@@ -1,0 +1,9 @@
+django==5.0.2
+djangorestframework==3.14.0
+docx==0.2.4
+docx2pdf==0.1.8
+docxtpl==0.16.7
+openai==1.12.0
+opencv-python==4.9.0.80
+python-dotenv==1.0.1
+requests==2.31.0

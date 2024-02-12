@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend-django:
+    container_name: backend-django
+    image: backend-django:latest
+    build:
+      context: ./docker/backend-django
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - server
+    volumes:
+      - ./backend-django:/app
+    restart: unless-stopped
+
+networks:
+  server:
+    driver: bridge
+
+volumes:
+  data:

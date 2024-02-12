@@ -13,6 +13,8 @@ services:
       - server
     volumes:
       - ./backend-django:/app
+    env_file:
+      - ./docker/backend-django/.env
     restart: unless-stopped
 
 networks:

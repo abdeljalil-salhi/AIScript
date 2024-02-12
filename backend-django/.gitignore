@@ -6,9 +6,10 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Hidden flag files
+.migrated
+
+# Media files
+public/**/*.png
+public/**/*.docx
+public/**/*.pdf

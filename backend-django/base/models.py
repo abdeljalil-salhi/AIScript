@@ -9,7 +9,7 @@ class Book(models.Model):
     num_subsections = models.IntegerField()
     cover = models.CharField(max_length=100)
     table_of_contents = models.JSONField()
-    outline = models.JSONField()
+    content = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

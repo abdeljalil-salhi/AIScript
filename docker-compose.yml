@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  database:
+    container_name: database
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    networks:
+      - server
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      TZ: "Africa/Casablanca"
+    env_file:
+      - ./docker/database/.env
+    restart: unless-stopped
   backend-django:
     container_name: backend-django
     image: backend-django:latest

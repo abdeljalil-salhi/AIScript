@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  """Creates a new user."""
+  createUser: String!
+}
+
+type Query {
+  """A simple hello world query to test the GraphQL API."""
+  hello: String!
+}

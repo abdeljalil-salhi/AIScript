@@ -7,6 +7,9 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from 'src/user/user.module';
+import { AvatarModule } from 'src/avatar/avatar.module';
+import { ConnectionModule } from 'src/connection/connection.module';
+import { WalletModule } from 'src/wallet/wallet.module';
 
 /**
  * The root module of the application.
@@ -31,6 +34,9 @@ import { UserModule } from 'src/user/user.module';
     }),
 
     UserModule,
+    AvatarModule,
+    ConnectionModule,
+    WalletModule,
   ],
   providers: [AppService],
   controllers: [AppController],

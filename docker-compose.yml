@@ -30,6 +30,23 @@ services:
     env_file:
       - ./docker/backend-django/.env
     restart: unless-stopped
+  backend-nestjs:
+    container_name: backend-nestjs
+    image: backend-nestjs:latest
+    build:
+      context: ./docker/backend-nestjs
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - server
+    volumes:
+      - ./backend-nestjs:/app
+    env_file:
+      - ./docker/backend-nestjs/.env
+    restart: unless-stopped
+    depends_on:
+      - database
 
 networks:
   server:

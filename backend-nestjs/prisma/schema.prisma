@@ -1,0 +1,61 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id         String      @id @default(uuid())
+    avatar     Avatar?
+    wallet     Wallet?
+    connection Connection?
+    username   String      @unique
+    isAdmin    Boolean     @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("users")
+}
+
+model Connection {
+    id           String    @id @default(uuid())
+    userId       String    @unique
+    email        String    @unique
+    is2faEnabled Boolean   @default(false)
+    provider     String
+    otp          String?
+    otpCreatedAt DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("connections")
+}
+
+model Avatar {
+    id              String @id @default(uuid())
+    userId          String @unique
+    defaultFilename String
+    filename        String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("avatars")
+}
+
+model Wallet {
+    id     String @id @default(uuid())
+    userId String @unique
+    credit Int    @default(0)
+
+    user User @relation(fields: [userId], references: [id])
+}

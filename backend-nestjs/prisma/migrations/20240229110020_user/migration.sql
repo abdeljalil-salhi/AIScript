@@ -37,12 +37,14 @@ CREATE TABLE "avatars" (
 );
 
 -- CreateTable
-CREATE TABLE "Wallet" (
+CREATE TABLE "wallets" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "credit" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Wallet_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "wallets_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -58,7 +60,7 @@ CREATE UNIQUE INDEX "connections_email_key" ON "connections"("email");
 CREATE UNIQUE INDEX "avatars_userId_key" ON "avatars"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Wallet_userId_key" ON "Wallet"("userId");
+CREATE UNIQUE INDEX "wallets_userId_key" ON "wallets"("userId");
 
 -- AddForeignKey
 ALTER TABLE "connections" ADD CONSTRAINT "connections_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -67,4 +69,4 @@ ALTER TABLE "connections" ADD CONSTRAINT "connections_userId_fkey" FOREIGN KEY (
 ALTER TABLE "avatars" ADD CONSTRAINT "avatars_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Wallet" ADD CONSTRAINT "Wallet_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "wallets" ADD CONSTRAINT "wallets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

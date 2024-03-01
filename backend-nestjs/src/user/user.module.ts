@@ -1,5 +1,9 @@
+// Dependencies
 import { Module } from '@nestjs/common';
+
+// Services
 import { UserService } from './user.service';
+// Resolvers
 import { UserResolver } from './user.resolver';
 
 /**

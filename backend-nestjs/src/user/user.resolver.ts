@@ -1,4 +1,7 @@
+// Dependencies
 import { Mutation, Query, Resolver } from '@nestjs/graphql';
+
+// Services
 import { UserService } from './user.service';
 
 /**

@@ -54,9 +54,9 @@ model Avatar {
 }
 
 model Wallet {
-    id     String @id @default(uuid())
-    userId String @unique
-    credit Int    @default(0)
+    id      String @id @default(uuid())
+    userId  String @unique
+    balance Int    @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

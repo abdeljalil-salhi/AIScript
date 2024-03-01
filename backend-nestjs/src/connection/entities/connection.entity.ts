@@ -22,8 +22,10 @@ export class Connection {
    * ID of the associated user
    * @type {string}
    */
-  @IsNotEmpty({ message: 'User ID must not be empty' })
-  @Field(() => String, { description: 'ID of the associated user' })
+  @IsNotEmpty({ message: 'Connection user ID must not be empty' })
+  @Field(() => String, {
+    description: 'ID of the associated user that owns the connection',
+  })
   public userId: string;
 
   /**
@@ -36,8 +38,8 @@ export class Connection {
    * Email of the connection
    * @type {string}
    */
-  @IsNotEmpty({ message: 'Email must not be empty' })
-  @IsEmail({}, { message: 'Email must be a valid email address' })
+  @IsNotEmpty({ message: 'Connection email must not be empty' })
+  @IsEmail({}, { message: 'Connection email must be a valid email address' })
   @Field(() => String, { description: 'Email of the connection' })
   public email: string;
 
@@ -46,8 +48,8 @@ export class Connection {
    * @type {boolean}
    * @default false
    */
-  @IsNotEmpty({ message: 'Is email verified must not be empty' })
-  @IsBoolean({ message: 'Is email verified must be a boolean' })
+  @IsNotEmpty({ message: 'Connection is email verified must not be empty' })
+  @IsBoolean({ message: 'Connection is email verified must be a boolean' })
   @Field(() => Boolean, {
     description: 'Indicates whether email is verified for the connection',
     defaultValue: false,
@@ -59,8 +61,8 @@ export class Connection {
    * @type {boolean}
    * @default false
    */
-  @IsNotEmpty({ message: 'Is 2FA enabled must not be empty' })
-  @IsBoolean({ message: 'Is 2FA enabled must be a boolean' })
+  @IsNotEmpty({ message: 'Connection is 2FA enabled must not be empty' })
+  @IsBoolean({ message: 'Connection is 2FA enabled must be a boolean' })
   @Field(() => Boolean, {
     description: 'Indicates whether 2FA is enabled for the connection',
     defaultValue: false,
@@ -72,7 +74,7 @@ export class Connection {
    * @type {string}
    * @enum {['local', 'google']}
    */
-  @IsNotEmpty({ message: 'Provider must not be empty' })
+  @IsNotEmpty({ message: 'Connection provider must not be empty' })
   @Field(() => String, { description: 'Provider of the connection' })
   public provider: string;
 
@@ -81,7 +83,7 @@ export class Connection {
    * @type {string}
    * @nullable
    */
-  @IsNotEmpty({ message: 'OTP must not be empty' })
+  @IsNotEmpty({ message: 'Connection one-time password must not be empty' })
   @Field(() => String, {
     description: 'One-time password associated with the connection',
     nullable: true,
@@ -94,10 +96,13 @@ export class Connection {
    * @example 2021-09-01T12:00:00.000Z
    * @nullable
    */
-  @IsNotEmpty({ message: 'OTP created at must not be empty' })
-  @IsDate({ message: 'OTP created at must be a date' })
+  @IsNotEmpty({
+    message: 'Connection one-time password created at must not be empty',
+  })
+  @IsDate({ message: 'Connection one-time password created at must be a date' })
   @Field(() => Date, {
-    description: 'The date and time when the one-time password was created',
+    description:
+      'The date and time when the connection one-time password was created',
     nullable: true,
   })
   public otpCreatedAt?: Date;
@@ -107,8 +112,8 @@ export class Connection {
    * @type {Date}
    * @example 2021-09-01T12:00:00.000Z
    */
-  @IsNotEmpty({ message: 'Created at must not be empty' })
-  @IsDate({ message: 'Created at must be a date' })
+  @IsNotEmpty({ message: 'Connection created at must not be empty' })
+  @IsDate({ message: 'Connection created at must be a date' })
   @Field(() => Date, {
     description: 'Date and time of the connection creation',
   })
@@ -119,8 +124,8 @@ export class Connection {
    * @type {Date}
    * @example 2021-09-01T12:00:00.000Z
    */
-  @IsNotEmpty({ message: 'Updated at must not be empty' })
-  @IsDate({ message: 'Updated at must be a date' })
+  @IsNotEmpty({ message: 'Connection updated at must not be empty' })
+  @IsDate({ message: 'Connection updated at must be a date' })
   @Field(() => Date, {
     description: 'Date and time of the connection last update',
   })

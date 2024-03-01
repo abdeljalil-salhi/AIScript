@@ -14,6 +14,7 @@ import { AvatarModule } from 'src/avatar/avatar.module';
 import { ConnectionModule } from 'src/connection/connection.module';
 import { UserModule } from 'src/user/user.module';
 import { WalletModule } from 'src/wallet/wallet.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 /**
  * The root module of the application.
@@ -37,6 +38,7 @@ import { WalletModule } from 'src/wallet/wallet.module';
       includeStacktraceInErrorResponses: false, // Disable the stack trace in error responses
     }),
 
+    AuthModule,
     UserModule,
     AvatarModule,
     ConnectionModule,

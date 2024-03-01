@@ -1,6 +1,13 @@
 import { IsDate, IsNotEmpty } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+/**
+ * Represents an avatar entity that is used by GraphQL
+ *
+ * @export
+ * @class Avatar
+ * @module AvatarModule
+ */
 @ObjectType()
 export class Avatar {
   /**

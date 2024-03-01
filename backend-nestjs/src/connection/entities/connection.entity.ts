@@ -1,6 +1,8 @@
 import { IsBoolean, IsDate, IsEmail, IsNotEmpty } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { User } from 'src/user/entities/user.entity';
+
 /**
  * Represents a connection entity that is used by GraphQL
  *
@@ -32,7 +34,11 @@ export class Connection {
    * Associated user entity
    * @type {User}
    */
-  user?: any;
+  @Field(() => User, {
+    description: 'Connection associated user entity',
+    nullable: true,
+  })
+  user?: User;
 
   /**
    * Email of the connection

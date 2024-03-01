@@ -1,6 +1,8 @@
 import { IsDate, IsNotEmpty } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { User } from 'src/user/entities/user.entity';
+
 /**
  * Represents an avatar entity that is used by GraphQL
  *
@@ -32,7 +34,11 @@ export class Avatar {
    * Associated user entity
    * @type {User}
    */
-  user?: any;
+  @Field(() => User, {
+    description: 'Avatar associated user entity',
+    nullable: true,
+  })
+  user?: User;
 
   /**
    * Default file name of the avatar

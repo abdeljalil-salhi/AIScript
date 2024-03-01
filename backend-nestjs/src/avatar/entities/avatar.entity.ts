@@ -22,8 +22,10 @@ export class Avatar {
    * ID of the associated user
    * @type {string}
    */
-  @IsNotEmpty({ message: 'User ID must not be empty' })
-  @Field(() => String, { description: 'ID of the associated user' })
+  @IsNotEmpty({ message: 'Avatar user ID must not be empty' })
+  @Field(() => String, {
+    description: 'ID of the associated user that owns the avatar',
+  })
   public userId: string;
 
   /**
@@ -36,7 +38,7 @@ export class Avatar {
    * Default file name of the avatar
    * @type {string}
    */
-  @IsNotEmpty({ message: 'Default File name must not be empty' })
+  @IsNotEmpty({ message: 'Avatar default file name must not be empty' })
   @Field(() => String, { description: 'Default file name of the avatar' })
   public defaultFilename: string;
 
@@ -44,7 +46,7 @@ export class Avatar {
    * File name of the avatar
    * @type {string}
    */
-  @IsNotEmpty({ message: 'File name must not be empty' })
+  @IsNotEmpty({ message: 'Avatar file name must not be empty' })
   @Field(() => String, { description: 'File name of the avatar' })
   public filename: string;
 
@@ -53,8 +55,8 @@ export class Avatar {
    * @type {Date}
    * @example 2021-09-01T12:00:00.000Z
    */
-  @IsNotEmpty({ message: 'Created at must not be empty' })
-  @IsDate({ message: 'Created at must be a date' })
+  @IsNotEmpty({ message: 'Avatar created at must not be empty' })
+  @IsDate({ message: 'Avatar created at must be a date' })
   @Field(() => Date, { description: 'Date and time of the avatar creation' })
   public createdAt: Date;
 
@@ -63,8 +65,10 @@ export class Avatar {
    * @type {Date}
    * @example 2021-09-01T12:00:00.000Z
    */
-  @IsNotEmpty({ message: 'Updated at must not be empty' })
-  @IsDate({ message: 'Updated at must be a date' })
-  @Field(() => Date, { description: 'Date and time of the avatar last update' })
+  @IsNotEmpty({ message: 'Avatar updated at must not be empty' })
+  @IsDate({ message: 'Avatar updated at must be a date' })
+  @Field(() => Date, {
+    description: 'Date and time of the avatar last update',
+  })
   public updatedAt: Date;
 }

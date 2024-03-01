@@ -1,8 +1,11 @@
+// Dependencies
 import { Module } from '@nestjs/common';
 
+// Services
 import { AvatarService } from './avatar.service';
-import { AvatarResolver } from './avatar.resolver';
 import { PrismaService } from 'src/prisma/prisma.service';
+// Resolvers
+import { AvatarResolver } from './avatar.resolver';
 
 /**
  * Represents the avatar module that encapsulates all avatar-related features

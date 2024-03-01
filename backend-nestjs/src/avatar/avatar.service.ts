@@ -1,7 +1,11 @@
+// Dependencies
 import { Injectable } from '@nestjs/common';
 
+// Services
 import { PrismaService } from 'src/prisma/prisma.service';
+// DTOs
 import { NewAvatarInput } from './dtos/new-avatar.input';
+// Entities
 import { Avatar } from './entities/avatar.entity';
 
 /**

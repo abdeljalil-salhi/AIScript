@@ -1,5 +1,7 @@
+// Dependencies
 import { Resolver } from '@nestjs/graphql';
 
+// Services
 import { AvatarService } from './avatar.service';
 
 /**

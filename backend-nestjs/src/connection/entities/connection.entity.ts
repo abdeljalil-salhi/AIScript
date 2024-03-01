@@ -1,6 +1,8 @@
+// Dependencies
 import { IsBoolean, IsDate, IsEmail, IsNotEmpty } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+// Entities
 import { User } from 'src/user/entities/user.entity';
 
 /**

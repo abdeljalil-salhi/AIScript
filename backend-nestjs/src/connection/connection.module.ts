@@ -1,8 +1,11 @@
+// Dependencies
 import { Module } from '@nestjs/common';
 
+// Services
 import { ConnectionService } from './connection.service';
-import { ConnectionResolver } from './connection.resolver';
 import { PrismaService } from 'src/prisma/prisma.service';
+// Resolvers
+import { ConnectionResolver } from './connection.resolver';
 
 /**
  * Represents the connection module that encapsulates all connection-related features

@@ -1,5 +1,7 @@
+// Dependencies
 import { Resolver } from '@nestjs/graphql';
 
+// Services
 import { ConnectionService } from './connection.service';
 
 /**

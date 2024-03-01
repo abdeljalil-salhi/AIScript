@@ -1,7 +1,11 @@
+// Dependencies
 import { Injectable } from '@nestjs/common';
 
+// Services
 import { PrismaService } from 'src/prisma/prisma.service';
+// DTOs
 import { NewConnectionInput } from './dtos/new-connection.input';
+// Entities
 import { Connection } from './entities/connection.entity';
 
 /**

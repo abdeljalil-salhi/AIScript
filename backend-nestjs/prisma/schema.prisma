@@ -22,13 +22,14 @@ model User {
 }
 
 model Connection {
-    id           String    @id @default(uuid())
-    userId       String    @unique
-    email        String    @unique
-    is2faEnabled Boolean   @default(false)
-    provider     String
-    otp          String?
-    otpCreatedAt DateTime?
+    id              String    @id @default(uuid())
+    userId          String    @unique
+    email           String    @unique
+    isEmailVerified Boolean   @default(false)
+    is2faEnabled    Boolean   @default(false)
+    provider        String
+    otp             String?
+    otpCreatedAt    DateTime?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

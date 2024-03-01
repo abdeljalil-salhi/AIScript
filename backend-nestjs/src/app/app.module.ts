@@ -1,14 +1,18 @@
+// Dependencies
 import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
+// Controllers
 import { AppController } from './app.controller';
+// Services
 import { AppService } from './app.service';
-import { UserModule } from 'src/user/user.module';
+// Modules
 import { AvatarModule } from 'src/avatar/avatar.module';
 import { ConnectionModule } from 'src/connection/connection.module';
+import { UserModule } from 'src/user/user.module';
 import { WalletModule } from 'src/wallet/wallet.module';
 
 /**

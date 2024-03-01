@@ -1,6 +1,8 @@
+// Dependencies
 import { NestFactory } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
 
+// Modules
 import { AppModule } from './app/app.module';
 
 /**

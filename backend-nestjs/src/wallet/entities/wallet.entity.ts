@@ -22,8 +22,10 @@ export class Wallet {
    * ID of the associated user
    * @type {string}
    */
-  @IsNotEmpty({ message: 'User ID must not be empty' })
-  @Field(() => String, { description: 'ID of the associated user' })
+  @IsNotEmpty({ message: 'Wallet user ID must not be empty' })
+  @Field(() => String, {
+    description: 'ID of the associated user that owns the wallet',
+  })
   public userId: string;
 
   /**
@@ -37,7 +39,7 @@ export class Wallet {
    * @type {number}
    * @default 0
    */
-  @IsNotEmpty({ message: 'Balance must not be empty' })
+  @IsNotEmpty({ message: 'Wallet balance must not be empty' })
   @Field(() => Number, {
     description: 'Balance of the wallet',
     defaultValue: 0,
@@ -49,8 +51,8 @@ export class Wallet {
    * @type {Date}
    * @example 2021-09-01T12:00:00.000Z
    */
-  @IsNotEmpty({ message: 'Created at must not be empty' })
-  @IsDate({ message: 'Created at must be a date' })
+  @IsNotEmpty({ message: 'Wallet created at must not be empty' })
+  @IsDate({ message: 'Wallet created at must be a date' })
   @Field(() => Date, { description: 'Date and time of the wallet creation' })
   public createdAt: Date;
 
@@ -59,8 +61,10 @@ export class Wallet {
    * @type {Date}
    * @example 2021-09-01T12:00:00.000Z
    */
-  @IsNotEmpty({ message: 'Updated at must not be empty' })
-  @IsDate({ message: 'Updated at must be a date' })
-  @Field(() => Date, { description: 'Date and time of the wallet update' })
+  @IsNotEmpty({ message: 'Wallet updated at must not be empty' })
+  @IsDate({ message: 'Wallet updated at must be a date' })
+  @Field(() => Date, {
+    description: 'Date and time of the wallet last update',
+  })
   public updatedAt: Date;
 }

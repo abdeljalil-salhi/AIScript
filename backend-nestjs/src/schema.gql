@@ -2,12 +2,171 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthResponse {
+  """Access token of the user"""
+  accessToken: String!
+
+  """Refresh token of the user"""
+  refreshToken: String!
+
+  """User details"""
+  user: User!
+}
+
+type Avatar {
+  """Date and time of the avatar creation"""
+  createdAt: DateTime!
+
+  """Default file name of the avatar"""
+  defaultFilename: String!
+
+  """File name of the avatar"""
+  filename: String!
+
+  """Unique identifier of the avatar"""
+  id: String!
+
+  """Date and time of the avatar last update"""
+  updatedAt: DateTime!
+
+  """Avatar associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the avatar"""
+  userId: String!
+}
+
+type Connection {
+  """Date and time of the connection creation"""
+  createdAt: DateTime!
+
+  """Email of the connection"""
+  email: String!
+
+  """Unique identifier of the connection"""
+  id: String!
+
+  """Indicates whether 2FA is enabled for the connection"""
+  is2faEnabled: Boolean!
+
+  """Indicates whether email is verified for the connection"""
+  isEmailVerified: Boolean!
+
+  """One-time password associated with the connection"""
+  otp: String
+
+  """The date and time when the connection one-time password was created"""
+  otpCreatedAt: DateTime
+
+  """Password of the connection"""
+  password: String
+
+  """Provider of the connection"""
+  provider: String!
+
+  """Date and time of the connection last update"""
+  updatedAt: DateTime!
+
+  """Connection associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the connection"""
+  userId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginInput {
+  """Password of the user"""
+  password: String!
+
+  """Username or email of the user"""
+  usernameOrEmail: String!
+}
+
+type LogoutResponse {
+  """Indicates whether the user has been successfully logged out."""
+  isLoggedOut: Boolean!
+}
+
 type Mutation {
-  """Creates a new user."""
-  createUser: String!
+  """Logs in a user with the specified details."""
+  login(loginInput: LoginInput!): AuthResponse!
+
+  """Logs out a user with the specified user ID."""
+  logout(userId: String!): LogoutResponse!
+
+  """Registers a new user with the specified details."""
+  register(registerInput: RegisterInput!): AuthResponse!
 }
 
 type Query {
   """A simple hello world query to test the GraphQL API."""
   hello: String!
+}
+
+input RegisterInput {
+  """Email of the user"""
+  email: String!
+
+  """Filename of the avatar"""
+  filename: String!
+
+  """Password of the user"""
+  password: String!
+
+  """Username of the user"""
+  username: String!
+}
+
+type User {
+  """User associated avatar entity"""
+  avatar: Avatar
+
+  """User associated connection entity"""
+  connection: Connection
+
+  """Date and time of the user creation"""
+  createdAt: DateTime!
+
+  """Unique identifier of the user"""
+  id: String!
+
+  """Indicates whether the user is an admin"""
+  isAdmin: Boolean!
+
+  """Refresh token of the user"""
+  refreshToken: String
+
+  """Date and time of the user last update"""
+  updatedAt: DateTime!
+
+  """Username of the user"""
+  username: String!
+
+  """User associated wallet entity"""
+  wallet: Wallet
+}
+
+type Wallet {
+  """Balance of the wallet"""
+  balance: Float!
+
+  """Date and time of the wallet creation"""
+  createdAt: DateTime!
+
+  """Unique identifier of the wallet"""
+  id: String!
+
+  """Date and time of the wallet last update"""
+  updatedAt: DateTime!
+
+  """Wallet associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the wallet"""
+  userId: String!
 }

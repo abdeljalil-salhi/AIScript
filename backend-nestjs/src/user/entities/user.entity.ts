@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsDate,
   IsNotEmpty,
+  IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -93,6 +94,18 @@ export class User {
     defaultValue: false,
   })
   public isAdmin: boolean;
+
+  /**
+   * Refresh token of the user
+   * @type {string}
+   * @nullable
+   */
+  @IsString({ message: 'User refresh token must be a string' })
+  @Field(() => String, {
+    description: 'Refresh token of the user',
+    nullable: true,
+  })
+  public refreshToken?: string;
 
   /**
    * Date and time of the user creation

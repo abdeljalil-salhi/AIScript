@@ -40,7 +40,7 @@ export class Connection {
     description: 'Connection associated user entity',
     nullable: true,
   })
-  user?: User;
+  public user?: User;
 
   /**
    * Email of the connection
@@ -50,6 +50,17 @@ export class Connection {
   @IsEmail({}, { message: 'Connection email must be a valid email address' })
   @Field(() => String, { description: 'Email of the connection' })
   public email: string;
+
+  /**
+   * Password of the connection
+   * @type {string}
+   * @nullable
+   */
+  @Field(() => String, {
+    description: 'Password of the connection',
+    nullable: true,
+  })
+  public password?: string;
 
   /**
    * Is email verified for the connection

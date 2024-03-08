@@ -1,6 +1,8 @@
+// Dependencies
 import { NestFactory } from '@nestjs/core';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 
+// Modules
 import { AppModule } from './app/app.module';
 
 /**
@@ -12,6 +14,9 @@ import { AppModule } from './app/app.module';
 const bootstrap = async (): Promise<void> => {
   // Create the NestJS application instance
   const app: INestApplication = await NestFactory.create(AppModule);
+
+  // Use the global validation pipe for all incoming requests
+  app.useGlobalPipes(new ValidationPipe());
 
   // Enable CORS for the application
   app.enableCors({

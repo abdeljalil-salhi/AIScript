@@ -1,12 +1,15 @@
+// Dependencies
 import {
   IsBoolean,
   IsDate,
   IsNotEmpty,
+  IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+// Entities
 import { Avatar } from 'src/avatar/entities/avatar.entity';
 import { Wallet } from 'src/wallet/entities/wallet.entity';
 import { Connection } from 'src/connection/entities/connection.entity';
@@ -91,6 +94,18 @@ export class User {
     defaultValue: false,
   })
   public isAdmin: boolean;
+
+  /**
+   * Refresh token of the user
+   * @type {string}
+   * @nullable
+   */
+  @IsString({ message: 'User refresh token must be a string' })
+  @Field(() => String, {
+    description: 'Refresh token of the user',
+    nullable: true,
+  })
+  public refreshToken?: string;
 
   /**
    * Date and time of the user creation

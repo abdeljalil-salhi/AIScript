@@ -1,4 +1,7 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+// Dependencies
+import { Query, Resolver } from '@nestjs/graphql';
+
+// Services
 import { UserService } from './user.service';
 
 /**
@@ -28,18 +31,5 @@ export class UserResolver {
   })
   public async hello(): Promise<string> {
     return 'Hello World!';
-  }
-
-  /**
-   * Creates a new user.
-   *
-   * @returns {Promise<string>} The result message
-   */
-  @Mutation(() => String, {
-    name: 'createUser',
-    description: 'Creates a new user.',
-  })
-  public async createUser(): Promise<string> {
-    return 'User created!';
   }
 }

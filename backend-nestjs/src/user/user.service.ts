@@ -36,6 +36,28 @@ export class UserService {
   }
 
   /**
+   * Finds a user by their ID.
+   *
+   * @param {string} userId - The ID of the user to find.
+   * @returns {Promise<User>} - The user with the specified ID.
+   * @throws {NotFoundException} - Thrown if the user is not found.
+   */
+  public async findById(userId: string): Promise<User> {
+    const user: User = await this.prismaService.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: userIncludes,
+    });
+
+    // If the user is not found, throw a NotFoundException
+    if (!user) throw new NotFoundException('User not found');
+
+    // Return the user if found
+    return user;
+  }
+
+  /**
    * Finds a user by their username or email.
    *
    * @param {string} usernameOrEmail - The username or email of the user to find.

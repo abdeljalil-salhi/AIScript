@@ -9,6 +9,7 @@ import { CustomDecorator, SetMetadata } from '@nestjs/common';
  *
  * @export
  * @returns {CustomDecorator<string>} - The custom decorator function.
+ * @module AuthModule
  */
 export const Public = (): CustomDecorator<string> =>
   SetMetadata('isPublic', true);

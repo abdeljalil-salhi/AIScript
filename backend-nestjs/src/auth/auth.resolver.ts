@@ -1,4 +1,5 @@
 // Dependencies
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 // Services
@@ -7,9 +8,14 @@ import { AuthService } from './auth.service';
 import { AuthResponse } from './dtos/auth.response';
 import { LoginInput } from './dtos/login.input';
 import { LogoutResponse } from './dtos/logout.response';
+import { NewTokensResponse } from './dtos/new-tokens.response';
 import { RegisterInput } from './dtos/register.input';
 // Decorators
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserId } from './decorators/current-userid.decorator';
 import { Public } from './decorators/public.decorator';
+// Guards
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
 
 /**
  * The authentication resolver that encapsulates all authentication-related GraphQL queries,
@@ -82,5 +88,28 @@ export class AuthResolver {
   public async logout(@Args('userId') userId: string): Promise<LogoutResponse> {
     // Invalidate refresh tokens and log the user out
     return this.authService.logout(userId);
+  }
+
+  /**
+   * Mutation resolver that generates new access and refresh tokens for a user.
+   *
+   * @public
+   * @use RefreshTokenGuard
+   * @param {number} userId - ID of the current user.
+   * @param {string} refreshToken - Refresh token of the current user.
+   * @returns {Promise<NewTokensResponse>} - Response containing new access and refresh tokens.
+   */
+  @Public()
+  @UseGuards(RefreshTokenGuard)
+  @Mutation(() => NewTokensResponse, {
+    name: 'refresh',
+    description: 'Generates new access and refresh tokens for a user.',
+  })
+  public async refresh(
+    @CurrentUserId() userId: string,
+    @CurrentUser('refreshToken') refreshToken: string,
+  ): Promise<NewTokensResponse> {
+    // Generate new access and refresh tokens for the user
+    return this.authService.getNewTokens(userId, refreshToken);
   }
 }

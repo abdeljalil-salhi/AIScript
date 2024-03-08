@@ -5,6 +5,16 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
+/**
+ * Guard class representing an access token authentication guard.
+ *
+ * This guard utilizes the 'jwt' strategy to validate access tokens.
+ *
+ * @export
+ * @class AccessTokenGuard
+ * @extends {AuthGuard('jwt')}
+ * @module AuthModule
+ */
 @Injectable()
 export class AccessTokenGuard extends AuthGuard('jwt') {
   /**

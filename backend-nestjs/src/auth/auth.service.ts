@@ -246,4 +246,46 @@ export class AuthService {
     // Update the refresh token in the database
     await this.userService.updateRefreshToken(userId, hashedRefreshToken);
   }
+
+  public async getNewTokens(
+    userId: string,
+    refreshToken: string,
+  ): Promise<NewTokensResponse> {
+    /**
+     * Find the user with the specified ID.
+     * If the user is not found, throw a ForbiddenException.
+     * Otherwise, continue with the token refresh process.
+     */
+    const user: User = await this.userService
+      .findById(userId)
+      .then((user: User) => {
+        if (!user) throw new ForbiddenException('Invalid user ID');
+        return user;
+      });
+
+    /**
+     * Verify the provided refresh token against the hashed refresh token in the database.
+     * If the refresh token is invalid, throw a forbidden exception.
+     * Otherwise, continue with the token refresh process.
+     */
+    await argon
+      .verify(user.refreshToken, refreshToken)
+      .then((isRefreshTokenValid: boolean) => {
+        if (!isRefreshTokenValid)
+          throw new ForbiddenException('Invalid refresh token');
+      });
+
+    // Create new tokens for the user
+    const { accessToken, refreshToken: newRefreshToken } =
+      await this.createTokens(user);
+
+    // Update the refresh token in the database
+    await this.updateRefreshToken(user.id, newRefreshToken);
+
+    // Return the new access token and refresh token
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+    };
+  }
 }

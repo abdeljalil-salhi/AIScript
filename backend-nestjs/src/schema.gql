@@ -99,8 +99,19 @@ type Mutation {
   """Logs out a user with the specified user ID."""
   logout(userId: String!): LogoutResponse!
 
+  """Generates new access and refresh tokens for a user."""
+  refresh: NewTokensResponse!
+
   """Registers a new user with the specified details."""
   register(registerInput: RegisterInput!): AuthResponse!
+}
+
+type NewTokensResponse {
+  """JSON Web Token (JWT) used for authorization and access"""
+  accessToken: String!
+
+  """Token for refreshing the JSON Web Token (JWT) when it expires"""
+  refreshToken: String!
 }
 
 type Query {

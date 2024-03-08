@@ -1,6 +1,7 @@
 // Dependencies
 import { join } from 'path';
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -15,6 +16,8 @@ import { ConnectionModule } from 'src/connection/connection.module';
 import { UserModule } from 'src/user/user.module';
 import { WalletModule } from 'src/wallet/wallet.module';
 import { AuthModule } from 'src/auth/auth.module';
+// Guards
+import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 
 /**
  * The root module of the application.
@@ -44,7 +47,12 @@ import { AuthModule } from 'src/auth/auth.module';
     ConnectionModule,
     WalletModule,
   ],
-  providers: [AppService],
+
+  providers: [
+    AppService,
+    // Use access token guard for all routes
+    { provide: APP_GUARD, useClass: AccessTokenGuard },
+  ],
   controllers: [AppController],
 })
 export class AppModule {}

@@ -8,6 +8,8 @@ import { AuthResponse } from './dtos/auth.response';
 import { LoginInput } from './dtos/login.input';
 import { LogoutResponse } from './dtos/logout.response';
 import { RegisterInput } from './dtos/register.input';
+// Decorators
+import { Public } from './decorators/public.decorator';
 
 /**
  * The authentication resolver that encapsulates all authentication-related GraphQL queries,
@@ -34,6 +36,7 @@ export class AuthResolver {
    * @param {RegisterInput} registerInput - The input details for the user to register.
    * @returns {Promise<AuthResponse>} - The result of the registration operation.
    */
+  @Public()
   @Mutation(() => AuthResponse, {
     name: 'register',
     description: 'Registers a new user with the specified details.',
@@ -53,6 +56,7 @@ export class AuthResolver {
    * @param {LoginInput} loginInput - The input details for the user to log in.
    * @returns {Promise<AuthResponse>} - The result of the login operation.
    */
+  @Public()
   @Mutation(() => AuthResponse, {
     name: 'login',
     description: 'Logs in a user with the specified details.',
@@ -67,7 +71,6 @@ export class AuthResolver {
   /**
    * Logs out a user with the specified user ID.
    *
-   * @public
    * @mutation
    * @param {string} userId - The ID of the user to log out.
    * @returns {Promise<LogoutResponse>} - The result of the logout operation.

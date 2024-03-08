@@ -9,6 +9,9 @@ import { AuthService } from './auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 // Resolvers
 import { AuthResolver } from './auth.resolver';
+// Strategies
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 
 /**
  * The authentication module that encapsulates all authentication-related features
@@ -19,6 +22,13 @@ import { AuthResolver } from './auth.resolver';
  */
 @Module({
   imports: [UserModule],
-  providers: [AuthResolver, AuthService, PrismaService, JwtService],
+  providers: [
+    AuthResolver,
+    AuthService,
+    PrismaService,
+    JwtService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+  ],
 })
 export class AuthModule {}

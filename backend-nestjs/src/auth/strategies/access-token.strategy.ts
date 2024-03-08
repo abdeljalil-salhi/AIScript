@@ -15,7 +15,7 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
  * @module AuthModule
  */
 @Injectable()
-export class AccessToken extends PassportStrategy(Strategy, 'jwt') {
+export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   /**
    * Creates an instance of the AccessToken strategy.
    */

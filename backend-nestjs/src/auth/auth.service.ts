@@ -56,7 +56,8 @@ export class AuthService {
       .findByUsernameOrEmail(registerInput.username)
       .then(() => {
         throw new ConflictException('Username already exists');
-      });
+      })
+      .catch(() => {});
 
     /**
      * Hash the password of the user.

@@ -78,6 +78,7 @@ export class UserService {
           },
         ],
       },
+      include: userIncludes,
     });
 
     // If the user is not found, throw a NotFoundException

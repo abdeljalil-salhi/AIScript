@@ -26,7 +26,7 @@ export class AppController {
    * @public
    * @returns {string} - The version of the API.
    */
-//   @Public()
+  @Public()
   @Get()
   getVersion(): string {
     return this.appService.getVersion();

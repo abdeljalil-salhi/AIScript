@@ -47,6 +47,24 @@ services:
     restart: unless-stopped
     depends_on:
       - database
+  frontend:
+    container_name: frontend
+    image: frontend:latest
+    build:
+      context: ./docker/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    networks:
+      - server
+    volumes:
+      - ./frontend:/app
+    env_file:
+      - ./docker/frontend/.env
+    restart: unless-stopped
+    depends_on:
+      - backend-django
+      - backend-nestjs
 
 networks:
   server:

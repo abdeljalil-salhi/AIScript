@@ -11,7 +11,7 @@ interface ButtonGradientProps {}
  * @returns {JSX.Element} - ButtonGradient SVG component
  * @exports ButtonGradient
  */
-const ButtonGradient: FC<ButtonGradientProps> = (): JSX.Element => {
+export const ButtonGradient: FC<ButtonGradientProps> = (): JSX.Element => {
   return (
     <svg className="block" width={0} height={0}>
       <defs>
@@ -41,5 +41,3 @@ const ButtonGradient: FC<ButtonGradientProps> = (): JSX.Element => {
     </svg>
   );
 };
-
-export default ButtonGradient;

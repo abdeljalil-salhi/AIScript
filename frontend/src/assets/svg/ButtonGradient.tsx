@@ -1,4 +1,17 @@
-const ButtonGradient = () => {
+// Dependencies
+import { FC } from "react";
+
+// Interfaces
+interface ButtonGradientProps {}
+
+/**
+ * ButtonGradient SVG component
+ *
+ * @interface ButtonGradientProps
+ * @returns {JSX.Element} - ButtonGradient SVG component
+ * @exports ButtonGradient
+ */
+const ButtonGradient: FC<ButtonGradientProps> = (): JSX.Element => {
   return (
     <svg className="block" width={0} height={0}>
       <defs>

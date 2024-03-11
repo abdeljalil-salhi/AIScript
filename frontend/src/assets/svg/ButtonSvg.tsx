@@ -1,4 +1,19 @@
-const ButtonSvg = (white) => (
+// Dependencies
+import { FC } from "react";
+
+// Interfaces
+interface ButtonSvgProps {
+  white?: boolean;
+}
+
+/**
+ * Button SVG component
+ *
+ * @interface ButtonSvgProps
+ * @returns {JSX.Element} - Button SVG component
+ * @exports ButtonSvg
+ */
+const ButtonSvg: FC<ButtonSvgProps> = ({ white }): JSX.Element => (
   <>
     <svg
       className="absolute top-0 left-0"

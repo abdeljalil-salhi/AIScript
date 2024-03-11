@@ -13,6 +13,7 @@ interface AppProps {}
 /**
  * App component
  *
+ * @interface AppProps
  * @returns {JSX.Element} - App component
  * @exports App
  */

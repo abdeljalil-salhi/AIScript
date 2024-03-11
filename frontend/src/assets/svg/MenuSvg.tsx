@@ -1,4 +1,19 @@
-const MenuSvg = ({ openNavigation }) => {
+// Dependencies
+import { FC } from "react";
+
+// Interfaces
+interface MenuSvgProps {
+  openNavigation: boolean;
+}
+
+/**
+ * MenuSvg Component
+ *
+ * @interface MenuSvgProps
+ * @returns {JSX.Element} - MenuSvg Component
+ * @exports MenuSvg
+ */
+export const MenuSvg: FC<MenuSvgProps> = ({ openNavigation }): JSX.Element => {
   return (
     <svg
       className="overflow-visible"
@@ -27,5 +42,3 @@ const MenuSvg = ({ openNavigation }) => {
     </svg>
   );
 };
-
-export default MenuSvg;

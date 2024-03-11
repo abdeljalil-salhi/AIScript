@@ -1,4 +1,19 @@
-const PlusSvg = ({ className = "" }) => {
+// Dependencies
+import { FC } from "react";
+
+// Interfaces
+interface PlusSvgProps {
+  className?: string;
+}
+
+/**
+ * PlusSvg Component
+ *
+ * @interface PlusSvgProps
+ * @returns {JSX.Element} - PlusSvg Component
+ * @exports PlusSvg
+ */
+export const PlusSvg: FC<PlusSvgProps> = ({ className = "" }): JSX.Element => {
   return (
     <svg className={`${className} || ""`} width="11" height="11" fill="none">
       <path
@@ -8,5 +23,3 @@ const PlusSvg = ({ className = "" }) => {
     </svg>
   );
 };
-
-export default PlusSvg;

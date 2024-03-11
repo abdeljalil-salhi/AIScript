@@ -1,6 +1,24 @@
-import PlusSvg from "./PlusSvg";
+// Dependencies
+import { FC } from "react";
 
-const SectionSvg = ({ crossesOffset }) => {
+// SVGs
+import { PlusSvg } from "./PlusSvg";
+
+// Interfaces
+interface SectionSvgProps {
+  crossesOffset?: string;
+}
+
+/**
+ * SectionSvg Component
+ *
+ * @interface SectionSvgProps
+ * @returns {JSX.Element} - SectionSvg Component
+ * @exports SectionSvg
+ */
+export const SectionSvg: FC<SectionSvgProps> = ({
+  crossesOffset,
+}): JSX.Element => {
   return (
     <>
       <PlusSvg
@@ -17,5 +35,3 @@ const SectionSvg = ({ crossesOffset }) => {
     </>
   );
 };
-
-export default SectionSvg;

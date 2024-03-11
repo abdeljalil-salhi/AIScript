@@ -1,7 +1,14 @@
-import { useEffect, useState } from "react";
+// Dependencies
+import { FC, RefObject, useEffect, useState } from "react";
 import { MouseParallax } from "react-just-parallax";
 
-import PlusSvg from "../../assets/svg/PlusSvg";
+// SVGs
+import { PlusSvg } from "../../assets/svg/PlusSvg";
+
+// Interfaces
+interface BackgroundCirclesProps {
+  parallaxRef?: RefObject<HTMLDivElement>;
+}
 
 export const Gradient = () => {
   return (
@@ -35,7 +42,17 @@ const Rings = () => {
   );
 };
 
-export const BackgroundCircles = ({ parallaxRef }) => {
+/**
+ * Background Circles Component
+ * Moving background colored circle balls with parallax effect
+ *
+ * @param {RefObject<HTMLDivElement>} parallaxRef - Parallax reference
+ * @returns {JSX.Element} - Background Circles Component
+ * @exports BackgroundCircles
+ */
+export const BackgroundCircles: FC<BackgroundCirclesProps> = ({
+  parallaxRef,
+}): JSX.Element => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

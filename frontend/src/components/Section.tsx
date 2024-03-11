@@ -1,7 +1,7 @@
 // Dependencies
 import { FC, ReactNode } from "react";
 
-// Components
+// SVGs
 import { SectionSvg } from "../assets/svg/SectionSvg";
 
 // Interfaces

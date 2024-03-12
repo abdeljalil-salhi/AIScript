@@ -1,7 +1,11 @@
 // Dependencies
 import { FC } from "react";
-import { notificationImages } from "../constants";
+
+// Assets
 import { notification1 } from "../assets";
+
+// Constants
+import { notificationImages } from "../constants";
 
 // Interfaces
 interface NotificationProps {

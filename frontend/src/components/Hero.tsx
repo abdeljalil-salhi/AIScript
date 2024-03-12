@@ -9,9 +9,10 @@ import { curve, heroBackground, robot } from "../assets";
 import { heroIcons } from "../constants";
 
 // Components
+import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";
 import { Button } from "./Button";
+import { Generating } from "./Generating";
 import { Section } from "./Section";
-import { BackgroundCircles, Gradient } from "./design/Hero";
 
 // Interfaces
 interface HeroProps {}
@@ -36,7 +37,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
       <div className="container relative" ref={parallaxRef}>
         <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[4rem] md:mb-20 lg:mb-[6rem]">
           <h1 className="h1 mb-6">
-            Explore the Possibilities of AI with{" "}
+            Explore the Possibilities of&nbsp;AI&nbsp;Writing with{" "}
             <span className="inline-block relative">
               AIScript{" "}
               <img
@@ -70,6 +71,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
                   draggable={false}
                   alt="AI"
                 />
+                <Generating className="absolute left-4 right-4 bottom-5 md:left-1/2 md:right-auto md:bottom-8 md:w-[31rem] md:-translate-x-1/2" />
                 <ScrollParallax isAbsolutelyPositioned>
                   <ul className="hidden absolute -left-[5.5rem] bottom-[7.5rem] px-1 py-1 bg-n-9/40 backdrop-blur border border-n-1/10 rounded-2xl xl:flex">
                     {heroIcons.map((icon, index) => (
@@ -96,6 +98,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
           <BackgroundCircles />
         </div>
       </div>
+      <BottomLine />
     </Section>
   );
 };

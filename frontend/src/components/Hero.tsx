@@ -13,6 +13,7 @@ import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";
 import { Button } from "./Button";
 import { Generating } from "./Generating";
 import { Section } from "./Section";
+import { Notification } from "./Notification";
 
 // Interfaces
 interface HeroProps {}
@@ -80,6 +81,12 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
                       </li>
                     ))}
                   </ul>
+                </ScrollParallax>
+                <ScrollParallax isAbsolutelyPositioned>
+                  <Notification
+                    className="hidden absolute -right-[5.5rem] bottom-[11rem] w-[18rem] xl:flex"
+                    title="Books generation"
+                  />
                 </ScrollParallax>
               </div>
             </div>

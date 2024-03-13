@@ -4,3 +4,7 @@ updates:
     directory: "/backend-nestjs"
     schedule:
       interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"

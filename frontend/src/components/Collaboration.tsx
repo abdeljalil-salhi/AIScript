@@ -6,6 +6,7 @@ import { brainwaveSymbol, check } from "../assets";
 // Constants
 import { collabApps, collabContent, collabText } from "../constants";
 // Components
+import { LeftCurve, RightCurve } from "./design/Collaboration";
 import { Button } from "./Button";
 import { Section } from "./Section";
 
@@ -25,7 +26,7 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
       <div className="container lg:flex">
         <div className="max-w-[25rem]">
           <h2 className="h2 mb-4 md:mb-8">
-            AI&nbsp;Writing&nbsp;Assistant for&nbsp;Authors
+            AI&nbsp;Writing Assistant for&nbsp;Authors
           </h2>
           <ul className="max-w-[22rem] mb-10 md:mb-14">
             {collabContent.map((content) => (
@@ -46,10 +47,10 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
               </li>
             ))}
           </ul>
-          <Button>Try it now</Button>
+          <Button className="mb-8">Try it now</Button>
         </div>
-        <div className="lg:ml-auto xl:w-[38rem] mt-4">
-          <p className="body-2 mb-4 text-n-4 md:mb-16 lg:mb-32 lg:w-[22rem] lg:mx-auto">
+        <div className="lg:ml-auto xl:w-[38rem]">
+          <p className="body-2 mb-10 text-n-4 md:mb-16 lg:mb-32 lg:w-[22rem] lg:mx-auto">
             {collabText}
           </p>
           <div className="relative left-1/2 flex w-[22rem] aspect-square border border-n-6 rounded-full -translate-x-1/2 scale:75 md:scale-100">
@@ -89,6 +90,8 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
                 </li>
               ))}
             </ul>
+            <LeftCurve />
+            <RightCurve />
           </div>
         </div>
       </div>

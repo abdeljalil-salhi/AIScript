@@ -1,7 +1,7 @@
 // Dependencies
 import { FC } from "react";
 
-// SVGs
+// Components
 import { PlusSvg } from "./PlusSvg";
 
 // Interfaces

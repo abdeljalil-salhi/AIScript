@@ -2,7 +2,7 @@
 import { ReactNode, FC } from "react";
 
 // SVGs
-import ButtonSvg from "../assets/svg/ButtonSvg";
+import { ButtonSvg } from "../assets/svg/ButtonSvg";
 
 // Interfaces
 interface ButtonProps {

@@ -3,17 +3,19 @@ import { FC, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
-// SVGs
-import brainwave from "../assets/brainwave.svg";
+// Assets
+import { brainwave } from "../assets";
 
 // Constants
 import { navigations } from "../constants";
 import { Navigation } from "../constants/types";
 
+// SVGs
+import { MenuSvg } from "../assets/svg/MenuSvg";
+
 // Components
 import { Button } from "./Button";
 import { HamburgerMenu } from "./design/Header";
-import { MenuSvg } from "../assets/svg/MenuSvg";
 
 // Interfaces
 interface HeaderProps {}

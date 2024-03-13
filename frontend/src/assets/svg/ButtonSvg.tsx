@@ -13,7 +13,7 @@ interface ButtonSvgProps {
  * @returns {JSX.Element} - Button SVG component
  * @exports ButtonSvg
  */
-const ButtonSvg: FC<ButtonSvgProps> = ({ white }): JSX.Element => (
+export const ButtonSvg: FC<ButtonSvgProps> = ({ white }): JSX.Element => (
   <>
     <svg
       className="absolute top-0 left-0"
@@ -71,5 +71,3 @@ const ButtonSvg: FC<ButtonSvgProps> = ({ white }): JSX.Element => (
     </svg>
   </>
 );
-
-export default ButtonSvg;

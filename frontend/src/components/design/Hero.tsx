@@ -6,11 +6,21 @@ import { MouseParallax } from "react-just-parallax";
 import { PlusSvg } from "../../assets/svg/PlusSvg";
 
 // Interfaces
+interface GradientProps {}
+interface BottomLineProps {}
+interface RingsProps {}
 interface BackgroundCirclesProps {
   parallaxRef?: RefObject<HTMLDivElement>;
 }
 
-export const Gradient = () => {
+/**
+ * Gradient Component
+ *
+ * @interface GradientProps
+ * @returns {JSX.Element} - Gradient Component
+ * @exports Gradient
+ */
+export const Gradient: FC<GradientProps> = (): JSX.Element => {
   return (
     <>
       <div className="relative z-1 h-6 mx-2.5 bg-n-11 shadow-xl rounded-b-[1.25rem] lg:h-6 lg:mx-8" />
@@ -19,7 +29,14 @@ export const Gradient = () => {
   );
 };
 
-export const BottomLine = () => {
+/**
+ * BottomLine Component
+ *
+ * @interface BottomLineProps
+ * @returns {JSX.Element} - BottomLine Component
+ * @exports BottomLine
+ */
+export const BottomLine: FC<BottomLineProps> = (): JSX.Element => {
   return (
     <>
       <div className="hidden absolute top-[55.25rem] left-10 right-10 h-0.25 bg-n-6 pointer-events-none xl:block" />
@@ -31,7 +48,14 @@ export const BottomLine = () => {
   );
 };
 
-const Rings = () => {
+/**
+ * Rings Component
+ *
+ * @interface RingsProps
+ * @returns {JSX.Element} - Rings Component
+ * @exports Rings
+ */
+export const Rings: FC<RingsProps> = (): JSX.Element => {
   return (
     <>
       <div className="absolute top-1/2 left-1/2 w-[65.875rem] aspect-square border border-n-2/10 rounded-full -translate-x-1/2 -translate-y-1/2" />

@@ -4,7 +4,7 @@ import { FC } from "react";
 // Assets
 import { brainwaveSymbol, check } from "../assets";
 // Constants
-import { collabContent, collabText } from "../constants";
+import { collabApps, collabContent, collabText } from "../constants";
 // Components
 import { Button } from "./Button";
 import { Section } from "./Section";
@@ -65,6 +65,30 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
                 </div>
               </div>
             </div>
+            <ul>
+              {collabApps.map((app) => (
+                <li
+                  key={app.id}
+                  className={`absolute top-0 left-1/2 h-1/2 -ml-[1.6rem] origin-bottom rotate-${
+                    Number(app.id) * 45
+                  }`}
+                >
+                  <div
+                    className={`relative -top-[1.6rem] flex w-[3.2rem] h-[3.2rem] bg-n-7 border border-n-1/15 rounded-xl -rotate-${
+                      Number(app.id) * 45
+                    }`}
+                  >
+                    <img
+                      src={app.icon}
+                      width={app.width}
+                      height={app.height}
+                      className="m-auto"
+                      alt={app.title}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

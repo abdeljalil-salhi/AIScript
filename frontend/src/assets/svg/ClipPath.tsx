@@ -1,4 +1,17 @@
-const ClipPath = () => {
+// Dependencies
+import { FC } from "react";
+
+// Interfaces
+interface ClipPathProps {}
+
+/**
+ * ClipPath Component
+ *
+ * @interface ClipPathProps
+ * @returns {JSX.Element} - ClipPath Component
+ * @exports ClipPath
+ */
+export const ClipPath: FC<ClipPathProps> = (): JSX.Element => {
   return (
     <svg className="block" width={0} height={0}>
       <clipPath id="benefits" clipPathUnits="objectBoundingBox">
@@ -7,5 +20,3 @@ const ClipPath = () => {
     </svg>
   );
 };
-
-export default ClipPath;

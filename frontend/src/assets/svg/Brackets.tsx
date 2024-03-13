@@ -1,5 +1,20 @@
-const brackets = (position) =>
-  position === "left" ? (
+// Dependencies
+import { FC } from "react";
+
+// Interfaces
+interface BracketsProps {
+  position: "left" | "right";
+}
+
+/**
+ * Brackets Component
+ *
+ * @interface BracketsProps
+ * @returns {JSX.Element} - Brackets Component
+ * @exports Brackets
+ */
+export const Brackets: FC<BracketsProps> = ({ position }): JSX.Element => {
+  return position === "left" ? (
     <svg
       width="5"
       height="14"
@@ -41,5 +56,4 @@ const brackets = (position) =>
       </defs>
     </svg>
   );
-
-export default brackets;
+};

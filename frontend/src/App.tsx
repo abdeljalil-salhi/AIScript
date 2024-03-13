@@ -6,6 +6,7 @@ import { ButtonGradient } from "./assets/svg/ButtonGradient";
 
 // Components
 import { Benefits } from "./components/Benefits";
+import { Collaboration } from "./components/Collaboration";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 
@@ -26,6 +27,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
         <Header />
         <Hero />
         <Benefits />
+        <Collaboration />
       </div>
       <ButtonGradient />
     </>

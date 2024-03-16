@@ -2,13 +2,18 @@
 import { FC } from "react";
 
 // Constants
-import { brainwaveServices } from "../constants";
+import { brainwaveServices, brainwaveServicesIcons } from "../constants";
 // Assets
-import { check, service1, service2 } from "../assets";
+import { check, service1, service2, service3 } from "../assets";
 // Components
 import { Generating } from "./Generating";
 import { Heading } from "./Heading";
-import { PhotoChatMessage } from "./design/Services";
+import {
+  Gradient,
+  PhotoChatMessage,
+  VideoBar,
+  VideoChatMessage,
+} from "./design/Services";
 import { Section } from "./Section";
 
 // Interfaces
@@ -47,7 +52,7 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
                 AIScript unlocks the potential of AI-powered e-books.
               </p>
               <ul className="body-2">
-                {brainwaveServices.map((service, index) => (
+                {brainwaveServices.map((service, index: number) => (
                   <li
                     key={index}
                     className="flex items-start py-4 border-t border-n-6"
@@ -87,7 +92,57 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
               </div>
               <PhotoChatMessage />
             </div>
+            <div className="p-4 bg-n-7 rounded-3xl overflow-hidden lg:min-h-[46rem]">
+              <div className="py-12 px-4 xl:px-8">
+                <h4 className="h4 mb-4">Cover generation</h4>
+                <p className="body-2 mb-[2rem] text-n-3">
+                  The world&apos;s first AI-powered book cover generator. Create
+                  a professional book cover in seconds. What will you create?
+                </p>
+                <ul className="flex items-center justify-between">
+                  {brainwaveServicesIcons.map((service, index: number) => (
+                    <li
+                      key={index}
+                      className={`flex items-center justify-center rounded-2xl ${
+                        index === 2
+                          ? "w-[3rem] h-[3rem] p-0.25 bg-conic-gradient md:w-[4.5rem] md:h-[4.5rem]"
+                          : "flex w-10 h-10 bg-n-6 md:w-15 md:h-15"
+                      }`}
+                    >
+                      <div
+                        className={
+                          index === 2
+                            ? "flex items-center justify-center w-full h-full bg-n-7 rounded-[1rem]"
+                            : ""
+                        }
+                      >
+                        <img
+                          src={service}
+                          width={24}
+                          height={24}
+                          alt="Service icon"
+                          draggable={false}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="relative h-[20rem] bg-n-8 rounded-xl overflow-hidden md:h-[25rem]">
+                <img
+                  src={service3}
+                  width={520}
+                  height={400}
+                  className="w-full h-full object-cover"
+                  alt="Futuristic robot"
+                  draggable={false}
+                />
+                <VideoChatMessage />
+                <VideoBar />
+              </div>
+            </div>
           </div>
+          <Gradient />
         </div>
       </div>
     </Section>

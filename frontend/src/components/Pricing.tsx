@@ -4,6 +4,7 @@ import { FC } from "react";
 // Assets
 import { smallSphere, stars } from "../assets";
 // Components
+import { Heading } from "./Heading";
 import { Section } from "./Section";
 
 // Interfaces
@@ -39,6 +40,7 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
             />
           </div>
         </div>
+        <Heading tag="Get started with AIScript" title="Pay as you go" />
       </div>
     </Section>
   );

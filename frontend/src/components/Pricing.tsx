@@ -5,7 +5,9 @@ import { FC } from "react";
 import { smallSphere, stars } from "../assets";
 // Components
 import { Heading } from "./Heading";
+import { PricingList } from "./PricingList";
 import { Section } from "./Section";
+import { LeftLine, RightLine } from "./design/Pricing";
 
 // Interfaces
 interface PricingProps {}
@@ -41,6 +43,20 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
           </div>
         </div>
         <Heading tag="Get started with AIScript" title="Pay as you go" />
+        <div className="relative">
+          <PricingList />
+          <LeftLine />
+          <RightLine />
+        </div>
+        <div className="flex justify-center mt-10">
+          <a
+            href="/pricing"
+            className="text-xs font-code font-bold tracking-wider uppercase border-b"
+            draggable={false}
+          >
+            See the full details
+          </a>
+        </div>
       </div>
     </Section>
   );

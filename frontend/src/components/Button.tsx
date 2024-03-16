@@ -36,14 +36,14 @@ export const Button: FC<ButtonProps> = ({
   const spanClasses = `relative z-10`;
 
   const renderButton = (): JSX.Element => (
-    <button className={classes} onClick={onClick}>
+    <button className={classes} onClick={onClick} draggable={false}>
       <span className={spanClasses}>{children}</span>
       {ButtonSvg({ white })}
     </button>
   );
 
   const renderLink = (): JSX.Element => (
-    <a href={href} className={classes}>
+    <a href={href} className={classes} draggable={false}>
       <span className={spanClasses}>{children}</span>
       {ButtonSvg({ white })}
     </a>

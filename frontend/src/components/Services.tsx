@@ -4,10 +4,11 @@ import { FC } from "react";
 // Constants
 import { brainwaveServices } from "../constants";
 // Assets
-import { check, service1 } from "../assets";
+import { check, service1, service2 } from "../assets";
 // Components
 import { Generating } from "./Generating";
 import { Heading } from "./Heading";
+import { PhotoChatMessage } from "./design/Services";
 import { Section } from "./Section";
 
 // Interfaces
@@ -64,6 +65,28 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
               </ul>
             </div>
             <Generating className="absolute left-4 right-4 bottom-4 border-n-1/10 border lg:left-1/2 lg:bottom-8 lg:-translate-x-1/2" />
+          </div>
+          <div className="relative z-1 grid gap-5 lg:grid-cols-2">
+            <div className="relative min-h-[39rem] border border-n-1/10 rounded-3xl overflow-hidden">
+              <div className="absolute inset-0">
+                <img
+                  src={service2}
+                  width={630}
+                  height={750}
+                  className="h-full w-full object-cover"
+                  alt="Robot"
+                  draggable={false}
+                />
+              </div>
+              <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
+                <h4 className="h4 mb-4">E-book generation</h4>
+                <p className="body-2 mb-[3rem] text-n-3">
+                  Automatically generate e-books using our AI technology. Try it
+                  now!
+                </p>
+              </div>
+              <PhotoChatMessage />
+            </div>
           </div>
         </div>
       </div>

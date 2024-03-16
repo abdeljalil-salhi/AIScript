@@ -97,7 +97,7 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
                 <h4 className="h4 mb-4">Cover generation</h4>
                 <p className="body-2 mb-[2rem] text-n-3">
                   The world&apos;s first AI-powered book cover generator. Create
-                  a professional book cover in seconds. What will you create?
+                  an artistic book cover in seconds. What will you create?
                 </p>
                 <ul className="flex items-center justify-between">
                   {brainwaveServicesIcons.map((service, index: number) => (

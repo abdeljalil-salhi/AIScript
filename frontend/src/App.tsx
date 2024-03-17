@@ -1,18 +1,24 @@
 // Dependencies
+import routerBindings, {
+  DocumentTitleHandler,
+  UnsavedChangesNotifier,
+} from "@refinedev/react-router-v6";
 import { FC } from "react";
+import { App as AntdApp } from "antd";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Refine } from "@refinedev/core";
+import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
+import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import { useNotificationProvider } from "@refinedev/antd";
 
-// SVGs
-import { ButtonGradient } from "./assets/svg/ButtonGradient";
-
-// Components
-import { Benefits } from "./components/Benefits";
-import { Collaboration } from "./components/Collaboration";
-import { Footer } from "./components/Footer";
-import { Header } from "./components/Header";
-import { Hero } from "./components/Hero";
-import { Pricing } from "./components/Pricing";
-import { Roadmap } from "./components/Roadmap";
-import { Services } from "./components/Services";
+// Config
+import { resources } from "./config/resources";
+// Contexts
+import { ColorModeContextProvider } from "./contexts/color-mode";
+// Providers
+import { authProvider, dataProvider, liveProvider } from "./providers";
+// Pages
+import { LandingPage } from "./pages/landing";
 
 // Interfaces
 interface AppProps {}
@@ -26,18 +32,38 @@ interface AppProps {}
  */
 export const App: FC<AppProps> = (): JSX.Element => {
   return (
-    <>
-      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden">
-        <Header />
-        <Hero />
-        <Benefits />
-        <Collaboration />
-        <Services />
-        <Pricing />
-        <Roadmap />
-        <Footer />
-      </div>
-      <ButtonGradient />
-    </>
+    <Router>
+      <RefineKbarProvider>
+        <ColorModeContextProvider>
+          <AntdApp>
+            <DevtoolsProvider>
+              <Refine
+                resources={resources}
+                dataProvider={dataProvider}
+                liveProvider={liveProvider}
+                authProvider={authProvider}
+                notificationProvider={useNotificationProvider}
+                routerProvider={routerBindings}
+                options={{
+                  syncWithLocation: true,
+                  warnWhenUnsavedChanges: true,
+                  useNewQueryKeys: true,
+                  projectId: "UKx02D-lCzBz4-flgSXL",
+                  liveMode: "auto",
+                }}
+              >
+                <Routes>
+                  <Route index element={<LandingPage />} />
+                </Routes>
+                <RefineKbar />
+                <UnsavedChangesNotifier />
+                <DocumentTitleHandler />
+              </Refine>
+              <DevtoolsPanel />
+            </DevtoolsProvider>
+          </AntdApp>
+        </ColorModeContextProvider>
+      </RefineKbarProvider>
+    </Router>
   );
 };

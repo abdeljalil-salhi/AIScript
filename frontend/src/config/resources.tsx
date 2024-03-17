@@ -11,7 +11,7 @@ export const resources: IResourceItem[] = [
     list: "/",
     meta: {
       label: "Dashboard",
-      icon: <DashboardOutlined />,
+      icon: <DashboardOutlined onPointerEnterCapture onPointerLeaveCapture />,
     },
   },
   {
@@ -21,7 +21,7 @@ export const resources: IResourceItem[] = [
     edit: "/tasks/edit/:id",
     meta: {
       label: "Tasks",
-      icon: <ProjectOutlined />,
+      icon: <ProjectOutlined onPointerEnterCapture onPointerLeaveCapture />,
     },
   },
 ];

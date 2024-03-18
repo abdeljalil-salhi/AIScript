@@ -1,5 +1,6 @@
 // Dependencies
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 // Constants
 import { socials } from "../constants";
@@ -25,9 +26,9 @@ export const Footer: FC<FooterProps> = (): JSX.Element => {
         </p>
         <ul className="flex gap-5 flex-wrap">
           {socials.map((social) => (
-            <a
+            <Link
+              to={social.url}
               key={social.id}
-              href={social.url}
               target="_blank"
               className="flex items-center justify-center w-10 h-10 bg-n-7 rounded-full transition-colors hover:bg-n-6"
               draggable={false}
@@ -38,7 +39,7 @@ export const Footer: FC<FooterProps> = (): JSX.Element => {
                 height={16}
                 alt={social.title}
               />
-            </a>
+            </Link>
           ))}
         </ul>
       </div>

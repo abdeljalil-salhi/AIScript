@@ -1,13 +1,14 @@
 // Dependencies
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 // Assets
 import { smallSphere, stars } from "../assets";
 // Components
+import { LeftLine, RightLine } from "./design/Pricing";
 import { Heading } from "./Heading";
 import { PricingList } from "./PricingList";
 import { Section } from "./Section";
-import { LeftLine, RightLine } from "./design/Pricing";
 
 // Interfaces
 interface PricingProps {}
@@ -49,13 +50,13 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
           <RightLine />
         </div>
         <div className="flex justify-center mt-10">
-          <a
-            href="/pricing"
+          <Link
+            to="/pricing"
             className="text-xs font-code font-bold tracking-wider uppercase border-b"
             draggable={false}
           >
             See the full details
-          </a>
+          </Link>
         </div>
       </div>
     </Section>

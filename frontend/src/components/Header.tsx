@@ -1,6 +1,6 @@
 // Dependencies
 import { FC, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
 // Assets
@@ -62,9 +62,9 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
-        <a className="block w-[12rem] xl:mr-8" href="#hero">
+        <Link to="/" className="block w-[12rem] xl:mr-8">
           <img src={brainwave} width={190} height={40} alt="AIScript" />
-        </a>
+        </Link>
         <nav
           className={`${
             openNavigation ? "flex" : "hidden"
@@ -73,8 +73,8 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
           <div className="relative z-2 flex flex-col items-center justify-center m-auto lg:flex-row">
             {navigations.map((item: Navigation) => (
               <a
-                key={item.id}
                 href={item.url}
+                key={item.id}
                 onClick={handleClick}
                 className={`block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-color-1 ${
                   item.onlyMobile ? "lg:hidden" : ""
@@ -90,12 +90,12 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
           </div>
           <HamburgerMenu />
         </nav>
-        <a
-          href="#signup"
+        <Link
+          to="/register"
           className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
         >
           New account
-        </a>
+        </Link>
         <Button className="hidden lg:flex" href="#login">
           Sign in
         </Button>

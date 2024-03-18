@@ -1,5 +1,6 @@
 // Dependencies
 import { ReactNode, FC } from "react";
+import { Link } from "react-router-dom";
 
 // SVGs
 import { ButtonSvg } from "../assets/svg/ButtonSvg";
@@ -43,10 +44,11 @@ export const Button: FC<ButtonProps> = ({
   );
 
   const renderLink = (): JSX.Element => (
-    <a href={href} className={classes} draggable={false}>
+    // `href as string` because if we want to render a link, it will have the href prop
+    <Link to={href as string} className={classes} draggable={false}>
       <span className={spanClasses}>{children}</span>
       {ButtonSvg({ white })}
-    </a>
+    </Link>
   );
 
   return href ? renderLink() : renderButton();

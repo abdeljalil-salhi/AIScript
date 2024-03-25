@@ -56,7 +56,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
             with AIScript, the AI-powered tool that helps you write ebooks in
             seconds.
           </p>
-          <Button href="/pricing" white>
+          <Button href="/register" white>
             Get Started
           </Button>
         </div>

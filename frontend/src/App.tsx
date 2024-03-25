@@ -19,6 +19,7 @@ import { ColorModeContextProvider } from "./contexts/color-mode";
 import { authProvider, dataProvider, liveProvider } from "./providers";
 // Pages
 import { LandingPage } from "./pages/landing";
+import { RegisterPage } from "./pages/register";
 
 // Interfaces
 interface AppProps {}
@@ -54,6 +55,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
               >
                 <Routes>
                   <Route index element={<LandingPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
                 </Routes>
                 <RefineKbar />
                 <UnsavedChangesNotifier />

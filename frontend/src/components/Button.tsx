@@ -13,6 +13,7 @@ interface ButtonProps {
   children?: ReactNode;
   px?: string;
   white?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 /**
@@ -29,6 +30,7 @@ export const Button: FC<ButtonProps> = ({
   children,
   px,
   white,
+  type,
 }: ButtonProps): JSX.Element => {
   const classes = `button relative inline-flex items-center justify-center h-11 transition-colors hover:text-color-1 ${
     px || "px-7"
@@ -37,7 +39,12 @@ export const Button: FC<ButtonProps> = ({
   const spanClasses = `relative z-10`;
 
   const renderButton = (): JSX.Element => (
-    <button className={classes} onClick={onClick} draggable={false}>
+    <button
+      className={classes}
+      onClick={onClick}
+      draggable={false}
+      type={type || "button"}
+    >
       <span className={spanClasses}>{children}</span>
       {ButtonSvg({ white })}
     </button>

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 // Constants
 import { OAuthProviders } from "@/constants";
 import { OAuthProvider } from "@/constants/types";
+import { Button } from "../Button";
 
 // Interfaces
 interface RightSideProps {}
@@ -72,7 +73,7 @@ export const RightSide: FC<RightSideProps> = (): JSX.Element => {
             />
           </div>
         ))}
-        <div>
+        <div className="mt-2">
           <label htmlFor="terms" className="flex items-center">
             <input
               type="checkbox"
@@ -100,12 +101,9 @@ export const RightSide: FC<RightSideProps> = (): JSX.Element => {
             </span>
           </label>
         </div>
-        <button
-          type="submit"
-          className="btn bg-n-9/80 text-n-1 hover:bg-n-9 transition-all rounded-lg py-2 font-medium text-sm w-full mt-2"
-        >
+        <Button white type="submit" className="mt-2">
           Register
-        </button>
+        </Button>
       </form>
       <div className="w-full flex items-center justify-center">
         <p className="text-n-1">

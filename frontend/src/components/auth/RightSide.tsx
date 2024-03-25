@@ -30,7 +30,7 @@ export const RightSide: FC<RightSideProps> = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4 2xl:gap-6 px-8 py-4 text-n-1 w-full min-w-[24rem] md:min-w-[29rem] max-h-[95vh]">
+    <div className="flex flex-col justify-center items-center gap-4 2xl:gap-6 px-8 py-3 text-n-1 w-full min-w-[24rem] md:min-w-[29rem] max-h-[95vh]">
       <div className="flex flex-col justify-center mb-3 w-full">
         <h4 className="h4 font-medium">Get Started Now</h4>
         <p className="body-2 font-normal">
@@ -105,8 +105,8 @@ export const RightSide: FC<RightSideProps> = (): JSX.Element => {
           Register
         </Button>
       </form>
-      <div className="w-full flex items-center justify-center">
-        <p className="text-n-1">
+      <div className="w-full flex items-center justify-center -mt-2">
+        <p className="text-n-1 text-sm">
           Already a member?{" "}
           <Link
             to="/login"

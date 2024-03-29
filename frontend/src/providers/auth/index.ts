@@ -16,6 +16,7 @@ type AuthCredentials = {
 };
 type LoginParams = {
   email: string;
+  password: string;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type OnErrorParams = any;
@@ -43,7 +44,10 @@ export const authProvider: AuthBindings = {
    * @param {LoginParams} params
    * @returns {Promise<AuthActionResponse>}
    */
-  login: async ({ email }: LoginParams): Promise<AuthActionResponse> => {
+  login: async ({
+    email,
+    password,
+  }: LoginParams): Promise<AuthActionResponse> => {
     try {
       /**
        * Call the login mutation
@@ -57,12 +61,24 @@ export const authProvider: AuthBindings = {
         method: "post",
         headers: {},
         meta: {
-          variables: { email },
-          // Pass the email to see if the user exists and if so, return the accessToken
+          variables: {
+            loginInput: {
+              usernameOrEmail: email,
+              password: password,
+            },
+          },
           rawQuery: `
-            mutation Login($email: String!) {
-              login(loginInput: { email: $email }) {
+            mutation Login($loginInput: LoginInput!) {
+              login(loginInput: $loginInput) {
                 accessToken
+                refreshToken
+                user {
+                  id
+                  username
+                  connection {
+                    email
+                  }
+                }
               }
             }
           `,
@@ -74,7 +90,7 @@ export const authProvider: AuthBindings = {
 
       return {
         success: true,
-        redirectTo: "/",
+        redirectTo: "/dashboard",
       };
     } catch (e) {
       const error = e as Error;
@@ -82,8 +98,8 @@ export const authProvider: AuthBindings = {
       return {
         success: false,
         error: {
-          message: "message" in error ? error.message : "Login failed",
-          name: "name" in error ? error.name : "Invalid email or password",
+          message: "message" in error ? error.message : "Login Error",
+          name: "name" in error ? error.name : "Invalid credentials",
         },
       };
     }

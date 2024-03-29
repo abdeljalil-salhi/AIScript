@@ -96,8 +96,8 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
         >
           New account
         </Link>
-        <Button className="hidden lg:flex" href="#login">
-          Sign in
+        <Button className="hidden lg:flex" href="/login">
+          Log in
         </Button>
         <Button
           className="ml-auto lg:hidden"

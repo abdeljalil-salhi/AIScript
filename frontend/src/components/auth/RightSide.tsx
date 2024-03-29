@@ -2,13 +2,18 @@
 import { FC, FormEvent } from "react";
 import { Link } from "react-router-dom";
 
+// Assets
+import { brainwave, heroBackground } from "@/assets";
 // Constants
 import { OAuthProviders } from "@/constants";
 import { OAuthProvider } from "@/constants/types";
+// Components
 import { Button } from "../Button";
 
 // Interfaces
-interface RightSideProps {}
+interface RightSideProps {
+  page: "login" | "register";
+}
 interface FormInput {
   id: string;
   label: string;
@@ -23,13 +28,13 @@ interface FormInput {
  * @returns {JSX.Element} - RightSide Component
  * @exports RightSide
  */
-export const RightSide: FC<RightSideProps> = (): JSX.Element => {
+export const RightSide: FC<RightSideProps> = ({ page }): JSX.Element => {
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
     console.log("submitted");
   };
 
-  return (
+  return page === "register" ? (
     <div className="flex flex-col justify-center items-center gap-4 2xl:gap-6 px-8 py-3 text-n-1 w-full min-w-[24rem] md:min-w-[29rem] max-h-[95vh]">
       <div className="flex flex-col justify-center mb-3 w-full">
         <h4 className="h4 font-medium">Get Started Now</h4>
@@ -45,7 +50,7 @@ export const RightSide: FC<RightSideProps> = (): JSX.Element => {
             className="text-[.8rem] px-5 py-3 bg-n-7 hover:bg-n-6 transition-all border-2 rounded-lg border-n-6 hover:border-n-5 flex items-center justify-center gap-[.6rem] text-nowrap font-medium text-n-2 hover:text-n-1"
           >
             <item.icon className="w-[1.15rem] h-[1.15rem]" />
-            Log in with {item.title}
+            Sign up with {item.title}
           </Link>
         ))}
       </div>
@@ -115,6 +120,27 @@ export const RightSide: FC<RightSideProps> = (): JSX.Element => {
             Log in
           </Link>
         </p>
+      </div>
+    </div>
+  ) : (
+    <div className="relative">
+      <img
+        src={heroBackground}
+        className="hidden min-w-[30rem] max-h-[90vh] rounded-xl object-cover lg:block"
+        alt="Authentication background"
+        draggable={false}
+      />
+      <div className="absolute top-0 left-0 right-0 bottom-0 hidden min-w-[30rem] max-h-[90vh] items-start justify-between flex-col p-10 lg:flex">
+        <img src={brainwave} alt="AIScript Logo" draggable={false} />
+        <div className="flex flex-col items-start justify-center h-full gap-7 text-n-1">
+          <h4 className="h4 font-bold">
+            Save precious time <br /> with AI writing
+          </h4>
+          <Button>Watch Demo</Button>
+        </div>
+        <Link to="/" className="body-2 hover:text-n-1">
+          Home
+        </Link>
       </div>
     </div>
   );

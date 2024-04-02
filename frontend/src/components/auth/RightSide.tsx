@@ -1,6 +1,7 @@
 // Dependencies
 import { FC, FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { useRegister } from "@refinedev/core";
 
 // Assets
 import { brainwave, heroBackground } from "@/assets";
@@ -29,9 +30,29 @@ interface FormInput {
  * @exports RightSide
  */
 export const RightSide: FC<RightSideProps> = ({ page }): JSX.Element => {
-  const handleSubmit = (e: FormEvent): void => {
+  // `useRegister` hook to register a new user, defined in the auth provider
+  const { mutate: register, isLoading } = useRegister();
+
+  /**
+   * Handle register form submission
+   * @param {FormEvent<HTMLFormElement>} e - Form event
+   */
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    // Prevent default form submission
     e.preventDefault();
-    console.log("submitted");
+
+    // Get form data
+    const formData = Object.fromEntries(
+      new FormData(e.currentTarget).entries()
+    );
+    // Filter "terms" key
+    delete formData.terms;
+
+    // Call register mutation
+    register(formData);
+
+    // Clear form
+    e.currentTarget.reset();
   };
 
   return page === "register" ? (
@@ -106,8 +127,8 @@ export const RightSide: FC<RightSideProps> = ({ page }): JSX.Element => {
             </span>
           </label>
         </div>
-        <Button white type="submit" className="mt-2">
-          Register
+        <Button white type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? "Creating your account..." : "Register"}
         </Button>
       </form>
       <div className="w-full flex items-center justify-center -mt-2">

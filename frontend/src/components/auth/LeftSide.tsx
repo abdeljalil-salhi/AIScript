@@ -1,6 +1,7 @@
 // Dependencies
 import { FC, FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { useLogin } from "@refinedev/core";
 
 // Assets
 import { brainwave, heroBackground } from "@/assets";
@@ -29,9 +30,29 @@ interface FormInput {
  * @exports LeftSide
  */
 export const LeftSide: FC<LeftSideProps> = ({ page }): JSX.Element => {
-  const handleSubmit = (e: FormEvent): void => {
+  // `useLogin` hook to log in a user, defined in the auth provider
+  const { mutate: login, isLoading } = useLogin();
+
+  /**
+   * Handle login form submission
+   * @param {FormEvent<HTMLFormElement>} e - Form event
+   */
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    // Prevent default form submission
     e.preventDefault();
-    console.log("submitted");
+
+    // Get form data
+    const formData = Object.fromEntries(
+      new FormData(e.currentTarget).entries()
+    );
+    // Filter "remember" key
+    delete formData.remember;
+
+    // Call login mutation
+    login(formData);
+
+    // Clear form
+    e.currentTarget.reset();
   };
 
   return page === "register" ? (
@@ -102,7 +123,6 @@ export const LeftSide: FC<LeftSideProps> = ({ page }): JSX.Element => {
               className="w-4 h-4 accent-n-9/80 focus:accent-n-9/80"
               name="remember"
               id="remember"
-              required
             />
             <span className="ml-2 text-n-1">Remember me</span>
           </label>
@@ -115,8 +135,8 @@ export const LeftSide: FC<LeftSideProps> = ({ page }): JSX.Element => {
             </Link>
           </p>
         </div>
-        <Button white type="submit" className="mt-2">
-          Log in
+        <Button white type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? "Logging in..." : "Log in"}
         </Button>
       </form>
       <div className="w-full flex items-center justify-center">

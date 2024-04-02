@@ -5,6 +5,13 @@ import { Field, ObjectType } from '@nestjs/graphql';
 // Entities
 import { User } from 'src/user/entities/user.entity';
 
+/**
+ * Represents the response after a user's authentication operation.
+ *
+ * @export
+ * @class AuthResponse
+ * @module AuthModule
+ */
 @ObjectType()
 export class AuthResponse {
   /**

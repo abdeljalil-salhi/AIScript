@@ -14,6 +14,7 @@ interface ButtonProps {
   px?: string;
   white?: boolean;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 /**
@@ -31,6 +32,7 @@ export const Button: FC<ButtonProps> = ({
   px,
   white,
   type,
+  disabled = false,
 }: ButtonProps): JSX.Element => {
   const classes = `button relative inline-flex items-center justify-center h-11 transition-colors hover:text-color-1 ${
     px || "px-7"
@@ -44,6 +46,7 @@ export const Button: FC<ButtonProps> = ({
       onClick={onClick}
       draggable={false}
       type={type || "button"}
+      disabled={disabled}
     >
       <span className={spanClasses}>{children}</span>
       {ButtonSvg({ white })}

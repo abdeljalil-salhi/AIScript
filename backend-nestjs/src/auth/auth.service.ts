@@ -16,6 +16,7 @@ import { User } from 'src/user/entities/user.entity';
 import { AuthResponse } from './dtos/auth.response';
 import { LoginInput } from './dtos/login.input';
 import { LogoutResponse } from './dtos/logout.response';
+import { MeResponse } from './dtos/me.response';
 import { NewTokensResponse } from './dtos/new-tokens.response';
 import { RegisterInput } from './dtos/register.input';
 
@@ -170,6 +171,37 @@ export class AuthService {
     // Return response indicating that the user has been logged out successfully
     return {
       isLoggedOut: true,
+    };
+  }
+
+  /**
+   * Returns the currently authenticated user.
+   *
+   * @param {string} userId - The ID of the current user.
+   * @returns {Promise<MeResponse>} - The currently authenticated user.
+   * @throws {NotFoundException} - Thrown if the user is not found.
+   * @throws {ForbiddenException} - Thrown if the user is not logged in.
+   */
+  public async me(userId: string): Promise<MeResponse> {
+    /**
+     * Find the user with the specified ID.
+     * If the user is not found, throw a NotFoundException.
+     * Otherwise, continue with the user details retrieval process.
+     */
+    const user: User = await this.userService
+      .findById(userId)
+      .then((user: User) => {
+        if (!user) throw new NotFoundException('User not found');
+        return user;
+      });
+
+    // If the user does not have a refresh token, invalidate the user's session
+    // It means the user is not logged in
+    if (!user.refreshToken) throw new ForbiddenException('Session logged out');
+
+    // Return the user details
+    return {
+      user,
     };
   }
 

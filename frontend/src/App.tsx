@@ -1,12 +1,13 @@
 // Dependencies
 import routerBindings, {
+  CatchAllNavigate,
   DocumentTitleHandler,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import { FC } from "react";
 import { App as AntdApp } from "antd";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { Refine } from "@refinedev/core";
+import { Authenticated, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import { useNotificationProvider } from "@refinedev/antd";
@@ -18,7 +19,9 @@ import { ColorModeContextProvider } from "./contexts/color-mode";
 // Providers
 import { authProvider, dataProvider, liveProvider } from "./providers";
 // Pages
+import { DashboardPage } from "./pages/dashboard";
 import { LandingPage } from "./pages/landing";
+import { LoadingPage } from "./pages/loading";
 import { LoginPage } from "./pages/login";
 import { RegisterPage } from "./pages/register";
 
@@ -58,6 +61,19 @@ export const App: FC<AppProps> = (): JSX.Element => {
                   <Route index element={<LandingPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/login" element={<LoginPage />} />
+                  <Route
+                    element={
+                      <Authenticated
+                        key={"authenticated-layout"}
+                        loading={<LoadingPage />}
+                        fallback={<CatchAllNavigate to="/login" />}
+                      >
+                        <DashboardPage />
+                      </Authenticated>
+                    }
+                  >
+                    <Route path="/dashboard" element={<DashboardPage />} />
+                  </Route>
                 </Routes>
                 <RefineKbar />
                 <UnsavedChangesNotifier />

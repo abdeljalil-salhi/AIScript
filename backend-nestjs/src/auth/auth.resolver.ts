@@ -1,6 +1,6 @@
 // Dependencies
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 // Services
 import { AuthService } from './auth.service';
@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { AuthResponse } from './dtos/auth.response';
 import { LoginInput } from './dtos/login.input';
 import { LogoutResponse } from './dtos/logout.response';
+import { MeResponse } from './dtos/me.response';
 import { NewTokensResponse } from './dtos/new-tokens.response';
 import { RegisterInput } from './dtos/register.input';
 // Decorators
@@ -85,9 +86,25 @@ export class AuthResolver {
     name: 'logout',
     description: 'Logs out a user with the specified user ID.',
   })
-  public async logout(@Args('userId') userId: string): Promise<LogoutResponse> {
+  public async logout(
+    @CurrentUserId() userId: string,
+  ): Promise<LogoutResponse> {
     // Invalidate refresh tokens and log the user out
     return this.authService.logout(userId);
+  }
+
+  /**
+   * Returns the currently authenticated user.
+   *
+   * @param {string} userId - The ID of the current user.
+   * @returns {Promise<MeResponse>} - The currently authenticated user.
+   */
+  @Query(() => MeResponse, {
+    name: 'me',
+    description: 'Returns the currently authenticated user.',
+  })
+  public async me(@CurrentUserId() userId: string): Promise<MeResponse> {
+    return this.authService.me(userId);
   }
 
   /**

@@ -92,12 +92,17 @@ type LogoutResponse {
   isLoggedOut: Boolean!
 }
 
+type MeResponse {
+  """User details"""
+  user: User!
+}
+
 type Mutation {
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
 
   """Logs out a user with the specified user ID."""
-  logout(userId: String!): LogoutResponse!
+  logout: LogoutResponse!
 
   """Generates new access and refresh tokens for a user."""
   refresh: NewTokensResponse!
@@ -117,6 +122,9 @@ type NewTokensResponse {
 type Query {
   """A simple hello world query to test the GraphQL API."""
   hello: String!
+
+  """Returns the currently authenticated user."""
+  me: MeResponse!
 }
 
 input RegisterInput {

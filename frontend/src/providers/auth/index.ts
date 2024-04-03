@@ -12,10 +12,11 @@ import { API_URL, dataProvider } from "../data";
 // Types
 type AuthCredentials = {
   email: string;
+  username: string;
   password: string;
 };
 type LoginParams = {
-  email: string;
+  usernameOrEmail: string;
   password: string;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,8 +27,8 @@ type OnErrorParams = any;
  * @type {AuthCredentials}
  * @exports authCredentials
  */
-export const authCredentials: AuthCredentials = {
-  email: "demo@aiscript.com",
+export const loginCredentials: LoginParams = {
+  usernameOrEmail: "demo@aiscript.com",
   password: "demodemo",
 };
 
@@ -39,13 +40,103 @@ export const authCredentials: AuthCredentials = {
  */
 export const authProvider: AuthBindings = {
   /**
+   * This function is called when the user submits the register form
+   *
+   * @param {AuthCredentials} params
+   * @returns {Promise<AuthActionResponse>}
+   */
+  register: async ({
+    email,
+    username,
+    password,
+  }: AuthCredentials): Promise<AuthActionResponse> => {
+    try {
+      /**
+       * Call the register mutation
+       * `dataProvider.custom` is used to make a custom request to the GraphQL API
+       * This will call `dataProvider` which will go through the `fetchWrapper` function
+       *
+       * @see dataProvider.custom
+       */
+      const { data } = await dataProvider.custom({
+        url: API_URL,
+        method: "post",
+        headers: {},
+        meta: {
+          variables: {
+            registerInput: {
+              email,
+              username,
+              password,
+              filename: "default.png",
+            },
+          },
+          rawQuery: `
+            mutation Register($registerInput: RegisterInput!) {
+              register(registerInput: $registerInput) {
+                accessToken
+                refreshToken
+                user {
+                  id
+                  username
+                  isAdmin
+                  connection {
+                    email
+                    isEmailVerified
+                    is2faEnabled
+                    provider
+                    otpCreatedAt
+                  }
+                  avatar {
+                    defaultFilename
+                    filename
+                    updatedAt
+                  }
+                  wallet {
+                    balance
+                    updatedAt
+                  }
+                  createdAt
+                  updatedAt
+                }
+              }
+            }
+            `,
+        },
+      });
+
+      // Save the accessToken in localStorage
+      localStorage.setItem("access_token", data.register.accessToken);
+
+      return {
+        success: true,
+        redirectTo: "/dashboard",
+      };
+    } catch (e) {
+      const error = e as Error;
+
+      console.error(error);
+
+      return {
+        success: false,
+        error: {
+          message: "Something went wrong",
+          name: error.message.includes("Unique constraint failed on the fields")
+            ? "Email or username already exists"
+            : "User registration failed",
+        },
+      };
+    }
+  },
+
+  /**
    * This function is called when the user submits the login form
    *
    * @param {LoginParams} params
    * @returns {Promise<AuthActionResponse>}
    */
   login: async ({
-    email,
+    usernameOrEmail,
     password,
   }: LoginParams): Promise<AuthActionResponse> => {
     try {
@@ -63,8 +154,8 @@ export const authProvider: AuthBindings = {
         meta: {
           variables: {
             loginInput: {
-              usernameOrEmail: email,
-              password: password,
+              usernameOrEmail,
+              password,
             },
           },
           rawQuery: `
@@ -75,9 +166,25 @@ export const authProvider: AuthBindings = {
                 user {
                   id
                   username
+                  isAdmin
                   connection {
                     email
+                    isEmailVerified
+                    is2faEnabled
+                    provider
+                    otpCreatedAt
                   }
+                  avatar {
+                    defaultFilename
+                    filename
+                    updatedAt
+                  }
+                  wallet {
+                    balance
+                    updatedAt
+                  }
+                  createdAt
+                  updatedAt
                 }
               }
             }
@@ -98,8 +205,8 @@ export const authProvider: AuthBindings = {
       return {
         success: false,
         error: {
-          message: "message" in error ? error.message : "Login Error",
-          name: "name" in error ? error.name : "Invalid credentials",
+          message: "Something went wrong",
+          name: "message" in error ? error.message : "Login Error",
         },
       };
     }
@@ -112,6 +219,23 @@ export const authProvider: AuthBindings = {
   logout: async (): Promise<AuthActionResponse> => {
     // Simply remove the accessToken from localStorage to logout the user
     localStorage.removeItem("access_token");
+
+    // Call the logout mutation\
+    // This is to logout the user from the server
+    await dataProvider.custom({
+      url: API_URL,
+      method: "post",
+      headers: {},
+      meta: {
+        rawQuery: `
+          mutation Logout {
+            logout {
+              isLoggedOut
+            }
+          }
+        `,
+      },
+    });
 
     return {
       success: true,
@@ -130,7 +254,8 @@ export const authProvider: AuthBindings = {
     if (error.statusCode === "UNAUTHENTICATED")
       return {
         logout: true,
-        ...error,
+        redirectTo: "/login",
+        error,
       };
 
     return { error };
@@ -152,17 +277,39 @@ export const authProvider: AuthBindings = {
           rawQuery: `
             query Me {
               me {
-                name
+                user {
+                  id
+                  username
+                  isAdmin
+                  connection {
+                    email
+                    isEmailVerified
+                    is2faEnabled
+                    provider
+                    otpCreatedAt
+                  }
+                  avatar {
+                    defaultFilename
+                    filename
+                    updatedAt
+                  }
+                  wallet {
+                    balance
+                    updatedAt
+                  }
+                  createdAt
+                  updatedAt
+                }
               }
             }
           `,
         },
       });
 
-      // If the user is authenticated, redirect to the home page
+      // If the user is authenticated, redirect to the dashboard
       return {
         authenticated: true,
-        redirectTo: "/",
+        redirectTo: "/dashboard",
       };
     } catch (error) {
       // For testing purposes, if the user is using the test credentials, redirect to the home page
@@ -177,6 +324,11 @@ export const authProvider: AuthBindings = {
       return {
         authenticated: false,
         redirectTo: "/login",
+        logout: true,
+        error: {
+          message: "You need to login to access this page",
+          name: "Unauthorized",
+        },
       };
     }
   },
@@ -204,17 +356,33 @@ export const authProvider: AuthBindings = {
             }
           : {},
         meta: {
-          // Get the user information such as name, email, etc.
+          // Get the user information such as id, username, email, etc.
           rawQuery: `
             query Me {
               me {
-                id
-                name
-                email
-                phone
-                jobTitle
-                timezone
-                avatarUrl
+                user {
+                  id
+                  username
+                  isAdmin
+                  connection {
+                    email
+                    isEmailVerified
+                    is2faEnabled
+                    provider
+                    otpCreatedAt
+                  }
+                  avatar {
+                    defaultFilename
+                    filename
+                    updatedAt
+                  }
+                  wallet {
+                    balance
+                    updatedAt
+                  }
+                  createdAt
+                  updatedAt
+                }
               }
             }
           `,
@@ -225,5 +393,29 @@ export const authProvider: AuthBindings = {
     } catch (error) {
       return undefined;
     }
+  },
+
+  /**
+   * This function is called to get the user permissions
+   * @returns {Promise<unknown>}
+   */
+  getPermissions: async (): Promise<unknown> => {
+    throw new Error("Method not implemented.");
+  },
+
+  /**
+   * This function is called when the user clicks the forgot password button
+   * @returns {Promise<AuthActionResponse>}
+   */
+  forgotPassword: async (): Promise<AuthActionResponse> => {
+    throw new Error("Method not implemented.");
+  },
+
+  /**
+   * This function is called when the user submits the reset password form
+   * @returns {Promise<AuthActionResponse>}
+   */
+  updatePassword: async (): Promise<AuthActionResponse> => {
+    throw new Error("Method not implemented.");
   },
 };

@@ -394,4 +394,28 @@ export const authProvider: AuthBindings = {
       return undefined;
     }
   },
+
+  /**
+   * This function is called to get the user permissions
+   * @returns {Promise<unknown>}
+   */
+  getPermissions: async (): Promise<unknown> => {
+    throw new Error("Method not implemented.");
+  },
+
+  /**
+   * This function is called when the user clicks the forgot password button
+   * @returns {Promise<AuthActionResponse>}
+   */
+  forgotPassword: async (): Promise<AuthActionResponse> => {
+    throw new Error("Method not implemented.");
+  },
+
+  /**
+   * This function is called when the user submits the reset password form
+   * @returns {Promise<AuthActionResponse>}
+   */
+  updatePassword: async (): Promise<AuthActionResponse> => {
+    throw new Error("Method not implemented.");
+  },
 };

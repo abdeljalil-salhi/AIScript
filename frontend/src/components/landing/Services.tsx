@@ -2,9 +2,9 @@
 import { FC } from "react";
 
 // Constants
-import { brainwaveServices, brainwaveServicesIcons } from "../constants";
+import { brainwaveServices, brainwaveServicesIcons } from "@/constants";
 // Assets
-import { check, service1, service2, service3 } from "../assets";
+import { check, service1, service2, service3 } from "@/assets";
 // Components
 import { Generating } from "./Generating";
 import { Heading } from "./Heading";

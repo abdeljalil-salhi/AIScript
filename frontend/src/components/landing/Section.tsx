@@ -2,7 +2,7 @@
 import { FC, ReactNode } from "react";
 
 // SVGs
-import { SectionSvg } from "../assets/svg/SectionSvg";
+import { SectionSvg } from "@/assets/svg/SectionSvg";
 
 // Interfaces
 interface SectionProps {

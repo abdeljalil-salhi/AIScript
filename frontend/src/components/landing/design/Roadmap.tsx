@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { gradient } from "../../assets";
+import { gradient } from "@/assets";
 
 // Interfaces
 interface GradientProps {}

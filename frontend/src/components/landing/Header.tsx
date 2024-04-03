@@ -4,14 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
 // Assets
-import { brainwave } from "../assets";
+import { brainwave } from "@/assets";
 
 // Constants
-import { navigations } from "../constants";
-import { Navigation } from "../constants/types";
+import { navigations } from "@/constants";
+import { Navigation } from "@/constants/types";
 
 // SVGs
-import { MenuSvg } from "../assets/svg/MenuSvg";
+import { MenuSvg } from "@/assets/svg/MenuSvg";
 
 // Components
 import { Button } from "./Button";

@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { curve1, curve2 } from "../../assets";
+import { curve1, curve2 } from "@/assets";
 
 // Interfaces
 interface RightCurveProps {}

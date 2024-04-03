@@ -3,7 +3,7 @@ import { ReactNode, FC } from "react";
 import { Link } from "react-router-dom";
 
 // SVGs
-import { ButtonSvg } from "../assets/svg/ButtonSvg";
+import { ButtonSvg } from "@/assets/svg/ButtonSvg";
 
 // Interfaces
 interface ButtonProps {

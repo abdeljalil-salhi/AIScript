@@ -2,9 +2,9 @@
 import { FC } from "react";
 
 // Assets
-import { brainwaveWhiteSymbol, gradient, play } from "../../assets";
+import { brainwaveWhiteSymbol, gradient, play } from "@/assets";
 // SVGs
-import { ChatBubbleWing } from "../../assets/svg/ChatBubbleWing";
+import { ChatBubbleWing } from "@/assets/svg/ChatBubbleWing";
 
 // Interfaces
 interface GradientProps {}

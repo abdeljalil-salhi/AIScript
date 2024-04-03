@@ -2,9 +2,9 @@
 import { FC } from "react";
 
 // Constants
-import { roadmap } from "../constants";
+import { roadmap } from "@/constants";
 // Assets
-import { check2, grid, loading1 } from "../assets";
+import { check2, grid, loading1 } from "@/assets";
 // Components
 import { Gradient } from "./design/Roadmap";
 import { Button } from "./Button";

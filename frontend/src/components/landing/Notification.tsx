@@ -2,10 +2,10 @@
 import { FC } from "react";
 
 // Assets
-import { notification1 } from "../assets";
+import { notification1 } from "@/assets";
 
 // Constants
-import { notificationImages } from "../constants";
+import { notificationImages } from "@/constants";
 
 // Interfaces
 interface NotificationProps {

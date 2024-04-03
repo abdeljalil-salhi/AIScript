@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 
 // Assets
-import { smallSphere, stars } from "../assets";
+import { smallSphere, stars } from "@/assets";
 // Components
 import { LeftLine, RightLine } from "./design/Pricing";
 import { Heading } from "./Heading";

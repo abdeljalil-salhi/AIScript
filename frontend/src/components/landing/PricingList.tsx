@@ -2,10 +2,10 @@
 import { FC } from "react";
 
 // Constants
-import { pricing } from "../constants";
+import { pricing } from "@/constants";
 // Components
 import { Button } from "./Button";
-import { check } from "../assets";
+import { check } from "@/assets";
 
 // Interfaces
 interface PricingListProps {}

@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { background } from "../../assets";
+import { background } from "@/assets";
 
 /**
  * Rings component

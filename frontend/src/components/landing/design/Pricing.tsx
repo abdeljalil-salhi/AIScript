@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { lines } from "../../assets";
+import { lines } from "@/assets";
 
 // Interfaces
 interface LeftLineProps {}

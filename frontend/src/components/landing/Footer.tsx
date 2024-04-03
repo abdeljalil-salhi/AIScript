@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 
 // Constants
-import { socials } from "../constants";
+import { socials } from "@/constants";
 // Components
 import { Section } from "./Section";
 

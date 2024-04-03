@@ -3,7 +3,7 @@ import { FC, RefObject, useEffect, useState } from "react";
 import { MouseParallax } from "react-just-parallax";
 
 // SVGs
-import { PlusSvg } from "../../assets/svg/PlusSvg";
+import { PlusSvg } from "@/assets/svg/PlusSvg";
 
 // Interfaces
 interface GradientProps {}

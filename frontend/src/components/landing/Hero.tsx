@@ -3,10 +3,10 @@ import { FC, useRef } from "react";
 import { ScrollParallax } from "react-just-parallax";
 
 // Assets
-import { curve, heroBackground, robot } from "../assets";
+import { curve, heroBackground, robot } from "@/assets";
 
 // Constants
-import { heroIcons } from "../constants";
+import { heroIcons } from "@/constants";
 
 // Components
 import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";

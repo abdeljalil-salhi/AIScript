@@ -2,10 +2,10 @@
 import { FC } from "react";
 
 // Constants
-import { benefits } from "../constants";
+import { benefits } from "@/constants";
 // SVGs
-import { Arrow } from "../assets/svg/Arrow";
-import { ClipPath } from "../assets/svg/ClipPath";
+import { Arrow } from "@/assets/svg/Arrow";
+import { ClipPath } from "@/assets/svg/ClipPath";
 // Components
 import { GradientLight } from "./design/Benefits";
 import { Heading } from "./Heading";

@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { loading } from "../assets";
+import { loading } from "@/assets";
 
 // Interfaces
 interface GeneratingProps {

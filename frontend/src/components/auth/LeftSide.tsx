@@ -10,7 +10,7 @@ import { brainwave, heroBackground } from "@/assets";
 import { OAuthProviders } from "@/constants";
 import { OAuthProvider } from "@/constants/types";
 // Components
-import { Button } from "../Button";
+import { Button } from "../landing/Button";
 
 // Interfaces
 interface LeftSideProps {

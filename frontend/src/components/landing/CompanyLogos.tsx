@@ -1,6 +1,6 @@
 // Dependencies
 import { FC } from "react";
-import { companyLogos } from "../constants";
+import { companyLogos } from "@/constants";
 
 // Interfaces
 interface CompanyLogosProps {

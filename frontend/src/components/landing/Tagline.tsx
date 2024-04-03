@@ -2,7 +2,7 @@
 import { FC, ReactNode } from "react";
 
 // SVGs
-import { Brackets } from "../assets/svg/Brackets";
+import { Brackets } from "@/assets/svg/Brackets";
 
 // Interfaces
 interface TaglineProps {

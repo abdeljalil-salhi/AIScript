@@ -2,9 +2,9 @@
 import { FC } from "react";
 
 // Assets
-import { brainwaveSymbol, check } from "../assets";
+import { brainwaveSymbol, check } from "@/assets";
 // Constants
-import { collabApps, collabContent, collabText } from "../constants";
+import { collabApps, collabContent, collabText } from "@/constants";
 // Components
 import { LeftCurve, RightCurve } from "./design/Collaboration";
 import { Button } from "./Button";

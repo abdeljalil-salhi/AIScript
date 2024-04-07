@@ -217,11 +217,8 @@ export const authProvider: AuthBindings = {
    * @returns {Promise<AuthActionResponse>}
    */
   logout: async (): Promise<AuthActionResponse> => {
-    // Simply remove the accessToken from localStorage to logout the user
-    localStorage.removeItem("access_token");
-
-    // Call the logout mutation\
-    // This is to logout the user from the server
+    // Call the logout mutation;
+    // This is to log out the user from the server
     await dataProvider.custom({
       url: API_URL,
       method: "post",
@@ -236,6 +233,9 @@ export const authProvider: AuthBindings = {
         `,
       },
     });
+
+    // Then remove the accessToken from localStorage
+    localStorage.removeItem("access_token");
 
     return {
       success: true,

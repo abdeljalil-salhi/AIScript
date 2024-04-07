@@ -12,5 +12,5 @@ interface DashboardPageProps {}
  * @exports DashboardPage
  */
 export const DashboardPage: FC<DashboardPageProps> = (): JSX.Element => {
-  return <div>Hello, World!</div>;
+  return <div className="bg-n-8" >Hello, World!</div>;
 };

@@ -1,6 +1,9 @@
 // Dependencies
 import { FC } from "react";
 
+/**
+ * General Interfaces
+ */
 export interface Navigation {
   id: string;
   title: string;
@@ -8,9 +11,21 @@ export interface Navigation {
   onlyMobile?: boolean;
 }
 
+/**
+ * Authentication Interfaces
+ */
 export interface OAuthProvider {
   id: string;
   title: string;
   href: string;
   icon: FC<{ className?: string }>;
+}
+
+/**
+ * Sidebar Interfaces
+ */
+export interface NavigationLink {
+  id: string;
+  title: string;
+  href: string;
 }

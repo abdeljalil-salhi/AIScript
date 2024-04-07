@@ -6,7 +6,12 @@ import routerBindings, {
 } from "@refinedev/react-router-v6";
 import { FC } from "react";
 import { App as AntdApp } from "antd";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Outlet,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import { Authenticated, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
@@ -18,6 +23,8 @@ import { resources } from "./config/resources";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 // Providers
 import { authProvider, dataProvider, liveProvider } from "./providers";
+// Components
+import { Layout } from "./components/layout";
 // Pages
 import { DashboardPage } from "./pages/dashboard";
 import { LandingPage } from "./pages/landing";
@@ -68,7 +75,9 @@ export const App: FC<AppProps> = (): JSX.Element => {
                         loading={<LoadingPage />}
                         fallback={<CatchAllNavigate to="/login" />}
                       >
-                        <DashboardPage />
+                        <Layout>
+                          <Outlet />
+                        </Layout>
                       </Authenticated>
                     }
                   >

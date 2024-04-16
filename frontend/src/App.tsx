@@ -26,10 +26,14 @@ import { authProvider, dataProvider, liveProvider } from "./providers";
 // Components
 import { Layout } from "./components/layout";
 // Pages
+import { CreatePage } from "./pages/create";
 import { DashboardPage } from "./pages/dashboard";
 import { LandingPage } from "./pages/landing";
+import { LibraryPage } from "./pages/library";
 import { LoadingPage } from "./pages/loading";
 import { LoginPage } from "./pages/login";
+import { PricingPage } from "./pages/pricing";
+import { ProfilePage } from "./pages/profile";
 import { RegisterPage } from "./pages/register";
 
 // Interfaces
@@ -82,6 +86,10 @@ export const App: FC<AppProps> = (): JSX.Element => {
                     }
                   >
                     <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/create" element={<CreatePage />} />
+                    <Route path="/library" element={<LibraryPage />} />
+                    <Route path="/pricing" element={<PricingPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                   </Route>
                 </Routes>
                 <RefineKbar />

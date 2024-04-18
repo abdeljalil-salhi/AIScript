@@ -4,8 +4,8 @@ import { NavigationLink } from "./types";
 export const navigationLinks: NavigationLink[] = [
   {
     id: "0",
-    title: "Dashboard",
-    href: "/dashboard",
+    title: "Home",
+    href: "/home",
   },
   {
     id: "1",

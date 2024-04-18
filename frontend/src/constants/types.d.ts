@@ -29,3 +29,11 @@ export interface NavigationLink {
   title: string;
   href: string;
 }
+
+/**
+ * Home Interfaces
+ */
+export interface Suggestion {
+  id: string;
+  content: string;
+}

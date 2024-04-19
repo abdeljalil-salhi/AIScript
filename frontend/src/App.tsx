@@ -27,7 +27,7 @@ import { authProvider, dataProvider, liveProvider } from "./providers";
 import { Layout } from "./components/layout";
 // Pages
 import { CreatePage } from "./pages/create";
-import { DashboardPage } from "./pages/dashboard";
+import { HomePage } from "./pages/home";
 import { LandingPage } from "./pages/landing";
 import { LibraryPage } from "./pages/library";
 import { LoadingPage } from "./pages/loading";
@@ -85,7 +85,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
                       </Authenticated>
                     }
                   >
-                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/home" element={<HomePage />} />
                     <Route path="/create" element={<CreatePage />} />
                     <Route path="/library" element={<LibraryPage />} />
                     <Route path="/pricing" element={<PricingPage />} />

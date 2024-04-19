@@ -29,3 +29,18 @@ export interface NavigationLink {
   title: string;
   href: string;
 }
+
+/**
+ * Home Interfaces
+ */
+export interface Suggestion {
+  id: string;
+  content: string;
+}
+export interface ShowcaseItem {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  imageUrl: string;
+}

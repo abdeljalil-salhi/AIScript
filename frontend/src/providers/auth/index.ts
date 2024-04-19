@@ -110,7 +110,7 @@ export const authProvider: AuthBindings = {
 
       return {
         success: true,
-        redirectTo: "/dashboard",
+        redirectTo: "/home",
       };
     } catch (e) {
       const error = e as Error;
@@ -197,7 +197,7 @@ export const authProvider: AuthBindings = {
 
       return {
         success: true,
-        redirectTo: "/dashboard",
+        redirectTo: "/home",
       };
     } catch (e) {
       const error = e as Error;
@@ -306,10 +306,10 @@ export const authProvider: AuthBindings = {
         },
       });
 
-      // If the user is authenticated, redirect to the dashboard
+      // If the user is authenticated, redirect to the home page
       return {
         authenticated: true,
-        redirectTo: "/dashboard",
+        redirectTo: "/home",
       };
     } catch (error) {
       // For testing purposes, if the user is using the test credentials, redirect to the home page

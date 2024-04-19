@@ -66,13 +66,13 @@ export const navigations: Navigation[] = [
   {
     id: "4",
     title: "New account",
-    url: "#signup",
+    url: "/register",
     onlyMobile: true,
   },
   {
     id: "5",
     title: "Sign in",
-    url: "#login",
+    url: "/login",
     onlyMobile: true,
   },
 ];

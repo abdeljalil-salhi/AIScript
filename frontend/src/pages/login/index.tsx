@@ -26,9 +26,9 @@ export const LoginPage: FC<LoginPageProps> = (): JSX.Element => {
   // The `useIsAuthenticated` hook is used to check if the user is authenticated or not.
   const { data: auth, isLoading } = useIsAuthenticated();
 
-  // If the user is authenticated and the page is not loading, redirect the user to the dashboard.
+  // If the user is authenticated and the page is not loading, redirect the user to the home page.
   if (auth?.authenticated && !isLoading) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/home" />;
   }
 
   return (

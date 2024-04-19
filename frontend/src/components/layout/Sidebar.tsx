@@ -61,7 +61,7 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
         },
       }}
     >
-      <nav className="flex flex-col items-center justify-between py-6 px-2 sticky t-0 l-0 h-screen z-[9] bg-n-7 min-w-[10rem]">
+      <nav className="flex flex-col items-center justify-between py-6 px-2 sticky top-0 left-0 h-screen z-[9] bg-n-7 min-w-[10rem]">
         <div className="w-full">
           <img
             src={Logo}
@@ -74,7 +74,7 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
               <Link to={item.href} key={item.id} draggable={false}>
                 <Button
                   type="text"
-                  className="text-start text-base font-grotesk"
+                  className="text-start text-base font-['Poppins']"
                   block
                 >
                   {item.title}

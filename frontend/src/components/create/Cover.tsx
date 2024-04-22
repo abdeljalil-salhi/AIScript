@@ -41,18 +41,18 @@ export const Cover: FC<CoverProps> = (): JSX.Element => {
       </label>
       {aiCover ? (
         <div className="w-full">
-          <Row gutter={[32, 0]}>
-            <Col xs={8} sm={8} xl={8}>
+          <Row gutter={[10, 10]}>
+            <Col xs={24} sm={8} xl={8}>
               <div className="flex flex-row gap-3 items-center justify-center bg-n-7 rounded-lg w-full aspect-square p-4 shadow-md cursor-pointer hover:shadow-lg">
                 <div className="text-base">Cover 1</div>
               </div>
             </Col>
-            <Col xs={8} sm={8} xl={8}>
+            <Col xs={24} sm={8} xl={8}>
               <div className="flex flex-row gap-3 items-center justify-center bg-n-7 rounded-lg w-full aspect-square p-4 shadow-md cursor-pointer hover:shadow-lg">
                 <div className="text-base">Cover 2</div>
               </div>
             </Col>
-            <Col xs={8} sm={8} xl={8}>
+            <Col xs={24} sm={8} xl={8}>
               <div className="flex flex-row gap-3 items-center justify-center bg-n-7 rounded-lg w-full aspect-square p-4 shadow-md cursor-pointer hover:shadow-lg">
                 <div className="text-base">Cover 3</div>
               </div>
@@ -113,6 +113,8 @@ export const Cover: FC<CoverProps> = (): JSX.Element => {
               type="file"
               className="hidden"
               onChange={handleCover}
+              accept="image/svg+xml, image/png, image/jpeg"
+              required
             />
           </label>
         </div>

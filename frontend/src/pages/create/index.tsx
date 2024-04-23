@@ -1,5 +1,9 @@
 // Dependencies
-import { FC } from 'react';
+import { FC } from "react";
+
+// Components
+import { CreateForm } from "./CreateForm";
+import { ListDisplay } from "./ListDisplay";
 
 // Interfaces
 interface CreatePageProps {}
@@ -12,9 +16,16 @@ interface CreatePageProps {}
  * @exports CreatePage
  */
 export const CreatePage: FC<CreatePageProps> = (): JSX.Element => {
-    return (
-        <div className="">
-            create page
+  return (
+    <>
+      <div className="w-full flex flex-col md:flex-row">
+        <div className="w-full md:w-2/5 min-h-0 h-[50vh] md:min-h-screen border-b md:border-r border-n-6/70 p-4 sticky md:static top-0 overflow-y-auto">
+          <CreateForm />
         </div>
-    );
+        <div className="w-full md:w-3/5 min-h-0 h-[calc(50vh-3.5rem)] md:min-h-screen sticky md:static bottom-0 overflow-y-auto">
+          <ListDisplay />
+        </div>
+      </div>
+    </>
+  );
 };

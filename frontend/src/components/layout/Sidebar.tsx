@@ -1,5 +1,5 @@
 // Dependencies
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, Button, ConfigProvider } from "antd";
 import { useLogout, useWarnAboutChange } from "@refinedev/core";
@@ -7,6 +7,8 @@ import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 
 // Assets
 import Logo from "@/assets/logo.webp";
+// Components
+import { DropdownModal } from "./DropdownModal";
 // Constants
 import { navigationLinks } from "@/constants/sidebar";
 import { NavigationLink } from "@/constants/types";
@@ -28,7 +30,18 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
    */
   const { warnWhen, setWarnWhen } = useWarnAboutChange();
 
+  /**
+   * Logout mutation hook;
+   * used to logout the user
+   */
   const { mutate: logout, isLoading } = useLogout();
+
+  /**
+   * Dropdown state to toggle the dropdown menu
+   * @type {boolean}
+   * @default false
+   */
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   /**
    * Handle logout when user clicks on the logout button
@@ -61,20 +74,22 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
         },
       }}
     >
-      <nav className="flex flex-col items-center justify-between py-6 px-2 sticky top-0 left-0 h-screen z-[9] bg-n-7 min-w-[10rem]">
-        <div className="w-full">
-          <img
-            src={Logo}
-            className="max-h-10 mb-4"
-            alt="AIScript logo"
-            draggable={false}
-          />
-          <div className="flex flex-col w-full gap-1">
+      <nav className="flex flex-row md:flex-col items-center justify-between py-0 md:py-6 px-4 md:px-2 sticky bottom-0 md:top-0 left-0 h-[3.5rem] md:h-screen z-[9] bg-n-7 min-w-0 w-screen md:w-fit md:min-w-[10rem]">
+        <div className="w-full flex flex-row md:flex-col justify-between items-center">
+          <Link to="/home" draggable={false}>
+            <img
+              src={Logo}
+              className="max-h-10 mb-0 md:mb-4"
+              alt="AIScript logo"
+              draggable={false}
+            />
+          </Link>
+          <div className="flex flex-row md:flex-col w-fit md:w-full gap-1">
             {navigationLinks.map((item: NavigationLink) => (
               <Link to={item.href} key={item.id} draggable={false}>
                 <Button
                   type="text"
-                  className="text-start text-base font-['Poppins']"
+                  className="text-start text-xs sm:text-sm md:text-base font-['Poppins']"
                   block
                 >
                   {item.title}
@@ -82,8 +97,24 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
               </Link>
             ))}
           </div>
+          <div className="relative">
+            <button
+              type="button"
+              className="flex md:hidden rounded-full focus:ring-4 focus:ring-n-6"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <span className="sr-only">Open user menu</span>
+              <Avatar className="cursor-pointer">
+                <UserOutlined />
+              </Avatar>
+            </button>
+            <DropdownModal
+              open={showDropdown}
+              onClose={() => setShowDropdown(false)}
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-8 w-full px-[15px]">
+        <div className="hidden md:flex flex-col gap-8 w-full px-[15px]">
           <div className="flex flex-col w-full">
             <Link
               to="/pricing"

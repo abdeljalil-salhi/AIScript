@@ -18,7 +18,7 @@ export const CreatePage: FC<CreatePageProps> = (): JSX.Element => {
   return (
     <>
       <div className="w-full flex flex-col md:flex-row">
-        <div className="w-full md:w-2/5 min-h-0 h-[50vh] md:min-h-screen border-b md:border-r border-n-6/70 p-4 sticky md:static top-0 overflow-y-scroll md:overflow-y-auto"
+        <div className="w-full md:w-2/5 min-h-0 h-[50vh] md:min-h-screen border-b md:border-r border-n-6/70 p-4 sticky md:static top-0 overflow-y-auto"
         >
           <CreateForm />
         </div>

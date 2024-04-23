@@ -47,9 +47,9 @@ export const CounterInput: FC<CounterInputProps> = ({
         >
           <path
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M1 1h16"
           />
         </svg>
@@ -59,6 +59,7 @@ export const CounterInput: FC<CounterInputProps> = ({
         id="bedrooms-input"
         className="bg-n-7 hover:bg-n-6 border border-n-6/70 h-11 font-medium text-center text-n-4 text-sm w-full pb-6 transition duration-300 ease-in-out outline-none focus:border-n-4"
         value={items}
+        readOnly
         required
       />
       <div className="absolute bottom-1 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 flex items-center text-xs text-n-13 space-x-1 rtl:space-x-reverse">
@@ -82,9 +83,9 @@ export const CounterInput: FC<CounterInputProps> = ({
         >
           <path
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M9 1v16M1 9h16"
           />
         </svg>

@@ -26,7 +26,7 @@ export const ChaptersAndSections: FC<
     <div className="w-full flex flex-col gap-1 mt-2 mb-2">
       <label htmlFor="bedrooms-input">Chapters and Sections</label>
       <Row gutter={[8, 8]}>
-        <Col xs={24} sm={24} xl={12}>
+        <Col xs={24} sm={12} xl={12}>
           <CounterInput
             name="chapter"
             Icon={BookFilled}
@@ -34,7 +34,7 @@ export const ChaptersAndSections: FC<
             setItems={setChapters}
           />
         </Col>
-        <Col xs={24} sm={24} xl={12}>
+        <Col xs={24} sm={12} xl={12}>
           <CounterInput
             name="section"
             Icon={BarsOutlined}

@@ -3,7 +3,7 @@ import { FC } from "react";
 
 // Components
 import { CreateForm } from "./CreateForm";
-import { ListDisplay } from "./ListDisplay";
+import { ListDisplay } from "../library/ListDisplay";
 
 // Interfaces
 interface CreatePageProps {}

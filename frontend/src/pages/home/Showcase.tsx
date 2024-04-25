@@ -1,11 +1,11 @@
 // Dependencies
 import { FC } from "react";
 import { Col, Row } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 // Constants
 import { showcaseItems } from "@/constants/home";
 import { ShowcaseItem } from "@/constants/types";
-import { UserOutlined } from "@ant-design/icons";
 
 // Interfaces
 interface ShowcaseProps {}
@@ -39,9 +39,9 @@ export const Showcase: FC<ShowcaseProps> = (): JSX.Element => {
                   draggable={false}
                 />
               </div>
-              <div className="w-full">
+              <div className="w-2/3">
                 <h3
-                  className="font-semibold text-base text-ellipsis whitespace-nowrap overflow-hidden max-w-[350px]"
+                  className="font-semibold text-base text-ellipsis whitespace-nowrap overflow-hidden"
                   title={showcaseItem.title}
                 >
                   {showcaseItem.title}
@@ -50,7 +50,7 @@ export const Showcase: FC<ShowcaseProps> = (): JSX.Element => {
                     <UserOutlined className="mr-1" />
                     {showcaseItem.author}</h4>
                 <p
-                  className="text-sm text-n-4 text-ellipsis whitespace-nowrap overflow-hidden max-w-[300px]"
+                  className="text-sm text-n-4 text-ellipsis whitespace-nowrap overflow-hidden"
                   title={showcaseItem.description}
                 >
                   {showcaseItem.description}

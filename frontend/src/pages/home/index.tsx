@@ -17,7 +17,7 @@ interface HomePageProps {}
  */
 export const HomePage: FC<HomePageProps> = (): JSX.Element => {
   return (
-    <div className="p-8 w-full flex flex-col gap-6">
+    <div className="p-4 md:p-6 w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col gap-6 overflow-y-auto">
       <Header />
       <Showcase />
     </div>

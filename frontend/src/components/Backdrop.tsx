@@ -4,7 +4,9 @@ import { FC } from "react";
 // Interfaces
 interface BackdropProps {
   onClick: () => void;
+  dark?: boolean;
   zIndex?: number;
+  mobileOnly?: boolean;
 }
 
 /**
@@ -17,11 +19,17 @@ interface BackdropProps {
  */
 export const Backdrop: FC<BackdropProps> = ({
   onClick,
+  dark = false,
   zIndex = 10,
+  mobileOnly = false,
 }): JSX.Element => {
   return (
     <div
-      className={`block md:hidden fixed top-0 left-0 bottom-0 right-0 z-${zIndex}`}
+      className={`block${
+        mobileOnly ? " md:hidden " : " "
+      }fixed top-0 left-0 bottom-0 right-0 z-${zIndex} ${
+        dark ? "bg-black/50" : ""
+      }`}
       onClick={onClick}
     ></div>
   );

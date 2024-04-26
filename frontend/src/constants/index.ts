@@ -42,6 +42,8 @@ import { Navigation } from "./types";
 // Export constants from external files
 export * from "./auth";
 
+export const defaultProfilePicture: string = "/default.png";
+
 export const navigations: Navigation[] = [
   {
     id: "0",

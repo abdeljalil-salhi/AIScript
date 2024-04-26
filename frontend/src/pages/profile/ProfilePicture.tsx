@@ -28,6 +28,7 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
 
   const handleSave = () => {
     // Save the image to the server
+    setCover("");
     alert("Image saved successfully!");
   };
 

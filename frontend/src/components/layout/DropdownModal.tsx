@@ -2,11 +2,11 @@
 import { FC } from "react";
 import { Spin } from "antd";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { useLogout, useWarnAboutChange } from "@refinedev/core";
 
 // Components
-import { Backdrop } from "./Backdrop";
-import { Link } from "react-router-dom";
+import { Backdrop } from "../Backdrop";
 
 // Interfaces
 interface DropdownModalProps {
@@ -59,7 +59,7 @@ export const DropdownModal: FC<DropdownModalProps> = ({
 
   return createPortal(
     <>
-      <Backdrop onClick={onClose} />
+      <Backdrop onClick={onClose} mobileOnly />
       <div className="z-20 block md:hidden bg-n-7 divide-y divide-n-6/70 rounded-lg shadow absolute bottom-[3.75rem] right-1">
         <div className="px-4 py-3 text-sm text-n-2">
           <Link to="/profile">

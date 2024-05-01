@@ -30,12 +30,12 @@ export const VerifyEmailModal: FC<VerifyEmailModalProps> = ({
   return createPortal(
     <>
       <Backdrop onClick={onClose} dark />
-      <div className="z-[11] absolute bg-n-7 m-auto left-0 right-0 top-0 bottom-0 w-5/6 sm:w-fit h-fit rounded-lg">
-        <div className="rounded-lg w-full sm:w-96 m-auto text-end py-4">
+      <div className="z-[11] absolute bg-n-7 m-auto left-0 right-0 top-0 bottom-0 w-11/12 sm:w-fit h-fit rounded-lg">
+        <div className="rounded-lg w-full sm:w-96 lg:w-[36rem] xl:w-[42rem] m-auto text-end py-4">
           <h1 className="text-xl font-bold w-full border-b text-center border-n-5 pb-3">
             Check your inbox
           </h1>
-          <p className="mt-2 p-4 w-full text-center">
+          <p className="mt-2 p-4 w-full text-justify">
             We are glad, that you’re with us ? We have sent you a verification
             link to the email address{" "}
             <span className="font-bold text-n-4 cursor-pointer hover:underline">

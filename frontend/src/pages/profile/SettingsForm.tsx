@@ -138,7 +138,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
               Verify email address
             </button>
             <VerifyEmailModal
-            email={identity!.user.connection!.email}
+              email={identity!.user.connection!.email}
               open={showVerifyEmailModal}
               onClose={() => setShowVerifyEmailModal(false)}
             />

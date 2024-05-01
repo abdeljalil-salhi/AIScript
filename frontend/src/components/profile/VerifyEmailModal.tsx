@@ -36,7 +36,7 @@ export const VerifyEmailModal: FC<VerifyEmailModalProps> = ({
             Check your inbox
           </h1>
           <p className="mt-2 p-4 w-full text-justify">
-            We are glad, that you’re with us ? We have sent you a verification
+            We are glad, that you&apos;re with us ? We have sent you a verification
             link to the email address{" "}
             <span className="font-bold text-n-4 cursor-pointer hover:underline">
               {email}

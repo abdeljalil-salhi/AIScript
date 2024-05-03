@@ -64,7 +64,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   return (
     <>
       <form
-        className="w-full max-w-96 flex flex-col gap-3 font-['Poppins']"
+        className="w-full max-w-96 lg:max-w-2xl flex flex-col gap-3 font-['Poppins']"
         onSubmit={handleSubmit}
       >
         <div className="w-full flex flex-col gap-1">
@@ -72,7 +72,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           <input
             type="text"
             id="username"
-            className="w-full max-w-96 p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+            className="w-full max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
             placeholder="e.g. johndoe"
             value={username}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -86,7 +86,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           <input
             type="email"
             id="email"
-            className="w-full max-w-96 p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+            className="w-full max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
             placeholder="Your email address"
             value={email}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -122,22 +122,23 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         <input
           type="submit"
           value="Save"
-          className="w-full max-w-96 px-4 py-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+          className="w-full max-w-96 lg:max-w-full px-4 py-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-md shadow-md cursor-pointer transition-all ease-in-out"
         />
       </form>
 
-      <hr className="hidden md:block w-full max-w-96 my-3 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-n-5 to-transparent opacity-50" />
+      <hr className="hidden md:block w-full max-w-96 lg:max-w-2xl my-3 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-n-5 to-transparent opacity-50" />
 
-      <div className="w-full max-w-96 flex flex-col gap-2">
+      <div className="w-full max-w-96 lg:max-w-2xl flex flex-col gap-2">
         {!isLoading && !identity?.user.connection?.isEmailVerified && (
           <>
             <button
-              className="w-full max-w-96 px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+              className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
               onClick={() => setShowVerifyEmailModal(true)}
             >
               Verify email address
             </button>
             <VerifyEmailModal
+              email={identity!.user.connection!.email}
               open={showVerifyEmailModal}
               onClose={() => setShowVerifyEmailModal(false)}
             />
@@ -145,7 +146,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         )}
 
         <button
-          className="w-full max-w-96 px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+          className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
           onClick={() => setShowChangePasswordModal(true)}
         >
           Change password
@@ -156,7 +157,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         />
 
         <button
-          className="w-full max-w-96 px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+          className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
           onClick={() => setShowEnable2FAModal(true)}
         >
           Enable 2FA
@@ -166,7 +167,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           onClose={() => setShowEnable2FAModal(false)}
         />
 
-        <div className="w-full max-w-96 text-start text-n-4 text-xs font-light italic">
+        <div className="w-full max-w-full text-start text-n-4 text-xs font-light italic">
           <p>Joined on 2021-10-01</p>
         </div>
       </div>

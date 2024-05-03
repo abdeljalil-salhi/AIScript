@@ -1,5 +1,13 @@
 // Dependencies
-import { FC, FormEvent, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 // Components
@@ -10,6 +18,8 @@ interface Enable2FAModalProps {
   open: boolean;
   onClose: () => void;
 }
+
+let currentPINIndex: number = 0;
 
 /**
  * Enable 2FA Modal Component
@@ -22,6 +32,9 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   open,
   onClose,
 }): JSX.Element => {
+  const [PIN, setPIN] = useState<Array<string>>(new Array(6).fill(""));
+  const [activePINIndex, setActivePINIndex] = useState<number>(0);
+
   /**
    * State to determine if the user is ready to move to the next step
    * after entering the password
@@ -29,6 +42,31 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
    * @default false
    */
   const [next, setNext] = useState<boolean>(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleOnChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
+    const newPIN: string[] = [...PIN];
+    newPIN[currentPINIndex] = value.substring(value.length - 1);
+
+    if (!value) setActivePINIndex(currentPINIndex - 1);
+    else setActivePINIndex(currentPINIndex + 1);
+
+    setPIN(newPIN);
+  };
+
+  const handleOnKeyDown = (
+    e: KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    currentPINIndex = index;
+    if (e.key === "Backspace") setActivePINIndex(currentPINIndex - 1);
+  };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [activePINIndex]);
 
   /**
    * Handle the password protection form submission
@@ -93,14 +131,6 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
               className="p-4 pb-0 w-full flex flex-col gap-3 items-center justify-center"
             >
               <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-row gap-3">
-                <div className="w-2/6 flex items-center justify-center">
-                  <img
-                    src="/assets/google-authenticator.png"
-                    className="w-2/6 aspect-square m-auto object-cover rounded-lg"
-                    alt="Google Authenticator logo"
-                    draggable={false}
-                  />
-                </div>
                 <div className="w-4/6 flex flex-col">
                   <h2 className="text-lg font-bold text-n-1/85">
                     Download Google Authenticator
@@ -118,16 +148,17 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                     on your phone or tablet.
                   </p>
                 </div>
-              </div>
-              <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-row gap-3">
                 <div className="w-2/6 flex items-center justify-center">
                   <img
-                    src="https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg"
-                    className="w-3/5 aspect-square object-cover"
-                    alt="QR Code"
+                    src="/assets/google-authenticator.png"
+                    className="w-2/6 aspect-square m-auto object-cover rounded-lg brightness-[.7] hover:brightness-100 transition-all ease-in-out duration-300"
+                    alt="Google Authenticator logo"
                     draggable={false}
                   />
                 </div>
+              </div>
+
+              <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-row gap-3">
                 <div className="w-4/6 flex flex-col">
                   <h2 className="text-lg font-bold text-n-1/85">
                     Scan the QR Code
@@ -137,7 +168,16 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                     using your device&apos;s camera.
                   </p>
                 </div>
+                <div className="w-2/6 flex items-center justify-center">
+                  <img
+                    src="https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg"
+                    className="w-3/5 aspect-square object-cover brightness-75 hover:brightness-100 transition-all ease-in-out duration-300"
+                    alt="QR Code"
+                    draggable={false}
+                  />
+                </div>
               </div>
+
               <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-col gap-1">
                 <h2 className="text-lg font-bold text-n-1/85">
                   Log in with your code
@@ -146,13 +186,18 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                   Enter the 6-digit verification code generated.
                 </p>
                 <div className="flex space-x-3">
-                  {[0, 1, 2, 3, 4, 5].map((i: number) => (
+                  {PIN.map((_, index: number) => (
                     <input
-                      key={i}
-                      type="text"
-                      name={`pin-${i}`}
-                      className="block w-[38px] aspect-square text-center bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light text-sm disabled:opacity-50 disabled:pointer-events-none"
-                      autoFocus={i === 0}
+                      key={index}
+                      type="number"
+                      name={`pin-${index}`}
+                      ref={activePINIndex === index ? inputRef : null}
+                      className="block w-[38px] aspect-square text-center bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light text-sm disabled:opacity-50 disabled:pointer-events-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      onChange={handleOnChange}
+                      onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
+                        handleOnKeyDown(e, index)
+                      }
+                      value={PIN[index]}
                       maxLength={1}
                       required
                     />

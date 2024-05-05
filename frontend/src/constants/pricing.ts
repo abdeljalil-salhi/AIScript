@@ -51,3 +51,6 @@ export const pricingPlans: PricingPlan[] = [
 ];
 
 export const mostPopularPlanId: string = "1";
+
+export const MONTHLY_BILLING = 0;
+export const YEARLY_BILLING = 1;

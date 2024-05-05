@@ -71,7 +71,7 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
         {pricingPlans.map((item: PricingPlan) => (
           <div
             key={item.id}
-            className="relative flex flex-col h-full p-6 rounded-2xl shadow-md bg-n-7 border border-n-6/70"
+            className="relative flex flex-col h-full p-6 rounded-2xl shadow-md bg-n-7 border border-n-6/70 lg:odd:my-4"
           >
             {mostPopularPlanId === item.id && (
               <div className="absolute top-0 right-0 mr-5 -mt-4">
@@ -115,9 +115,28 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
                   </div>
                 </div>
               ) : (
-                <span className="w-full inline-flex justify-center items-center whitespace-nowrap rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-3.5 py-2.5 text-sm font-medium text-n-1 shadow-sm transition-all duration-300 ease-in-out cursor-pointer">
-                  Subscribe
-                </span>
+                <div className="relative">
+                  <span className="w-full inline-flex justify-center items-center whitespace-nowrap rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-3.5 py-2.5 text-sm font-medium text-n-1 shadow-sm transition-all duration-300 ease-in-out cursor-pointer">
+                    Subscribe
+                  </span>
+
+                  <div className="absolute -bottom-6 w-full flex items-center justify-center">
+                    <span
+                      className="text-transparent bg-gradient-to-br from-purple-600 hover:from-purple-600/80 to-blue-500 hover:to-blue-500/80 webkit-bg-clip-text inline-block text-sm tracking-wide cursor-pointer transition-all duration-300 ease-in-out hover:underline"
+                      onClick={() =>
+                        setBillingPeriod(
+                          billingPeriod === MONTHLY_BILLING
+                            ? YEARLY_BILLING
+                            : MONTHLY_BILLING
+                        )
+                      }
+                    >
+                      {billingPeriod === MONTHLY_BILLING
+                        ? "Save with yearly billing (20% off)"
+                        : "Switch to monthly billing"}
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
 

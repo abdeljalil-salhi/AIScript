@@ -44,3 +44,16 @@ export interface ShowcaseItem {
   description: string;
   imageUrl: string;
 }
+
+/**
+ * Pricing Interfaces
+ */
+export interface PricingPlan {
+  id: string;
+  title: string;
+  description: string;
+  priceMonthly: number;
+  priceYearly: number;
+  priceYearlyPerMonth: number;
+  features: string[];
+}

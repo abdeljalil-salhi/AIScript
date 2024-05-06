@@ -1,6 +1,15 @@
 // Interfaces
 import { PricingPlan } from "./types";
 
+// Constants
+import {
+  basicPlanId,
+  monthlyPremierPlanId,
+  monthlyProPlanId,
+  yearlyPremierPlanId,
+  yearlyProPlanId,
+} from "./checkout";
+
 export const pricingPlans: PricingPlan[] = [
   {
     id: "0",
@@ -15,6 +24,8 @@ export const pricingPlans: PricingPlan[] = [
       "No credit top ups",
       "Free shared generation queue",
     ],
+    planIdMonthly: basicPlanId,
+    planIdYearly: basicPlanId,
   },
   {
     id: "1",
@@ -31,6 +42,8 @@ export const pricingPlans: PricingPlan[] = [
       "Optional credit top ups",
       "Priority generation queue",
     ],
+    planIdMonthly: monthlyProPlanId,
+    planIdYearly: yearlyProPlanId,
   },
   {
     id: "2",
@@ -47,6 +60,8 @@ export const pricingPlans: PricingPlan[] = [
       "Optional credit top ups",
       "Priority generation queue",
     ],
+    planIdMonthly: monthlyPremierPlanId,
+    planIdYearly: yearlyPremierPlanId,
   },
 ];
 

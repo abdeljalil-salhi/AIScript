@@ -26,6 +26,7 @@ import { authProvider, dataProvider, liveProvider } from "./providers";
 // Components
 import { Layout } from "./components/layout";
 // Pages
+import { CheckoutPage } from "./pages/checkout";
 import { CreatePage } from "./pages/create";
 import { HomePage } from "./pages/home";
 import { LandingPage } from "./pages/landing";
@@ -90,6 +91,26 @@ export const App: FC<AppProps> = (): JSX.Element => {
                     <Route path="/library" element={<LibraryPage />} />
                     <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route
+                      path="/checkout"
+                      element={<CatchAllNavigate to="/pricing" />}
+                    />
+                  </Route>
+                  <Route
+                    element={
+                      <Authenticated
+                        key={"authenticated-layout"}
+                        loading={<LoadingPage />}
+                        fallback={<CatchAllNavigate to="/login" />}
+                      >
+                        <Outlet />
+                      </Authenticated>
+                    }
+                  >
+                    <Route
+                      path="/checkout/:planId"
+                      element={<CheckoutPage />}
+                    />
                   </Route>
                 </Routes>
                 <RefineKbar />

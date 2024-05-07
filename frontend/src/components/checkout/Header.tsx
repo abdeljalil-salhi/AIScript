@@ -38,7 +38,7 @@ export const Header: FC<HeaderProps> = ({ plan }): JSX.Element => {
       <div className="mb-5 text-gray-400">
         <Link
           to="/pricing"
-          className="focus:outline-none hover:underline text-gray-500"
+          className="focus:outline-none hover:underline text-gray-500 hover:text-gray-600"
         >
           Pricing
         </Link>{" "}

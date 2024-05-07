@@ -71,3 +71,10 @@ export interface CheckoutPlan {
   pricingPlanId: string;
   period: 0 | 1;
 }
+export interface PaypalOrderResponse {
+  orderID: string;
+  subscriptionID: string;
+  facilitatorAccessToken: string;
+  paymentSource: string;
+  plan: CheckoutPlan;
+}

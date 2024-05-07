@@ -29,6 +29,7 @@ import { authProvider, dataProvider, liveProvider } from "./providers";
 // Components
 import { Layout } from "./components/layout";
 // Pages
+import { CancelPage } from "./pages/cancel";
 import { CheckoutPage } from "./pages/checkout";
 import { CreatePage } from "./pages/create";
 import { HomePage } from "./pages/home";
@@ -96,10 +97,6 @@ export const App: FC<AppProps> = (): JSX.Element => {
                       <Route path="/library" element={<LibraryPage />} />
                       <Route path="/pricing" element={<PricingPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
-                      <Route
-                        path="/checkout"
-                        element={<CatchAllNavigate to="/pricing" />}
-                      />
                     </Route>
                     <Route
                       element={
@@ -112,11 +109,27 @@ export const App: FC<AppProps> = (): JSX.Element => {
                         </Authenticated>
                       }
                     >
-                      <Route
-                        path="/checkout/:planId"
-                        element={<CheckoutPage />}
-                      />
-                      <Route path="/success" element={<SuccessPage />} />
+                      <Route path="/checkout">
+                        <Route
+                          index
+                          element={<CatchAllNavigate to="/pricing" />}
+                        />
+                        <Route path=":planId" element={<CheckoutPage />} />
+                        <Route path="success">
+                          <Route
+                            index
+                            element={<CatchAllNavigate to="/pricing" />}
+                          />
+                          <Route path=":orderId" element={<SuccessPage />} />
+                        </Route>
+                        <Route path="cancel">
+                          <Route
+                            index
+                            element={<CatchAllNavigate to="/pricing" />}
+                          />
+                          <Route path=":orderId" element={<CancelPage />} />
+                        </Route>
+                      </Route>
                     </Route>
                   </Routes>
                   <RefineKbar />

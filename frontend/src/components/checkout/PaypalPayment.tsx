@@ -1,5 +1,6 @@
 // Dependencies
 import { FC } from "react";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   PayPalButtons,
   PayPalButtonsComponentProps,
@@ -23,6 +24,13 @@ interface PaypalPaymentProps {
 export const PaypalPayment: FC<PaypalPaymentProps> = ({
   plan,
 }): JSX.Element => {
+  /**
+   * Navigate function for redirecting to other pages
+   * @type {NavigateFunction}
+   * @function
+   */
+  const navigate: NavigateFunction = useNavigate();
+
   const styles: PayPalButtonsComponentProps["style"] = {
     shape: "pill",
     color: "blue",
@@ -38,19 +46,16 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
     };
 
   const onApprove: PayPalButtonsComponentProps["onApprove"] = async (data) => {
-    console.log(data);
-    // {
-    //     "orderID": "8MR04774TD9366647",
-    //     "subscriptionID": "I-YRW4FCXUDRL6",
-    //     "facilitatorAccessToken": "A21AAJazRPKlsQTRTnGq76sBvxIrEV9yZf14sSUtCZh8r2xc4zGYHPcSdtfmh9Xz7rI1hhNWx6mzy1MN6_bWOCGgxcQ5N9GRQ",
-    //     "paymentSource": "paypal"
-    // }
-    alert(`You have successfully subscribed to ${data.subscriptionID}`);
+    navigate(`/checkout/success/${data.orderID}`, {
+      state: {
+        ...data,
+        plan,
+      },
+    });
   };
 
   const onCancel: PayPalButtonsComponentProps["onCancel"] = (data) => {
-    console.log(data);
-    alert("Subscription has been cancelled");
+    navigate(`/checkout/cancel/${data.orderID}`);
   };
 
   const onError: PayPalButtonsComponentProps["onError"] = (err) => {

@@ -177,8 +177,17 @@ type Wallet {
   """Date and time of the wallet creation"""
   createdAt: DateTime!
 
+  """Number of free credits available in the wallet"""
+  freeCredits: Float!
+
   """Unique identifier of the wallet"""
   id: String!
+
+  """Number of subscription credits available in the wallet"""
+  subscriptionCredits: Float!
+
+  """Number of top-up credits available in the wallet"""
+  topUpCredits: Float!
 
   """Date and time of the wallet last update"""
   updatedAt: DateTime!

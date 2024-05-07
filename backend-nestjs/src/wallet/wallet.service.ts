@@ -43,4 +43,72 @@ export class WalletService {
       },
     });
   }
+
+  public async getWalletById(id: string): Promise<Wallet> {
+    return this.prismaService.wallet.findUnique({ where: { id } });
+  }
+
+  public async getWallets(): Promise<Wallet[]> {
+    return this.prismaService.wallet.findMany();
+  }
+
+  public async updateWallet(id: string, newBalance: number): Promise<Wallet> {
+    return this.prismaService.wallet.update({
+      where: { id },
+      data: { balance: newBalance },
+    });
+  }
+
+  public async validateWallets(): Promise<void> {
+    const wallets: Wallet[] = await this.prismaService.wallet.findMany();
+
+    // Map the updates for each wallet
+    const updates: Promise<void>[] = wallets.map(async (wallet: Wallet) => {
+      const updateData: {
+        balance?: number;
+        freeCredits?: number;
+        subscriptionCredits?: number;
+        topUpCredits?: number;
+      } = {};
+
+      if (wallet.balance < 0) updateData.balance = 0;
+
+      if (wallet.freeCredits < 0) updateData.freeCredits = 0;
+
+      if (wallet.subscriptionCredits < 0) updateData.subscriptionCredits = 0;
+
+      if (wallet.topUpCredits < 0) updateData.topUpCredits = 0;
+
+      // If any update is needed, execute it
+      if (Object.keys(updateData).length > 0) {
+        await this.prismaService.wallet.update({
+          where: {
+            id: wallet.id,
+          },
+          data: updateData,
+        });
+      }
+
+      // If the balance is incorrect, update it
+      if (
+        wallet.balance !==
+        wallet.freeCredits + wallet.subscriptionCredits + wallet.topUpCredits
+      ) {
+        await this.prismaService.wallet.update({
+          where: {
+            id: wallet.id,
+          },
+          data: {
+            balance:
+              wallet.freeCredits +
+              wallet.subscriptionCredits +
+              wallet.topUpCredits,
+          },
+        });
+      }
+    });
+
+    // Wait for all updates to complete
+    await Promise.all(updates);
+  }
 }

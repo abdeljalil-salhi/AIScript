@@ -1,5 +1,5 @@
 // Dependencies
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 // Entities
@@ -45,14 +45,54 @@ export class Wallet {
   /**
    * Balance of the wallet
    * @type {number}
-   * @default 0
+   * @default 50
    */
   @IsNotEmpty({ message: 'Wallet balance must not be empty' })
+  @IsNumber({}, { message: 'Wallet balance must be a number' })
   @Field(() => Number, {
     description: 'Balance of the wallet',
-    defaultValue: 0,
+    defaultValue: 50,
   })
   public balance: number;
+
+  /**
+   * Number of free credits available in the wallet
+   * @type {number}
+   * @default 50
+   */
+  @IsNotEmpty({ message: 'Wallet free credits must not be empty' })
+  @IsNumber({}, { message: 'Wallet free credits must be a number' })
+  @Field(() => Number, {
+    description: 'Number of free credits available in the wallet',
+    defaultValue: 50,
+  })
+  public freeCredits: number;
+
+  /**
+   * Number of subscription credits available in the wallet
+   * @type {number}
+   * @default 0
+   */
+  @IsNotEmpty({ message: 'Wallet subscription credits must not be empty' })
+  @IsNumber({}, { message: 'Wallet subscription credits must be a number' })
+  @Field(() => Number, {
+    description: 'Number of subscription credits available in the wallet',
+    defaultValue: 0,
+  })
+  public subscriptionCredits: number;
+
+  /**
+   * Number of top-up credits available in the wallet
+   * @type {number}
+   * @default 0
+   */
+  @IsNotEmpty({ message: 'Wallet top-up credits must not be empty' })
+  @IsNumber({}, { message: 'Wallet top-up credits must be a number' })
+  @Field(() => Number, {
+    description: 'Number of top-up credits available in the wallet',
+    defaultValue: 0,
+  })
+  public topUpCredits: number;
 
   /**
    * Date and time of the wallet creation

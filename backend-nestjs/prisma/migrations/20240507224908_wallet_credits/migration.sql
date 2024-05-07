@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "wallets" ADD COLUMN     "freeCredits" INTEGER NOT NULL DEFAULT 50,
+ADD COLUMN     "subscriptionCredits" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "topUpCredits" INTEGER NOT NULL DEFAULT 0,
+ALTER COLUMN "balance" SET DEFAULT 50;

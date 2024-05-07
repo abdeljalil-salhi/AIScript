@@ -1,6 +1,5 @@
 // Dependencies
-import { FC, useEffect, useState } from "react";
-import { CreateSubscriptionActions, OnApproveActions } from "@paypal/paypal-js";
+import { FC, useState } from "react";
 
 // Constants
 import { MONTHLY_BILLING, pricingPlans } from "@/constants/pricing";
@@ -14,7 +13,6 @@ import { PricingPlan } from "@/components/pricing/PricingPlan";
 interface PricingPageProps {}
 
 const currentPlan: string = "0";
-let rendered = false;
 
 /**
  * Pricing Page Component
@@ -31,42 +29,6 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
    * @description 0 - Monthly Billing, 1 - Yearly Billing
    */
   const [billingPeriod, setBillingPeriod] = useState<0 | 1>(MONTHLY_BILLING);
-
-  useEffect(() => {
-    const renderPayPalButton = () => {
-      if (!rendered && window.paypal && window.paypal.Buttons) {
-        window.paypal
-          .Buttons({
-            style: {
-              shape: "pill",
-              color: "blue",
-              layout: "vertical",
-              label: "subscribe",
-            },
-            createSubscription: function (
-              _,
-              actions: CreateSubscriptionActions
-            ) {
-              return actions.subscription.create({
-                /* Creates the subscription */
-                plan_id: "P-35S65332BH602400LMY4BVZA",
-              });
-            },
-            onApprove: async function (_, actions: OnApproveActions) {
-              alert(actions);
-            },
-            onError: function (err) {
-              console.error(err);
-            },
-          })
-          .render("#paypal-button-container");
-
-        rendered = true;
-      }
-    };
-
-    renderPayPalButton();
-  }, []);
 
   return (
     <div className="p-4 md:p-6 w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col gap-6 overflow-y-auto">

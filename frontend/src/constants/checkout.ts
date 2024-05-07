@@ -55,3 +55,11 @@ export const checkoutPlans: CheckoutPlan[] = [
     period: YEARLY_BILLING,
   },
 ];
+
+export const PaymentMethodEnum = {
+  CARD_PAYMENT: "card_payment",
+  PAYPAL_PAYMENT: "paypal_payment",
+} as const;
+
+export type PaymentMethodEnum =
+  (typeof PaymentMethodEnum)[keyof typeof PaymentMethodEnum];

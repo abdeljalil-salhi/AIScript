@@ -50,6 +50,8 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
           />
         ))}
       </div>
+
+      <div className="w-full"></div>
     </div>
   );
 };

@@ -56,4 +56,25 @@ export interface PricingPlan {
   priceYearly: number;
   priceYearlyPerMonth: number;
   features: string[];
+  planIdMonthly: string;
+  planIdYearly: string;
+}
+
+/**
+ * Checkout Interfaces
+ */
+
+export interface CheckoutPlan {
+  id: string;
+  name: string;
+  planId: string;
+  pricingPlanId: string;
+  period: 0 | 1;
+}
+export interface PaypalOrderResponse {
+  orderID: string;
+  subscriptionID: string;
+  facilitatorAccessToken: string;
+  paymentSource: string;
+  plan: CheckoutPlan;
 }

@@ -1,5 +1,6 @@
 // Dependencies
 import { v4 as uuidv4 } from "uuid";
+import { ReactPayPalScriptOptions } from "@paypal/react-paypal-js";
 
 // Interfaces
 import { CheckoutPlan } from "./types";
@@ -63,3 +64,10 @@ export const PaymentMethodEnum = {
 
 export type PaymentMethodEnum =
   (typeof PaymentMethodEnum)[keyof typeof PaymentMethodEnum];
+
+export const subscriptionInitialOptions: ReactPayPalScriptOptions = {
+  clientId: import.meta.env.VITE_API_PAYPAL_CLIENT_ID,
+  currency: "USD",
+  intent: "subscription",
+  vault: true,
+};

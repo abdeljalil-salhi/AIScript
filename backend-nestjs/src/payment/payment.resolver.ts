@@ -1,5 +1,5 @@
 // Dependencies
-import { Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 // Services
 import { PaymentService } from './payment.service';
@@ -36,7 +36,7 @@ export class PaymentResolver {
     description: 'Creates a new payment entity.',
   })
   public async createPayment(
-    newPaymentInput: NewPaymentInput,
+    @Args('newPaymentInput') newPaymentInput: NewPaymentInput,
   ): Promise<Payment> {
     return this.paymentService.createPayment(newPaymentInput);
   }

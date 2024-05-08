@@ -39,7 +39,7 @@ export class SubscriptionResolver {
     description: 'Creates a new subscription entity.',
   })
   public async createSubscription(
-    newSubscriptionInput: NewSubscriptionInput,
+    @Args('newSubscriptionInput') newSubscriptionInput: NewSubscriptionInput,
   ): Promise<Subscription> {
     return this.subscriptionService.createSubscription(newSubscriptionInput);
   }
@@ -70,7 +70,7 @@ export class SubscriptionResolver {
     description: 'Retrieves a single subscription entity by ID.',
   })
   public async getSubscriptionById(
-    subscriptionId: string,
+    @Args('subscriptionId', { type: () => String }) subscriptionId: string,
   ): Promise<Subscription> {
     const subscription: Subscription =
       await this.subscriptionService.getSubscriptionById(subscriptionId);
@@ -92,7 +92,7 @@ export class SubscriptionResolver {
     description: 'Retrieves all subscription entities for a specific user.',
   })
   public async getSubscriptionsByUserId(
-    userId: string,
+    @Args('userId', { type: () => String }) userId: string,
   ): Promise<Subscription[]> {
     return this.subscriptionService.getSubscriptionsByUserId(userId);
   }
@@ -109,7 +109,7 @@ export class SubscriptionResolver {
     description: 'Retrieves all subscription entities for a specific plan.',
   })
   public async getSubscriptionsByPlanId(
-    planId: string,
+    @Args('planId', { type: () => String }) planId: string,
   ): Promise<Subscription[]> {
     return this.subscriptionService.getSubscriptionsByPlanId(planId);
   }
@@ -127,7 +127,7 @@ export class SubscriptionResolver {
     description: 'Deletes a subscription entity by ID.',
   })
   public async deleteSubscriptionById(
-    subscriptionId: string,
+    @Args('subscriptionId', { type: () => String }) subscriptionId: string,
   ): Promise<Subscription> {
     const subscription: Subscription =
       await this.subscriptionService.getSubscriptionById(subscriptionId);

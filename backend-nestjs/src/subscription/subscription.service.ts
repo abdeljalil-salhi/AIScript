@@ -7,6 +7,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { NewSubscriptionInput } from './dtos/new-subscription.input';
 // Entities
 import { Subscription } from './entities/subscription.entity';
+// Includes
+import { subscriptionIncludes } from './includes/subscription.includes';
 
 /**
  * Service for handling subscription-related operations.
@@ -51,6 +53,7 @@ export class SubscriptionService {
           },
         },
       },
+      include: subscriptionIncludes,
     });
   }
 

@@ -9,6 +9,7 @@ import { NewPaymentInput } from './dtos/new-payment.input';
 // Entities
 import { Payment } from './entities/payment.entity';
 import { NewSubscriptionInput } from 'src/subscription/dtos/new-subscription.input';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
 
 /**
  * Service for handling payment-related operations.
@@ -39,7 +40,7 @@ export class PaymentService {
   public async createPayment(
     newPaymentInput: NewPaymentInput,
   ): Promise<Payment> {
-    const payment: Payment = await this.prismaService.payment.create({
+    let payment: Payment = await this.prismaService.payment.create({
       data: {
         amount: newPaymentInput.amount,
         orderId: newPaymentInput.orderId,
@@ -62,7 +63,25 @@ export class PaymentService {
     };
 
     // Create a new subscription entity associated with the payment
-    await this.subscriptionService.createSubscription(newSubscriptionInput);
+    const subscription: Subscription =
+      await this.subscriptionService.createSubscription(newSubscriptionInput);
+
+    // Update the payment entity with the subscription ID
+    payment = await this.prismaService.payment.update({
+      where: {
+        id: payment.id,
+      },
+      data: {
+        subscriptionId: subscription.id,
+      },
+      include: {
+        subscription: {
+          include: {
+            plan: true,
+          },
+        },
+      },
+    });
 
     return payment;
   }

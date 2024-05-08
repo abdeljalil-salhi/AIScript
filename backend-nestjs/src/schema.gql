@@ -99,16 +99,25 @@ type MeResponse {
 
 type Mutation {
   """Creates a new payment entity."""
-  createPayment: Payment!
+  createPayment(newPaymentInput: NewPaymentInput!): Payment!
 
   """Creates the predefined plans in the database."""
   createPlans: [Plan!]!
+
+  """Creates a new subscription entity."""
+  createSubscription(newSubscriptionInput: NewSubscriptionInput!): Subscription!
 
   """Deletes all plans from the database."""
   deleteAllPlans: [Plan!]!
 
   """Deletes a plan by its ID."""
   deletePlan(planId: String!): Plan!
+
+  """Deletes a subscription entity by ID."""
+  deleteSubscriptionById(subscriptionId: String!): Subscription!
+
+  """Deletes all subscription entities for a specific user."""
+  deleteSubscriptionsByUserId(userId: String!): [Subscription!]!
 
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
@@ -124,6 +133,37 @@ type Mutation {
 
   """Updates a plan by its ID."""
   updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
+}
+
+input NewPaymentInput {
+  """Amount of the payment"""
+  amount: Float!
+
+  """Order ID of the payment"""
+  orderId: String!
+
+  """Source of the payment"""
+  paymentSource: String!
+
+  """PayPal subscription ID of the payment"""
+  paypalSubId: String!
+
+  """ID of the associated plan that the payment is for"""
+  planId: String!
+
+  """ID of the associated user that owns the payment"""
+  userId: String!
+}
+
+input NewSubscriptionInput {
+  """ID of the payment that created the subscription"""
+  paymentId: String!
+
+  """ID of the subscription plan"""
+  planId: String!
+
+  """ID of the associated user that owns the subscription"""
+  userId: String!
 }
 
 type NewTokensResponse {
@@ -196,8 +236,20 @@ type Query {
   """Gets all the available plans."""
   getAllPlans: [Plan!]!
 
+  """Retrieves all subscription entities."""
+  getAllSubscriptions: [Subscription!]!
+
   """Gets a plan by its ID."""
   getPlanById(planId: String!): Plan!
+
+  """Retrieves a single subscription entity by ID."""
+  getSubscriptionById(subscriptionId: String!): Subscription!
+
+  """Retrieves all subscription entities for a specific plan."""
+  getSubscriptionsByPlanId(planId: String!): [Subscription!]!
+
+  """Retrieves all subscription entities for a specific user."""
+  getSubscriptionsByUserId(userId: String!): [Subscription!]!
 
   """A simple hello world query to test the GraphQL API."""
   hello: String!
@@ -218,6 +270,38 @@ input RegisterInput {
 
   """Username of the user"""
   username: String!
+}
+
+type Subscription {
+  """Date and time of the subscription creation"""
+  createdAt: DateTime!
+
+  """Number of days with service ongoing"""
+  daysWithService: Float!
+
+  """Unique identifier of the subscription"""
+  id: String!
+
+  """Subscription associated payment entity"""
+  payment: Payment
+
+  """ID of the associated payment that owns the subscription"""
+  paymentId: String!
+
+  """Subscription associated plan entity"""
+  plan: Plan
+
+  """ID of the subscription plan"""
+  planId: String!
+
+  """Date and time of the subscription last update"""
+  updatedAt: DateTime!
+
+  """Subscription associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the subscription"""
+  userId: String!
 }
 
 input UpdatePlanInput {

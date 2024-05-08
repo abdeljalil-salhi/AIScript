@@ -106,18 +106,18 @@ model Payment {
 }
 
 model Subscription {
-    id              String @id @default(uuid())
-    userId          String @unique
+    id              String  @id @default(uuid())
+    userId          String  @unique
     planId          String
-    paymentId       String @unique
-    daysWithService Int    @default(0)
+    paymentId       String? @unique
+    daysWithService Int     @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    user    User    @relation(fields: [userId], references: [id])
-    plan    Plan    @relation(fields: [planId], references: [id])
-    payment Payment @relation(fields: [paymentId], references: [id])
+    user    User     @relation(fields: [userId], references: [id])
+    plan    Plan     @relation(fields: [planId], references: [id])
+    payment Payment? @relation(fields: [paymentId], references: [id])
 
     @@map("subscriptions")
 }

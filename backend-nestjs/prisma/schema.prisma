@@ -92,6 +92,7 @@ model Payment {
     userId         String        @unique
     amount         Float
     orderId        String        @unique
+    paypalSubId    String        @unique
     subscriptionId String
     paymentSource  String
     subscription   Subscription?

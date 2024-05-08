@@ -18,6 +18,7 @@ import { UserModule } from 'src/user/user.module';
 import { WalletModule } from 'src/wallet/wallet.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { TasksModule } from 'src/tasks/tasks.module';
+import { PaymentModule } from 'src/payment/payment.module';
 import { PlanModule } from 'src/plan/plan.module';
 // Guards
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
@@ -54,6 +55,7 @@ import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
     WalletModule,
     TasksModule,
     PlanModule,
+    PaymentModule,
   ],
 
   providers: [

@@ -98,6 +98,9 @@ type MeResponse {
 }
 
 type Mutation {
+  """Creates a new payment entity."""
+  createPayment: Payment!
+
   """Creates the predefined plans in the database."""
   createPlans: [Plan!]!
 
@@ -129,6 +132,38 @@ type NewTokensResponse {
 
   """Token for refreshing the JSON Web Token (JWT) when it expires"""
   refreshToken: String!
+}
+
+type Payment {
+  """Amount of the payment"""
+  amount: Float!
+
+  """Date and time of the payment creation"""
+  createdAt: DateTime!
+
+  """Unique identifier of the payment"""
+  id: String!
+
+  """Order ID of the payment"""
+  orderId: String!
+
+  """Source of the payment"""
+  paymentSource: String!
+
+  """PayPal subscription ID of the payment"""
+  paypalSubId: String!
+
+  """Subscription ID of the payment"""
+  subscriptionId: String!
+
+  """Date and time of the payment last update"""
+  updatedAt: DateTime!
+
+  """Payment associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the payment"""
+  userId: String!
 }
 
 type Plan {

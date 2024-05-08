@@ -75,7 +75,7 @@ model Wallet {
 
 model Plan {
     id            String         @id @default(uuid())
-    name          String
+    name          String         @unique
     description   String
     price         Float
     duration      Int

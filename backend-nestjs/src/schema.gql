@@ -98,6 +98,15 @@ type MeResponse {
 }
 
 type Mutation {
+  """Creates the predefined plans in the database."""
+  createPlans: [Plan!]!
+
+  """Deletes all plans from the database."""
+  deleteAllPlans: [Plan!]!
+
+  """Deletes a plan by its ID."""
+  deletePlan(planId: String!): Plan!
+
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
 
@@ -109,6 +118,9 @@ type Mutation {
 
   """Registers a new user with the specified details."""
   register(registerInput: RegisterInput!): AuthResponse!
+
+  """Updates a plan by its ID."""
+  updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
 }
 
 type NewTokensResponse {
@@ -119,7 +131,36 @@ type NewTokensResponse {
   refreshToken: String!
 }
 
+type Plan {
+  """Date and time of the plan creation"""
+  createdAt: DateTime!
+
+  """Description of the plan"""
+  description: String!
+
+  """Duration of the plan"""
+  duration: Float!
+
+  """Unique identifier of the plan"""
+  id: String!
+
+  """Name of the plan"""
+  name: String!
+
+  """Price of the plan"""
+  price: Float!
+
+  """Date and time of the plan last update"""
+  updatedAt: DateTime!
+}
+
 type Query {
+  """Gets all the available plans."""
+  getAllPlans: [Plan!]!
+
+  """Gets a plan by its ID."""
+  getPlanById(planId: String!): Plan!
+
   """A simple hello world query to test the GraphQL API."""
   hello: String!
 
@@ -139,6 +180,20 @@ input RegisterInput {
 
   """Username of the user"""
   username: String!
+}
+
+input UpdatePlanInput {
+  """Plan description"""
+  description: String
+
+  """Plan duration"""
+  duration: Int
+
+  """Plan name"""
+  name: String
+
+  """Plan price"""
+  price: Int
 }
 
 type User {

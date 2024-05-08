@@ -24,6 +24,13 @@ export class PaymentResolver {
    */
   constructor(private readonly paymentService: PaymentService) {}
 
+  /**
+   * Mutation to create a new payment entity.
+   *
+   * @mutation
+   * @param {NewPaymentInput} newPaymentInput - The input data to create a new payment.
+   * @returns {Promise<Payment>} - The newly created payment entity.
+   */
   @Mutation(() => Payment, {
     name: 'createPayment',
     description: 'Creates a new payment entity.',

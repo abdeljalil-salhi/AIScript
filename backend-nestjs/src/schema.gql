@@ -153,6 +153,9 @@ type Payment {
   """PayPal subscription ID of the payment"""
   paypalSubId: String!
 
+  """Payment associated subscription entity"""
+  subscription: String
+
   """Subscription ID of the payment"""
   subscriptionId: String!
 

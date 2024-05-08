@@ -4,6 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 // Entities
 import { User } from 'src/user/entities/user.entity';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
 
 /**
  * Represents a payment entity that is used by GraphQL
@@ -77,6 +78,16 @@ export class Payment {
   @IsString({ message: 'Payment subscription ID must be a string' })
   @Field(() => String, { description: 'Subscription ID of the payment' })
   public subscriptionId: string;
+
+  /**
+   * Associated subscription entity
+   * @type {Subscription}
+   */
+  @Field(() => String, {
+    description: 'Payment associated subscription entity',
+    nullable: true,
+  })
+  subscription?: Subscription;
 
   /**
    * Payment source

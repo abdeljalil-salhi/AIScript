@@ -24,6 +24,17 @@ export class NewPaymentInput {
   public userId: string;
 
   /**
+   * ID of the associated plan that the payment is for
+   * @type {string}
+   */
+  @IsNotEmpty({ message: 'New payment plan ID must not be empty' })
+  @IsString({ message: 'New payment plan ID must be a string' })
+  @Field(() => String, {
+    description: 'ID of the associated plan that the payment is for',
+  })
+  public planId: string;
+
+  /**
    * Amount of the payment
    * @type {number}
    */

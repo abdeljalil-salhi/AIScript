@@ -44,21 +44,71 @@ export class WalletService {
     });
   }
 
+  /**
+   * Retrieves a wallet entity by its ID.
+   *
+   * @param {string} id - The ID of the wallet entity to retrieve.
+   * @returns {Promise<Wallet>} - The wallet entity with the specified ID.
+   */
   public async getWalletById(id: string): Promise<Wallet> {
     return this.prismaService.wallet.findUnique({ where: { id } });
   }
 
-  public async getWallets(): Promise<Wallet[]> {
+  /**
+   * Retrieves all wallet entities.
+   *
+   * @returns {Promise<Wallet[]>} - An array of all wallet entities.
+   */
+  public async getAllWallets(): Promise<Wallet[]> {
     return this.prismaService.wallet.findMany();
   }
 
-  public async updateWallet(id: string, newBalance: number): Promise<Wallet> {
+  /**
+   * Updates a wallet entity.
+   *
+   * @param {string} id - The ID of the wallet entity to update.
+   * @param {number} newBalance - The new balance to set for the wallet entity.
+   * @returns {Promise<Wallet>} - The updated wallet entity.
+   */
+  public async updateWalletById(
+    id: string,
+    newBalance: number,
+  ): Promise<Wallet> {
     return this.prismaService.wallet.update({
       where: { id },
-      data: { balance: newBalance },
+      data: {
+        balance: newBalance,
+      },
     });
   }
 
+  /**
+   * Sets the subscription credits for a wallet entity.
+   *
+   * @param {string} id - The ID of the wallet entity to add credits to.
+   * @param {number} credits - The number of credits to add to the wallet entity.
+   * @returns {Promise<Wallet>} - The updated wallet entity.
+   */
+  public async setSubscriptionCreditsToWallet(
+    id: string,
+    credits: number,
+  ): Promise<Wallet> {
+    return this.prismaService.wallet.update({
+      where: { id },
+      data: {
+        subscriptionCredits: credits,
+      },
+    });
+  }
+
+  /**
+   * Validates all wallet entities to ensure that their balances are correct.
+   * If a wallet's balance is negative, it is set to zero.
+   * If a wallet's balance is incorrect, it is updated to reflect the sum of its credits.
+   * This is a background task that should be run periodically to ensure data integrity.
+   *
+   * @returns {Promise<void>} - An empty promise.
+   */
   public async validateWallets(): Promise<void> {
     const wallets: Wallet[] = await this.prismaService.wallet.findMany();
 
@@ -93,19 +143,11 @@ export class WalletService {
       if (
         wallet.balance !==
         wallet.freeCredits + wallet.subscriptionCredits + wallet.topUpCredits
-      ) {
-        await this.prismaService.wallet.update({
-          where: {
-            id: wallet.id,
-          },
-          data: {
-            balance:
-              wallet.freeCredits +
-              wallet.subscriptionCredits +
-              wallet.topUpCredits,
-          },
-        });
-      }
+      )
+        await this.updateWalletById(
+          wallet.id,
+          wallet.freeCredits + wallet.subscriptionCredits + wallet.topUpCredits,
+        );
     });
 
     // Wait for all updates to complete

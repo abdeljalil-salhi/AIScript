@@ -16,5 +16,6 @@ import { WalletResolver } from './wallet.resolver';
  */
 @Module({
   providers: [WalletResolver, WalletService, PrismaService],
+  exports: [WalletService],
 })
 export class WalletModule {}

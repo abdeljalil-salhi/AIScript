@@ -38,6 +38,19 @@ export class Plan {
   public description: string;
 
   /**
+   * Number of credits given by the plan
+   * @type {number}
+   * @default 0
+   */
+  @IsNotEmpty({ message: 'Plan credits must not be empty' })
+  @IsNumber({}, { message: 'Plan credits must be a number' })
+  @Field(() => Number, {
+    description: 'Number of credits given by the plan',
+    defaultValue: 0,
+  })
+  public credits: number;
+
+  /**
    * Price of the plan
    * @type {number}
    */

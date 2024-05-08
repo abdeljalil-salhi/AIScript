@@ -3,10 +3,12 @@ import { Injectable } from '@nestjs/common';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
+import { WalletService } from 'src/wallet/wallet.service';
 // DTOs
 import { NewSubscriptionInput } from './dtos/new-subscription.input';
 // Entities
 import { Subscription } from './entities/subscription.entity';
+import { Wallet } from 'src/wallet/entities/wallet.entity';
 // Includes
 import { subscriptionIncludes } from './includes/subscription.includes';
 
@@ -24,7 +26,10 @@ export class SubscriptionService {
    *
    * @param {PrismaService} prismaService - The Prisma service for database operations.
    */
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly walletService: WalletService,
+  ) {}
 
   /**
    * Creates a new subscription entity.
@@ -35,26 +40,42 @@ export class SubscriptionService {
   public async createSubscription(
     newSubscriptionInput: NewSubscriptionInput,
   ): Promise<Subscription> {
-    return this.prismaService.subscription.create({
-      data: {
-        user: {
-          connect: {
-            id: newSubscriptionInput.userId,
+    const subscription: Subscription =
+      await this.prismaService.subscription.create({
+        data: {
+          user: {
+            connect: {
+              id: newSubscriptionInput.userId,
+            },
+          },
+          plan: {
+            connect: {
+              id: newSubscriptionInput.planId,
+            },
+          },
+          payment: {
+            connect: {
+              id: newSubscriptionInput.paymentId,
+            },
           },
         },
-        plan: {
-          connect: {
-            id: newSubscriptionInput.planId,
+        include: {
+          ...subscriptionIncludes,
+          user: {
+            include: {
+              wallet: true,
+            },
           },
         },
-        payment: {
-          connect: {
-            id: newSubscriptionInput.paymentId,
-          },
-        },
-      },
-      include: subscriptionIncludes,
-    });
+      });
+
+    // Update the wallet balance
+    await this.walletService.setSubscriptionCreditsToWallet(
+      subscription.user.wallet.id,
+      subscription.plan.credits,
+    );
+
+    return subscription;
   }
 
   /**

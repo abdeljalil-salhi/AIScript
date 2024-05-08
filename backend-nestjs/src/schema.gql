@@ -213,6 +213,9 @@ type Plan {
   """Date and time of the plan creation"""
   createdAt: DateTime!
 
+  """Number of credits given by the plan"""
+  credits: Float!
+
   """Description of the plan"""
   description: String!
 

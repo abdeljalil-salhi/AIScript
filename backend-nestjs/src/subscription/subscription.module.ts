@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 // Services
 import { SubscriptionService } from './subscription.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { WalletService } from 'src/wallet/wallet.service';
 // Resolvers
 import { SubscriptionResolver } from './subscription.resolver';
 
@@ -14,7 +15,12 @@ import { SubscriptionResolver } from './subscription.resolver';
  * @class SubscriptionModule
  */
 @Module({
-  providers: [SubscriptionResolver, SubscriptionService, PrismaService],
+  providers: [
+    SubscriptionResolver,
+    SubscriptionService,
+    PrismaService,
+    WalletService,
+  ],
   exports: [SubscriptionService],
 })
 export class SubscriptionModule {}

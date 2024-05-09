@@ -45,6 +45,29 @@ export class SubscriptionResolver {
   }
 
   /**
+   * Mutation to cancel a subscription entity.
+   *
+   * @mutation
+   * @param {string} subscriptionId - The ID of the subscription entity to cancel.
+   * @returns {Promise<Subscription>} - The cancelled subscription entity.
+   * @throws {NotFoundException} - If the subscription is not found.
+   */
+  @Mutation(() => Subscription, {
+    name: 'cancelSubscription',
+    description: 'Cancels a subscription entity by ID.',
+  })
+  public async cancelSubscription(
+    @Args('subscriptionId', { type: () => String }) subscriptionId: string,
+  ): Promise<Subscription> {
+    const subscription: Subscription =
+      await this.subscriptionService.getSubscriptionById(subscriptionId);
+
+    if (!subscription) throw new NotFoundException('Subscription not found');
+
+    return this.subscriptionService.cancelSubscription(subscriptionId);
+  }
+
+  /**
    * Query to retrieve all subscription entities.
    *
    * @query

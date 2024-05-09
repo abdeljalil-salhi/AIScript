@@ -101,6 +101,22 @@ export class WalletService {
     });
   }
 
+  public async setSubscriptionCreditsToWallets(
+    walletsIds: string[],
+    credits: number,
+  ): Promise<void> {
+    await this.prismaService.wallet.updateMany({
+      where: {
+        id: {
+          in: walletsIds,
+        },
+      },
+      data: {
+        subscriptionCredits: credits,
+      },
+    });
+  }
+
   /**
    * Validates all wallet entities to ensure that their balances are correct.
    * If a wallet's balance is negative, it is set to zero.

@@ -21,6 +21,7 @@ import { TasksModule } from 'src/tasks/tasks.module';
 import { PaymentModule } from 'src/payment/payment.module';
 import { PlanModule } from 'src/plan/plan.module';
 import { SubscriptionModule } from 'src/subscription/subscription.module';
+import { DataModule } from 'src/data/data.module';
 // Guards
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 
@@ -58,6 +59,7 @@ import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
     PlanModule,
     PaymentModule,
     SubscriptionModule,
+    DataModule,
   ],
 
   providers: [

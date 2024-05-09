@@ -5,6 +5,8 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { plans } from 'src/constants/plans';
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
+// DTOs
+import { PlanIdResponse } from './dtos/plan-id.response';
 // Entities
 import { Plan } from './entities/plan.entity';
 
@@ -32,6 +34,24 @@ export class PlanService implements OnModuleInit {
   private createdPlans: Plan[] = [];
 
   /**
+   * The Pro Plan monthly and yearly IDs.
+   * @type {PlanIdResponse}
+   */
+  private proPlan: PlanIdResponse = {
+    monthly: '',
+    yearly: '',
+  };
+
+  /**
+   * The Premier Plan monthly and yearly IDs.
+   * @type {PlanIdResponse}
+   */
+  private premierPlan: PlanIdResponse = {
+    monthly: '',
+    yearly: '',
+  };
+
+  /**
    * Method called when the module is initialized.
    * This is used to create the plans when the application is started.
    *
@@ -39,6 +59,24 @@ export class PlanService implements OnModuleInit {
    */
   public async onModuleInit(): Promise<void> {
     await this.createPlans();
+
+    this.proPlan = {
+      monthly: this.createdPlans.find(
+        (plan: Plan) => plan.name === 'Pro Plan - Monthly',
+      ).id,
+      yearly: this.createdPlans.find(
+        (plan: Plan) => plan.name === 'Pro Plan - Yearly',
+      ).id,
+    };
+
+    this.premierPlan = {
+      monthly: this.createdPlans.find(
+        (plan: Plan) => plan.name === 'Premier Plan - Monthly',
+      ).id,
+      yearly: this.createdPlans.find(
+        (plan: Plan) => plan.name === 'Premier Plan - Yearly',
+      ).id,
+    };
   }
 
   /**
@@ -64,6 +102,24 @@ export class PlanService implements OnModuleInit {
     this.createdPlans = await this.getAllPlans();
 
     return this.createdPlans;
+  }
+
+  /**
+   * Returns the Pro Plan monthly and yearly IDs.
+   *
+   * @returns {PlanIdResponse} - The Pro Plan monthly and yearly IDs.
+   */
+  public getProPlanIds(): PlanIdResponse {
+    return this.proPlan;
+  }
+
+  /**
+   * Returns the Premier Plan monthly and yearly IDs.
+   *
+   * @returns {PlanIdResponse} - The Premier Plan monthly and yearly IDs.
+   */
+  public getPremierPlanIds(): PlanIdResponse {
+    return this.premierPlan;
   }
 
   /**

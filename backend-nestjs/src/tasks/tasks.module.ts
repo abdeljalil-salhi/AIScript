@@ -3,6 +3,9 @@ import { Module } from '@nestjs/common';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DataService } from 'src/data/data.service';
+import { SubscriptionService } from 'src/subscription/subscription.service';
+import { PlanService } from 'src/plan/plan.service';
 import { TasksService } from './tasks.service';
 import { WalletService } from 'src/wallet/wallet.service';
 
@@ -13,6 +16,13 @@ import { WalletService } from 'src/wallet/wallet.service';
  * @class TasksModule
  */
 @Module({
-  providers: [TasksService, WalletService, PrismaService],
+  providers: [
+    TasksService,
+    PrismaService,
+    WalletService,
+    SubscriptionService,
+    PlanService,
+    DataService,
+  ],
 })
 export class TasksModule {}

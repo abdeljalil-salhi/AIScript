@@ -1,5 +1,5 @@
 // Dependencies
-import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsBoolean, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 // Entities
@@ -96,6 +96,32 @@ export class Subscription {
   public daysWithService: number;
 
   /**
+   * Subscription is active
+   * @type {boolean}
+   * @default true
+   */
+  @IsNotEmpty({ message: 'Subscription is active must not be empty' })
+  @IsBoolean({ message: 'Subscription is active must be a boolean' })
+  @Field(() => Boolean, {
+    description: 'Subscription is active',
+    defaultValue: true,
+  })
+  public isActive: boolean;
+
+  /**
+   * Subscription is deactivated
+   * @type {boolean}
+   * @default false
+   */
+  @IsNotEmpty({ message: 'Subscription is deactivated must not be empty' })
+  @IsBoolean({ message: 'Subscription is deactivated must be a boolean' })
+  @Field(() => Boolean, {
+    description: 'Subscription is deactivated',
+    defaultValue: false,
+  })
+  public isDeactivated: boolean;
+
+  /**
    * Date and time of the subscription creation
    * @type {Date}
    * @example '2021-07-01T00:00:00.000Z'
@@ -118,4 +144,16 @@ export class Subscription {
     description: 'Date and time of the subscription last update',
   })
   public updatedAt: Date;
+
+  /**
+   * Date and time of the subscription last refresh
+   * @type {Date}
+   * @example '2021-07-01T00:00:00.000Z'
+   */
+  @IsNotEmpty({ message: 'Subscription refreshed at must not be empty' })
+  @IsDate({ message: 'Subscription refreshed at must be a date' })
+  @Field(() => Date, {
+    description: 'Date and time of the subscription last refresh',
+  })
+  public refreshedAt: Date;
 }

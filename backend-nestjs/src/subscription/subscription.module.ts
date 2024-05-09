@@ -4,6 +4,8 @@ import { Module } from '@nestjs/common';
 // Services
 import { SubscriptionService } from './subscription.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { DataService } from 'src/data/data.service';
+import { PlanService } from 'src/plan/plan.service';
 import { WalletService } from 'src/wallet/wallet.service';
 // Resolvers
 import { SubscriptionResolver } from './subscription.resolver';
@@ -18,8 +20,10 @@ import { SubscriptionResolver } from './subscription.resolver';
   providers: [
     SubscriptionResolver,
     SubscriptionService,
-    PrismaService,
+    PlanService,
     WalletService,
+    DataService,
+    PrismaService,
   ],
   exports: [SubscriptionService],
 })

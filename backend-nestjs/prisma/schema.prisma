@@ -112,13 +112,27 @@ model Subscription {
     planId          String
     paymentId       String? @unique
     daysWithService Int     @default(0)
+    isActive        Boolean @default(true)
+    isDeactivated   Boolean @default(false)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    refreshedAt DateTime @default(now())
 
     user    User     @relation(fields: [userId], references: [id])
     plan    Plan     @relation(fields: [planId], references: [id])
     payment Payment? @relation(fields: [paymentId], references: [id])
 
     @@map("subscriptions")
+}
+
+model Data {
+    id    String @id @default(uuid())
+    key   String @unique
+    value String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("data")
 }

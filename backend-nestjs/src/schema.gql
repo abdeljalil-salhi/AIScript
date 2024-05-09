@@ -98,6 +98,9 @@ type MeResponse {
 }
 
 type Mutation {
+  """Cancels a subscription entity by ID."""
+  cancelSubscription(subscriptionId: String!): Subscription!
+
   """Creates a new payment entity."""
   createPayment(newPaymentInput: NewPaymentInput!): Payment!
 
@@ -285,6 +288,12 @@ type Subscription {
   """Unique identifier of the subscription"""
   id: String!
 
+  """Subscription is active"""
+  isActive: Boolean!
+
+  """Subscription is deactivated"""
+  isDeactivated: Boolean!
+
   """Subscription associated payment entity"""
   payment: Payment
 
@@ -296,6 +305,9 @@ type Subscription {
 
   """ID of the subscription plan"""
   planId: String!
+
+  """Date and time of the subscription last refresh"""
+  refreshedAt: DateTime!
 
   """Date and time of the subscription last update"""
   updatedAt: DateTime!

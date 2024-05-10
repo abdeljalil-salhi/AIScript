@@ -131,11 +131,17 @@ type Mutation {
   """Generates new access and refresh tokens for a user."""
   refresh: NewTokensResponse!
 
+  """Refreshes all subscriptions credits."""
+  refreshSubscriptionsCredits: String!
+
   """Registers a new user with the specified details."""
   register(registerInput: RegisterInput!): AuthResponse!
 
   """Updates a plan by its ID."""
   updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
+
+  """Validates all subscriptions."""
+  validateSubscriptions: String!
 }
 
 input NewPaymentInput {

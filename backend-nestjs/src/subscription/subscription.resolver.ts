@@ -185,4 +185,56 @@ export class SubscriptionResolver {
 
     return this.subscriptionService.deleteSubscriptionsByUserId(userId);
   }
+
+  /**
+   * Mutation to validate all subscriptions.
+   * This mutation is restricted to admin users only.
+   *
+   * @mutation
+   * @param {boolean} isAdmin - A boolean flag indicating if the user is an admin.
+   * @returns {Promise<string>} - A message indicating the success of the operation.
+   * @throws {ForbiddenException} - If the user is not authorized to validate subscriptions.
+   */
+  @Mutation(() => String, {
+    name: 'validateSubscriptions',
+    description: 'Validates all subscriptions.',
+  })
+  public async validateSubscriptions(
+    @CurrentUser('isAdmin') isAdmin: boolean,
+  ): Promise<string> {
+    if (!isAdmin)
+      throw new ForbiddenException(
+        'User not authorized to validate subscriptions',
+      );
+
+    await this.subscriptionService.validateSubscriptions();
+
+    return 'Subscriptions validated successfully';
+  }
+
+  /**
+   * Mutation to refresh all subscriptions credits.
+   * This mutation is restricted to admin users only.
+   *
+   * @mutation
+   * @param {boolean} isAdmin - A boolean flag indicating if the user is an admin.
+   * @returns {Promise<string>} - A message indicating the success of the operation.
+   * @throws {ForbiddenException} - If the user is not authorized to refresh subscriptions credits.
+   */
+  @Mutation(() => String, {
+    name: 'refreshSubscriptionsCredits',
+    description: 'Refreshes all subscriptions credits.',
+  })
+  public async refreshSubscriptionsCredits(
+    @CurrentUser('isAdmin') isAdmin: boolean,
+  ): Promise<string> {
+    if (!isAdmin)
+      throw new ForbiddenException(
+        'User not authorized to refresh subscriptions credits',
+      );
+
+    await this.subscriptionService.refreshSubscriptionsCredits();
+
+    return 'Subscriptions credits refreshed successfully';
+  }
 }

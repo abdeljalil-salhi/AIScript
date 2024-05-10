@@ -10,6 +10,7 @@ import { WalletService } from 'src/wallet/wallet.service';
 import { NewSubscriptionInput } from './dtos/new-subscription.input';
 // Entities
 import { Subscription } from './entities/subscription.entity';
+import { User } from 'src/user/entities/user.entity';
 import { Plan } from 'src/plan/entities/plan.entity';
 import { Wallet } from 'src/wallet/entities/wallet.entity';
 // Includes
@@ -45,9 +46,23 @@ export class SubscriptionService {
   public async createSubscription(
     newSubscriptionInput: NewSubscriptionInput,
   ): Promise<Subscription> {
+    const oldSubscription: Subscription =
+      await this.prismaService.subscription.update({
+        where: {
+          userId: newSubscriptionInput.userId,
+        },
+        data: {
+          isActive: false,
+          isDeactivated: true,
+        },
+      });
+
+    if (!oldSubscription) return null;
+
     const subscription: Subscription =
       await this.prismaService.subscription.create({
         data: {
+          ownerUserId: newSubscriptionInput.userId,
           user: {
             connect: {
               id: newSubscriptionInput.userId,
@@ -143,6 +158,33 @@ export class SubscriptionService {
       await this.walletService.setSubscriptionCreditsToWallet(walletId, 0);
 
     if (wallet && wallet.subscriptionCredits === 0) {
+      const user: User = await this.prismaService.user.update({
+        where: {
+          id: wallet.user.id,
+        },
+        data: {
+          subscription: {
+            create: {
+              ownerUserId: wallet.user.id,
+              plan: {
+                connect: {
+                  id: this.planService.getBasicPlanId(),
+                },
+              },
+            },
+          },
+        },
+        include: {
+          subscription: true,
+        },
+      });
+
+      console.log(user);
+
+      console.log(this.planService.getBasicPlanId());
+
+      if (!user) return null;
+
       return this.prismaService.subscription.update({
         where: {
           id: subscriptionId,
@@ -229,7 +271,13 @@ export class SubscriptionService {
   ): Promise<Subscription[]> {
     return this.prismaService.subscription.findMany({
       where: {
-        userId: userId,
+        ownerUserId: userId,
+      },
+      include: {
+        plan: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
@@ -273,7 +321,7 @@ export class SubscriptionService {
   public async deleteSubscriptionsByUserId(userId: string): Promise<string> {
     await this.prismaService.subscription.deleteMany({
       where: {
-        userId: userId,
+        ownerUserId: userId,
       },
     });
 

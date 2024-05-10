@@ -4,6 +4,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PlanService } from 'src/plan/plan.service';
 // Entities
 import { User } from './entities/user.entity';
 // DTOs
@@ -21,7 +22,10 @@ export class UserService {
    *
    * @param {PrismaService} prismaService - The service for interacting with the Prisma ORM.
    */
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly planService: PlanService,
+  ) {}
 
   /**
    * Checks if the provided username is an admin.
@@ -105,7 +109,7 @@ export class UserService {
    * @returns {Promise<User>} - The newly created user.
    */
   public async createUser(newUserInput: NewUserInput): Promise<User> {
-    return this.prismaService.user.create({
+    const user: User = await this.prismaService.user.create({
       data: {
         ...newUserInput,
         isAdmin: false,
@@ -123,9 +127,29 @@ export class UserService {
         wallet: {
           create: {},
         },
+        subscription: {
+          create: {
+            plan: {
+              connect: {
+                id: this.planService.getBasicPlanId(),
+              },
+            },
+          },
+        },
       },
       include: userIncludes,
     });
+
+    await this.prismaService.subscription.update({
+      where: {
+        id: user.subscription.id,
+      },
+      data: {
+        ownerUserId: user.id,
+      },
+    });
+
+    return user;
   }
 
   /**

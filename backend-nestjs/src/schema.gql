@@ -300,6 +300,9 @@ type Subscription {
   """Subscription is deactivated"""
   isDeactivated: Boolean!
 
+  """ID of the owner user that owns the subscription"""
+  ownerUserId: String
+
   """Subscription associated payment entity"""
   payment: Payment
 
@@ -322,7 +325,7 @@ type Subscription {
   user: User
 
   """ID of the associated user that owns the subscription"""
-  userId: String!
+  userId: String
 }
 
 input UpdatePlanInput {
@@ -357,6 +360,9 @@ type User {
 
   """Refresh token of the user"""
   refreshToken: String
+
+  """User associated subscription entity"""
+  subscription: Subscription
 
   """Date and time of the user last update"""
   updatedAt: DateTime!

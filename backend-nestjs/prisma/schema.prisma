@@ -90,7 +90,7 @@ model Plan {
 
 model Payment {
     id             String        @id @default(uuid())
-    userId         String        @unique
+    userId         String
     amount         Float
     orderId        String        @unique
     paypalSubId    String        @unique
@@ -108,7 +108,8 @@ model Payment {
 
 model Subscription {
     id              String  @id @default(uuid())
-    userId          String  @unique
+    userId          String? @unique
+    ownerUserId     String?
     planId          String
     paymentId       String? @unique
     daysWithService Int     @default(0)
@@ -119,7 +120,7 @@ model Subscription {
     updatedAt   DateTime @updatedAt
     refreshedAt DateTime @default(now())
 
-    user    User     @relation(fields: [userId], references: [id])
+    user    User?    @relation(fields: [userId], references: [id])
     plan    Plan     @relation(fields: [planId], references: [id])
     payment Payment? @relation(fields: [paymentId], references: [id])
 

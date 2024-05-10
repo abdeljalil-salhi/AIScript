@@ -13,6 +13,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Avatar } from 'src/avatar/entities/avatar.entity';
 import { Wallet } from 'src/wallet/entities/wallet.entity';
 import { Connection } from 'src/connection/entities/connection.entity';
+import { Subscription } from 'src/subscription/entities/subscription.entity';
 
 /**
  * Represents a user entity that is used by GraphQL
@@ -64,6 +65,17 @@ export class User {
     nullable: true,
   })
   public connection?: Connection;
+
+  /**
+   * Associated subscription entity
+   * @type {Subscription}
+   * @nullable
+   */
+  @Field(() => Subscription, {
+    description: 'User associated subscription entity',
+    nullable: true,
+  })
+  public subscription?: Subscription;
 
   /**
    * Username of the user

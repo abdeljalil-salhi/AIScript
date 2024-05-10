@@ -33,6 +33,8 @@ export class PlanService implements OnModuleInit {
    */
   private createdPlans: Plan[] = [];
 
+  private basicPlan: string = '';
+
   /**
    * The Pro Plan monthly and yearly IDs.
    * @type {PlanIdResponse}
@@ -59,6 +61,10 @@ export class PlanService implements OnModuleInit {
    */
   public async onModuleInit(): Promise<void> {
     await this.createPlans();
+
+    this.basicPlan = this.createdPlans.find(
+      (plan: Plan) => plan.name === 'Basic Plan',
+    ).id;
 
     this.proPlan = {
       monthly: this.createdPlans.find(
@@ -102,6 +108,15 @@ export class PlanService implements OnModuleInit {
     this.createdPlans = await this.getAllPlans();
 
     return this.createdPlans;
+  }
+
+  /**
+   * Returns the Basic Plan ID.
+   *
+   * @returns {string} - The Basic Plan ID.
+   */
+  public getBasicPlanId(): string {
+    return this.basicPlan;
   }
 
   /**

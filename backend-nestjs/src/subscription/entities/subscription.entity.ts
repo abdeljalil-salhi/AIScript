@@ -28,11 +28,11 @@ export class Subscription {
    * ID of the associated user
    * @type {string}
    */
-  @IsNotEmpty({ message: 'Subscription user ID must not be empty' })
   @Field(() => String, {
     description: 'ID of the associated user that owns the subscription',
+    nullable: true,
   })
-  public userId: string;
+  public userId?: string;
 
   /**
    * Associated user entity
@@ -43,6 +43,18 @@ export class Subscription {
     nullable: true,
   })
   user?: User;
+
+  /**
+   * ID of the owner user;
+   * It is used to keep track of the owner of the subscription
+   * in case the subscription is deactivated.
+   * @type {string}
+   */
+  @Field(() => String, {
+    description: 'ID of the owner user that owns the subscription',
+    nullable: true,
+  })
+  public ownerUserId?: string;
 
   /**
    * Subscription plan ID

@@ -98,6 +98,9 @@ export class WalletService {
       data: {
         subscriptionCredits: credits,
       },
+      include: {
+        user: true,
+      },
     });
   }
 

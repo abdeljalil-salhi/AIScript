@@ -1,6 +1,6 @@
 // Dependencies
-import { FC, MouseEvent, useEffect, useState } from "react";
-import { useGetIdentity } from "@refinedev/core";
+import { ChangeEvent, FC, MouseEvent, useEffect, useState } from "react";
+import { useGetIdentity, useNotification } from "@refinedev/core";
 
 // Constants
 import { defaultProfilePicture } from "@/constants";
@@ -31,25 +31,55 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
    */
   const { data: identity, isLoading } = useGetIdentity<MeResponse>();
 
+  /**
+   * Notification hook to show notifications to the user
+   */
+  const { open } = useNotification();
+
+  /**
+   * Set the avatar when the identity is loaded
+   * @returns {void}
+   * @sideeffects {setAvatar}
+   */
   useEffect(() => {
     if (identity) {
       setAvatar(identity.user.avatar?.filename || "");
     }
   }, [identity]);
 
-  const handlePreviewAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0];
-    const reader = new FileReader();
+  /**
+   * Handle preview avatar when user uploads an image
+   * @param {ChangeEvent<HTMLInputElement>} e - Event
+   * @returns {void}
+   * @sideeffects {setPreviewAvatar}
+   */
+  const handlePreviewAvatar = (e: ChangeEvent<HTMLInputElement>): void => {
+    const file: File = e.target.files![0];
+    const reader: FileReader = new FileReader();
+
     reader.onloadend = () => {
       setPreviewAvatar(reader.result as string);
     };
+
+    // Read the file as a base64 data URL
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  /**
+   * Handle save avatar when user clicks on the save button
+   * @returns {void}
+   * @sideeffects {setPreviewAvatar}
+   */
+  const handleSave = (): void => {
     // Save the image to the server
     setPreviewAvatar("");
-    alert("Image saved successfully!");
+
+    // Show a success notification
+    open?.({
+      type: "success",
+      description: "Success!",
+      message: "Your profile picture has been updated successfully.",
+    });
   };
 
   return (
@@ -98,7 +128,7 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
         avatar &&
         avatar !== defaultProfilePicture && (
           <button
-            className="mt-3 px-4 text-red-500 hover:text-red-600 cursor-pointer transition-all ease-in-out"
+            className="w-40 mt-3 px-4 text-red-500 hover:text-red-600 cursor-pointer transition-all ease-in-out"
             onClick={() => setPreviewAvatar(defaultProfilePicture)}
           >
             Remove image

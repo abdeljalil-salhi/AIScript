@@ -38,28 +38,36 @@ export const SubscribeButton: FC<SubscribeButtonProps> = ({
   ) : (
     <div className="relative">
       <Link
-        to={`/checkout/${
-          billingPeriod == MONTHLY_BILLING
-            ? plan.planIdMonthly
-            : plan.planIdYearly
-        }`}
+        to={
+          plan.id === "0"
+            ? `/subscription/cancel`
+            : `/checkout/${
+                billingPeriod == MONTHLY_BILLING
+                  ? plan.planIdMonthly
+                  : plan.planIdYearly
+              }`
+        }
         className="w-full inline-flex justify-center items-center whitespace-nowrap rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-3.5 py-2.5 text-sm font-medium text-n-1 hover:text-n-1 shadow-sm transition-all duration-300 ease-in-out cursor-pointer"
       >
-        Subscribe
+        {plan.id === "0" ? "Cancel Subscription" : "Subscribe"}
       </Link>
 
       <div className="absolute -bottom-6 w-full flex items-center justify-center">
         <span
           className="text-transparent bg-gradient-to-br from-purple-600 hover:from-purple-600/80 to-blue-500 hover:to-blue-500/80 webkit-bg-clip-text inline-block text-sm tracking-wide cursor-pointer transition-all duration-300 ease-in-out hover:underline"
           onClick={() =>
-            setBillingPeriod(
-              billingPeriod === MONTHLY_BILLING
-                ? YEARLY_BILLING
-                : MONTHLY_BILLING
-            )
+            plan.id === "0"
+              ? null
+              : setBillingPeriod(
+                  billingPeriod === MONTHLY_BILLING
+                    ? YEARLY_BILLING
+                    : MONTHLY_BILLING
+                )
           }
         >
-          {billingPeriod === MONTHLY_BILLING
+          {plan.id === "0"
+            ? ""
+            : billingPeriod === MONTHLY_BILLING
             ? "Save with yearly billing (20% off)"
             : "Switch to monthly billing"}
         </span>

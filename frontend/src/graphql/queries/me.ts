@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 // Query to get the current user
-export const ME = gql`
+export const QUERY_ME = gql`
   query Me {
     me {
       user {
@@ -23,6 +23,18 @@ export const ME = gql`
         wallet {
           balance
           updatedAt
+        }
+        subscription {
+          plan {
+            id
+            name
+            price
+            duration
+            createdAt
+          }
+          daysWithService
+          isActive
+          createdAt
         }
         createdAt
         updatedAt

@@ -8,6 +8,11 @@ import {
 
 // Utils
 import { API_URL, dataProvider } from "../data";
+// GraphQL Queries
+import { QUERY_ME } from "@/graphql/queries/me";
+// GraphQL Mutations
+import { MUTATION_REGISTER } from "@/graphql/mutations/register";
+import { MUTATION_LOGIN } from "@/graphql/mutations/login";
 
 // Types
 type AuthCredentials = {
@@ -71,37 +76,7 @@ export const authProvider: AuthBindings = {
               filename: "default.png",
             },
           },
-          rawQuery: `
-            mutation Register($registerInput: RegisterInput!) {
-              register(registerInput: $registerInput) {
-                accessToken
-                refreshToken
-                user {
-                  id
-                  username
-                  isAdmin
-                  connection {
-                    email
-                    isEmailVerified
-                    is2faEnabled
-                    provider
-                    otpCreatedAt
-                  }
-                  avatar {
-                    defaultFilename
-                    filename
-                    updatedAt
-                  }
-                  wallet {
-                    balance
-                    updatedAt
-                  }
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-            `,
+          rawQuery: MUTATION_REGISTER,
         },
       });
 
@@ -158,37 +133,7 @@ export const authProvider: AuthBindings = {
               password,
             },
           },
-          rawQuery: `
-            mutation Login($loginInput: LoginInput!) {
-              login(loginInput: $loginInput) {
-                accessToken
-                refreshToken
-                user {
-                  id
-                  username
-                  isAdmin
-                  connection {
-                    email
-                    isEmailVerified
-                    is2faEnabled
-                    provider
-                    otpCreatedAt
-                  }
-                  avatar {
-                    defaultFilename
-                    filename
-                    updatedAt
-                  }
-                  wallet {
-                    balance
-                    updatedAt
-                  }
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-          `,
+          rawQuery: MUTATION_LOGIN,
         },
       });
 
@@ -274,35 +219,7 @@ export const authProvider: AuthBindings = {
         method: "post",
         headers: {},
         meta: {
-          rawQuery: `
-            query Me {
-              me {
-                user {
-                  id
-                  username
-                  isAdmin
-                  connection {
-                    email
-                    isEmailVerified
-                    is2faEnabled
-                    provider
-                    otpCreatedAt
-                  }
-                  avatar {
-                    defaultFilename
-                    filename
-                    updatedAt
-                  }
-                  wallet {
-                    balance
-                    updatedAt
-                  }
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-          `,
+          rawQuery: QUERY_ME,
         },
       });
 
@@ -357,35 +274,7 @@ export const authProvider: AuthBindings = {
           : {},
         meta: {
           // Get the user information such as id, username, email, etc.
-          rawQuery: `
-            query Me {
-              me {
-                user {
-                  id
-                  username
-                  isAdmin
-                  connection {
-                    email
-                    isEmailVerified
-                    is2faEnabled
-                    provider
-                    otpCreatedAt
-                  }
-                  avatar {
-                    defaultFilename
-                    filename
-                    updatedAt
-                  }
-                  wallet {
-                    balance
-                    updatedAt
-                  }
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-          `,
+          rawQuery: QUERY_ME,
         },
       });
 

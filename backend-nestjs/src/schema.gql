@@ -101,9 +101,6 @@ type Mutation {
   """Cancels a subscription entity by ID."""
   cancelSubscription(subscriptionId: String!): Subscription!
 
-  """Creates a new payment entity."""
-  createPayment(newPaymentInput: NewPaymentInput!): Payment!
-
   """Creates the predefined plans in the database."""
   createPlans: [Plan!]!
 
@@ -137,31 +134,14 @@ type Mutation {
   """Registers a new user with the specified details."""
   register(registerInput: RegisterInput!): AuthResponse!
 
+  """Creates a new payment entity while subscribing to a plan."""
+  subscribe(subscribeInput: SubscribeInput!): Payment!
+
   """Updates a plan by its ID."""
   updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
 
   """Validates all subscriptions."""
   validateSubscriptions: String!
-}
-
-input NewPaymentInput {
-  """Amount of the payment"""
-  amount: Float!
-
-  """Order ID of the payment"""
-  orderId: String!
-
-  """Source of the payment"""
-  paymentSource: String!
-
-  """PayPal subscription ID of the payment"""
-  paypalSubId: String!
-
-  """ID of the associated plan that the payment is for"""
-  planId: String!
-
-  """ID of the associated user that owns the payment"""
-  userId: String!
 }
 
 input NewSubscriptionInput {
@@ -282,6 +262,26 @@ input RegisterInput {
 
   """Username of the user"""
   username: String!
+}
+
+input SubscribeInput {
+  """Amount of the payment"""
+  amount: Float!
+
+  """Order ID of the payment"""
+  orderId: String!
+
+  """Source of the payment"""
+  paymentSource: String!
+
+  """PayPal subscription ID of the payment"""
+  paypalSubId: String!
+
+  """ID of the associated plan that the payment is for"""
+  planId: String!
+
+  """ID of the associated user that owns the payment"""
+  userId: String!
 }
 
 type Subscription {

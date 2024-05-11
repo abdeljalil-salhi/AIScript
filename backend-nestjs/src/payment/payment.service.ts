@@ -5,10 +5,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SubscriptionService } from 'src/subscription/subscription.service';
 // DTOs
-import { NewPaymentInput } from './dtos/new-payment.input';
+import { SubscribeInput } from './dtos/subscribe.input';
+import { NewSubscriptionInput } from 'src/subscription/dtos/new-subscription.input';
 // Entities
 import { Payment } from './entities/payment.entity';
-import { NewSubscriptionInput } from 'src/subscription/dtos/new-subscription.input';
 import { Subscription } from 'src/subscription/entities/subscription.entity';
 
 /**
@@ -34,22 +34,20 @@ export class PaymentService {
    * Creates a new payment entity.
    * Creates a new subscription entity that is associated with the payment.
    *
-   * @param {NewPaymentInput} newPaymentInput - The input data to create a new payment.
+   * @param {SubscribeInput} subscribeInput - The input data to create a new payment.
    * @returns {Promise<Payment>} - The newly created payment entity.
    */
-  public async createPayment(
-    newPaymentInput: NewPaymentInput,
-  ): Promise<Payment> {
+  public async createPayment(subscribeInput: SubscribeInput): Promise<Payment> {
     let payment: Payment = await this.prismaService.payment.create({
       data: {
-        amount: newPaymentInput.amount,
-        orderId: newPaymentInput.orderId,
-        paymentSource: newPaymentInput.paymentSource,
-        paypalSubId: newPaymentInput.paypalSubId,
+        amount: subscribeInput.amount,
+        orderId: subscribeInput.orderId,
+        paymentSource: subscribeInput.paymentSource,
+        paypalSubId: subscribeInput.paypalSubId,
         subscriptionId: 'subscriptionId',
         user: {
           connect: {
-            id: newPaymentInput.userId,
+            id: subscribeInput.userId,
           },
         },
       },
@@ -57,8 +55,8 @@ export class PaymentService {
 
     // Create a new subscription input object
     const newSubscriptionInput: NewSubscriptionInput = {
-      userId: newPaymentInput.userId,
-      planId: newPaymentInput.planId,
+      userId: subscribeInput.userId,
+      planId: subscribeInput.planId,
       paymentId: payment.id,
     };
 

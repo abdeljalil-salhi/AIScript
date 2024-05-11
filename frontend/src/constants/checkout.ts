@@ -8,11 +8,16 @@ import { CheckoutPlan } from "./types";
 const MONTHLY_BILLING = 0;
 const YEARLY_BILLING = 1;
 
-export const basicPlanId: string = uuidv4();
-export const monthlyProPlanId: string = uuidv4();
-export const yearlyProPlanId: string = uuidv4();
-export const monthlyPremierPlanId: string = uuidv4();
-export const yearlyPremierPlanId: string = uuidv4();
+export const basicPlanId: string =
+  (import.meta.env.VITE_API_BASIC_PLAN_ID as string) || uuidv4();
+export const monthlyProPlanId: string =
+  (import.meta.env.VITE_API_MONTHLY_PRO_PLAN_ID as string) || uuidv4();
+export const yearlyProPlanId: string =
+  (import.meta.env.VITE_API_YEARLY_PRO_PLAN_ID as string) || uuidv4();
+export const monthlyPremierPlanId: string =
+  (import.meta.env.VITE_API_MONTHLY_PREMIER_PLAN_ID as string) || uuidv4();
+export const yearlyPremierPlanId: string =
+  (import.meta.env.VITE_API_YEARLY_PREMIER_PLAN_ID as string) || uuidv4();
 
 export const cardPaymentMaintenance: boolean =
   String(import.meta.env.VITE_API_CARD_PAYMENT_MAINTENANCE)

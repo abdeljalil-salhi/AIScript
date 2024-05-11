@@ -1,9 +1,9 @@
 // Dependencies
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, Button, ConfigProvider } from "antd";
-import { useLogout, useWarnAboutChange } from "@refinedev/core";
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, ConfigProvider } from "antd";
+import { useGetIdentity, useLogout, useWarnAboutChange } from "@refinedev/core";
+import { LogoutOutlined } from "@ant-design/icons";
 
 // Assets
 import Logo from "@/assets/logo.webp";
@@ -12,6 +12,8 @@ import { DropdownModal } from "./DropdownModal";
 // Constants
 import { navigationLinks } from "@/constants/sidebar";
 import { NavigationLink } from "@/constants/types";
+// GraphQL Types
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface SidebarProps {}
@@ -34,7 +36,14 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
    * Logout mutation hook;
    * used to logout the user
    */
-  const { mutate: logout, isLoading } = useLogout();
+  const { mutate: logout, isLoading: isLoggingOut } = useLogout();
+
+  /**
+   * Get the user's identity
+   * @type {MeResponse}
+   */
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
 
   /**
    * Dropdown state to toggle the dropdown menu
@@ -104,13 +113,21 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <span className="sr-only">Open user menu</span>
-              <Avatar className="cursor-pointer">
-                <UserOutlined />
-              </Avatar>
+              {isIdentityLoading ? (
+                <div className="w-8 aspect-square p-1 rounded-full ring-2 ring-n-5 bg-n-6 animate-pulse"></div>
+              ) : (
+                <img
+                  src={identity?.user.avatar?.filename}
+                  alt={`${identity?.user.username}'s profile`}
+                  className="w-8 aspect-square cursor-pointer object-cover rounded-full"
+                />
+              )}
             </button>
             <DropdownModal
               open={showDropdown}
               onClose={() => setShowDropdown(false)}
+              identity={identity}
+              isIdentityLoading={isIdentityLoading}
             />
           </div>
         </div>
@@ -121,9 +138,11 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
               className="font-grotesk !text-n-1 hover:underline cursor-pointer"
               draggable={false}
             >
-              50 credits
-              <br />
-              Pricing
+              <p>
+                {isIdentityLoading ? "___" : identity?.user.wallet?.balance}{" "}
+                credits
+              </p>
+              <p>Pricing</p>
             </Link>
           </div>
           <div className="flex flex-col w-full gap-2">
@@ -138,15 +157,21 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
             </div>
             <div className="flex flex-row items-center justify-between mt-2 w-full gap-2">
               <Link to="/profile" draggable={false}>
-                <Avatar className="cursor-pointer">
-                  <UserOutlined />
-                </Avatar>
+                {isIdentityLoading ? (
+                  <div className="w-8 aspect-square p-1 rounded-full ring-2 ring-n-5 bg-n-6 animate-pulse"></div>
+                ) : (
+                  <img
+                    src={identity?.user.avatar?.filename}
+                    alt={`${identity?.user.username}'s profile`}
+                    className="w-8 aspect-square cursor-pointer object-cover rounded-full"
+                  />
+                )}
               </Link>
               <Button
                 type="text"
                 icon={<LogoutOutlined />}
                 className="h-full"
-                loading={isLoading}
+                loading={isLoggingOut}
                 onClick={handleLogout}
               ></Button>
             </div>

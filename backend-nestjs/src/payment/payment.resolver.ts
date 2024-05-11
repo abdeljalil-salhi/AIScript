@@ -4,7 +4,7 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 // Services
 import { PaymentService } from './payment.service';
 // DTOs
-import { NewPaymentInput } from './dtos/new-payment.input';
+import { SubscribeInput } from './dtos/subscribe.input';
 // Entities
 import { Payment } from './entities/payment.entity';
 
@@ -25,19 +25,19 @@ export class PaymentResolver {
   constructor(private readonly paymentService: PaymentService) {}
 
   /**
-   * Mutation to create a new payment entity.
+   * Mutation to create a new payment entity while subscribing to a plan.
    *
    * @mutation
-   * @param {NewPaymentInput} newPaymentInput - The input data to create a new payment.
+   * @param {SubscribeInput} subscribeInput - The input data to create a new payment.
    * @returns {Promise<Payment>} - The newly created payment entity.
    */
   @Mutation(() => Payment, {
-    name: 'createPayment',
-    description: 'Creates a new payment entity.',
+    name: 'subscribe',
+    description: 'Creates a new payment entity while subscribing to a plan.',
   })
-  public async createPayment(
-    @Args('newPaymentInput') newPaymentInput: NewPaymentInput,
+  public async subscribe(
+    @Args('subscribeInput') subscribeInput: SubscribeInput,
   ): Promise<Payment> {
-    return this.paymentService.createPayment(newPaymentInput);
+    return this.paymentService.createPayment(subscribeInput);
   }
 }

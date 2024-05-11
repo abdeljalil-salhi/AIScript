@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 
 // Constants
 import { PaymentMethodEnum } from "@/constants/checkout";
-import { CheckoutPlan } from "@/constants/types";
+import { CheckoutPlan, PricingPlan } from "@/constants/types";
 // Components
 import { CardPayment } from "@/components/checkout/CardPayment";
 import { PaymentMethod } from "@/components/checkout/PaymentMethod";
@@ -13,6 +13,7 @@ import { SubscriptionDetails } from "@/components/checkout/SubscriptionDetails";
 // Interfaces
 interface CheckoutPaymentProps {
   plan: CheckoutPlan;
+  pricingPlan: PricingPlan;
 }
 
 /**
@@ -24,6 +25,7 @@ interface CheckoutPaymentProps {
  */
 export const CheckoutPayment: FC<CheckoutPaymentProps> = ({
   plan,
+  pricingPlan,
 }): JSX.Element => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodEnum>(
     PaymentMethodEnum.PAYPAL_PAYMENT
@@ -45,7 +47,7 @@ export const CheckoutPayment: FC<CheckoutPaymentProps> = ({
             setPaymentMethod={setPaymentMethod}
           />
           {paymentMethod === PaymentMethodEnum.PAYPAL_PAYMENT && (
-            <PaypalPayment plan={plan} />
+            <PaypalPayment plan={plan} pricingPlan={pricingPlan} />
           )}
         </div>
 

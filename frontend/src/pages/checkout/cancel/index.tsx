@@ -3,12 +3,12 @@ import { FC } from "react";
 import { useParams } from "react-router-dom";
 
 // Components
-import { Header } from "@/components/cancel/Header";
+import { Header } from "@/components/checkout/cancel/Header";
 
 // Interfaces
-interface CancelPageProps {}
+interface CheckoutCancelPageProps {}
 
-interface CancelPageParams {
+interface CheckoutCancelPageParams {
   // Order ID from the URL
   orderId: string;
   // Allow for other params
@@ -16,18 +16,21 @@ interface CancelPageParams {
 }
 
 /**
- * Cancel Page Component
+ * Checkout Cancel Page Component
  *
- * @interface CancelPageProps
- * @returns {JSX.Element} - Cancel Page Component
- * @exports CancelPage
+ * @interface CheckoutCancelPageProps
+ * @returns {JSX.Element} - Checkout Cancel Page Component
+ * @exports CheckoutCancelPage
  */
-export const CancelPage: FC<CancelPageProps> = (): JSX.Element => {
+export const CheckoutCancelPage: FC<
+  CheckoutCancelPageProps
+> = (): JSX.Element => {
   /**
    * Get the order ID from the URL
+   * @type {Partial<CheckoutCancelPageParams>}
    */
-  const { orderId }: Readonly<Partial<CancelPageParams>> =
-    useParams<CancelPageParams>();
+  const { orderId }: Readonly<Partial<CheckoutCancelPageParams>> =
+    useParams<CheckoutCancelPageParams>();
 
   return (
     <div className="w-screen min-h-screen bg-gray-50 py-5 font-['Poppins'] flex flex-col items-center">
@@ -44,6 +47,7 @@ export const CancelPage: FC<CancelPageProps> = (): JSX.Element => {
                 </span>
               </p>
             </div>
+
             <div className="flex items-center justify-center w-full py-6 lg:text-center text-gray-800 font-light text-lg md:text-xl min-h-48">
               Your payment has been canceled.
             </div>

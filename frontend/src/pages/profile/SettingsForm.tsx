@@ -13,6 +13,7 @@ import { MeResponse } from "@/graphql/schema.types";
 import { ChangePasswordModal } from "@/components/profile/ChangePasswordModal";
 import { Enable2FAModal } from "@/components/profile/Enable2FAModal";
 import { VerifyEmailModal } from "@/components/profile/VerifyEmailModal";
+import { SubscriptionCard } from "@/components/profile/SubscriptionCard";
 
 // Interfaces
 interface SettingsFormProps {}
@@ -47,7 +48,8 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity, isLoading } = useGetIdentity<MeResponse>();
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
 
   useEffect(() => {
     if (identity) {
@@ -93,7 +95,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
               setEmail(e.target.value)
             }
           />
-          {!isLoading ? (
+          {!isIdentityLoading ? (
             identity?.user.connection?.isEmailVerified ? (
               <div className="flex flex-row gap-1 items-center justify-start">
                 <CheckCircleOutlined className="text-green-600 text-xs" />
@@ -128,8 +130,15 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
 
       <hr className="hidden md:block w-full max-w-96 lg:max-w-2xl my-3 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-n-5 to-transparent opacity-50" />
 
+      <SubscriptionCard
+        identity={identity}
+        isIdentityLoading={isIdentityLoading}
+      />
+
+      <hr className="hidden md:block w-full max-w-96 lg:max-w-2xl my-3 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-n-5 to-transparent opacity-50" />
+
       <div className="w-full max-w-96 lg:max-w-2xl flex flex-col gap-2">
-        {!isLoading && !identity?.user.connection?.isEmailVerified && (
+        {!isIdentityLoading && !identity?.user.connection?.isEmailVerified && (
           <>
             <button
               className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
@@ -168,7 +177,15 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         />
 
         <div className="w-full max-w-full text-start text-n-4 text-xs font-light italic">
-          <p>Joined on 2021-10-01</p>
+          <p>
+            Joined on{" "}
+            {!isIdentityLoading &&
+              new Date(identity!.user.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+          </p>
         </div>
       </div>
     </>

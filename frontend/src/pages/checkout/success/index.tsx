@@ -1,20 +1,21 @@
 // Dependencies
 import { FC, useEffect, useState } from "react";
-
-// Constants
-import { PaypalOrderResponse } from "@/constants/types";
 import {
   NavigateFunction,
   useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { Header } from "@/components/success/Header";
+
+// Constants
+import { PaypalOrderResponse } from "@/constants/types";
+// Components
+import { Header } from "@/components/checkout/success/Header";
 
 // Interfaces
-interface SuccessPageProps {}
+interface CheckoutSuccessPageProps {}
 
-interface SuccessPageParams {
+interface CheckoutSuccessPageParams {
   // Order ID from the URL
   orderId: string;
   // Allow for other params
@@ -22,13 +23,15 @@ interface SuccessPageParams {
 }
 
 /**
- * Success Page Component
+ * Checkout Success Page Component
  *
- * @interface SuccessPageProps
- * @returns {JSX.Element} - Success Page Component
- * @exports SuccessPage
+ * @interface CheckoutSuccessPageProps
+ * @returns {JSX.Element} - Checkout Success Page Component
+ * @exports CheckoutSuccessPage
  */
-export const SuccessPage: FC<SuccessPageProps> = (): JSX.Element => {
+export const CheckoutSuccessPage: FC<
+  CheckoutSuccessPageProps
+> = (): JSX.Element => {
   /**
    * Order details for the success page based on the order ID from the URL
    */
@@ -55,9 +58,13 @@ export const SuccessPage: FC<SuccessPageProps> = (): JSX.Element => {
   /**
    * Get the order ID from the URL
    */
-  const { orderId }: Readonly<Partial<SuccessPageParams>> =
-    useParams<SuccessPageParams>();
+  const { orderId }: Readonly<Partial<CheckoutSuccessPageParams>> =
+    useParams<CheckoutSuccessPageParams>();
 
+  /**
+   * Get the order details from the navigation state
+   * or redirect to the pricing page if there is no state
+   */
   useEffect(() => {
     setIsLoading(true);
 
@@ -113,6 +120,7 @@ export const SuccessPage: FC<SuccessPageProps> = (): JSX.Element => {
                 )}
               </p>
             </div>
+
             <div className="flex items-center justify-center w-full py-6 lg:text-center text-gray-800 font-light text-lg md:text-xl min-h-48">
               You have successfully subscribed to the {orderDetails.plan.name}{" "}
               Plan.

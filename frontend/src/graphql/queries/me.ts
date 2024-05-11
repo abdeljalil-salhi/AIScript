@@ -26,6 +26,7 @@ export const QUERY_ME = gql`
         }
         subscription {
           plan {
+            id
             name
             price
             duration

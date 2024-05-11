@@ -1,18 +1,20 @@
 // Dependencies
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useGetIdentity } from "@refinedev/core";
 
 // Constants
 import { MONTHLY_BILLING, pricingPlans } from "@/constants/pricing";
-import { PricingPlan as TPricingPlan } from "@/constants/types";
+import { checkoutPlans } from "@/constants/checkout";
+import { CheckoutPlan, PricingPlan as TPricingPlan } from "@/constants/types";
 // Components
 import { BillingPeriodSwitch } from "@/components/pricing/BillingPeriodSwitch";
 import { Header } from "@/components/pricing/Header";
 import { PricingPlan } from "@/components/pricing/PricingPlan";
+// GraphQL Types
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface PricingPageProps {}
-
-const currentPlan: string = "0";
 
 /**
  * Pricing Page Component
@@ -29,6 +31,34 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
    * @description 0 - Monthly Billing, 1 - Yearly Billing
    */
   const [billingPeriod, setBillingPeriod] = useState<0 | 1>(MONTHLY_BILLING);
+
+  /**
+   * Current Plan ID State
+   * @type {string}
+   * @default "0"
+   * @description ID of the current plan
+   */
+  const [currentPlan, setCurrentPlan] = useState<string>("0");
+
+  /**
+   * Get the user's identity
+   * @type {MeResponse}
+   */
+  const { data: identity } = useGetIdentity<MeResponse>();
+
+  /**
+   * Set the current plan based on the user's subscription
+   */
+  useEffect(() => {
+    if (identity) {
+      const currentCheckoutPlan = checkoutPlans.find(
+        (plan: CheckoutPlan) => plan.id === identity.user.subscription!.plan!.id
+      );
+
+      if (currentCheckoutPlan)
+        setCurrentPlan(currentCheckoutPlan.pricingPlanId);
+    }
+  }, [identity]);
 
   return (
     <div className="p-4 md:p-6 w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col gap-6 overflow-y-auto">

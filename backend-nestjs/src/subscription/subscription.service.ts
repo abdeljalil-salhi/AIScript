@@ -179,10 +179,6 @@ export class SubscriptionService {
         },
       });
 
-      console.log(user);
-
-      console.log(this.planService.getBasicPlanId());
-
       if (!user) return null;
 
       return this.prismaService.subscription.update({

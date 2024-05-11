@@ -7,11 +7,11 @@ import { Field, InputType } from '@nestjs/graphql';
  * This is used as input to the `createPayment` mutation.
  *
  * @export
- * @class NewPaymentInput
+ * @class SubscribeInput
  * @module PaymentModule
  */
 @InputType()
-export class NewPaymentInput {
+export class SubscribeInput {
   /**
    * ID of the associated user that owns the payment
    * @type {string}

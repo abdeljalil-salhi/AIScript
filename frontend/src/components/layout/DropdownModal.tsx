@@ -7,11 +7,15 @@ import { useLogout, useWarnAboutChange } from "@refinedev/core";
 
 // Components
 import { Backdrop } from "../Backdrop";
+// GraphQL Types
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface DropdownModalProps {
   open: boolean;
   onClose: () => void;
+  identity: MeResponse | undefined;
+  isIdentityLoading: boolean;
 }
 
 /**
@@ -24,6 +28,8 @@ interface DropdownModalProps {
 export const DropdownModal: FC<DropdownModalProps> = ({
   open,
   onClose,
+  identity,
+  isIdentityLoading,
 }): JSX.Element => {
   /**
    * Warn about changes hook;
@@ -63,9 +69,19 @@ export const DropdownModal: FC<DropdownModalProps> = ({
       <div className="z-20 block md:hidden bg-n-7 divide-y divide-n-6/70 rounded-lg shadow absolute bottom-[3.75rem] right-1">
         <div className="px-4 py-3 text-sm text-n-2">
           <Link to="/profile">
-            <div className="w-full">Abdeljalil Salhi</div>
+            <div className="w-full">
+              {isIdentityLoading ? (
+                <div className="w-full h-4 p-1 animate-pulse"></div>
+              ) : (
+                identity?.user.username
+              )}
+            </div>
             <div className="w-full font-medium truncate">
-              abdel@aiscript.com
+              {isIdentityLoading ? (
+                <div className="w-full h-4 p-1 animate-pulse"></div>
+              ) : (
+                identity?.user.connection?.email
+              )}
             </div>
           </Link>
         </div>

@@ -99,6 +99,17 @@ export class Payment {
   public paymentSource: string;
 
   /**
+   * Facilitator access token of the payment
+   * @type {string}
+   */
+  @IsNotEmpty({ message: 'Payment facilitator access token must not be empty' })
+  @IsString({ message: 'Payment facilitator access token must be a string' })
+  @Field(() => String, {
+    description: 'Facilitator access token of the payment',
+  })
+  public facilitatorAccessToken: string;
+
+  /**
    * Date and time of the payment creation
    * @type {Date}
    * @example 2021-07-01T00:00:00.000Z

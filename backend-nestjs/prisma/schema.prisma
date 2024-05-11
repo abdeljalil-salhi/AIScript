@@ -89,14 +89,15 @@ model Plan {
 }
 
 model Payment {
-    id             String        @id @default(uuid())
-    userId         String
-    amount         Float
-    orderId        String        @unique
-    paypalSubId    String        @unique
-    subscriptionId String
-    paymentSource  String
-    subscription   Subscription?
+    id                     String        @id @default(uuid())
+    userId                 String
+    amount                 Float
+    orderId                String        @unique
+    paypalSubId            String        @unique
+    subscriptionId         String
+    paymentSource          String
+    facilitatorAccessToken String        @default("")
+    subscription           Subscription?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

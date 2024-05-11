@@ -71,4 +71,19 @@ export class SubscribeInput {
   @IsString({ message: 'New payment source must be a string' })
   @Field(() => String, { description: 'Source of the payment' })
   public paymentSource: string;
+
+  /**
+   * Access token of the payment facilitator
+   * @type {string}
+   */
+  @IsNotEmpty({
+    message: 'New payment facilitator access token must not be empty',
+  })
+  @IsString({
+    message: 'New payment facilitator access token must be a string',
+  })
+  @Field(() => String, {
+    description: 'Access token of the payment facilitator',
+  })
+  public facilitatorAccessToken: string;
 }

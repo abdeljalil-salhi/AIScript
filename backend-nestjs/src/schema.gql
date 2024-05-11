@@ -170,6 +170,9 @@ type Payment {
   """Date and time of the payment creation"""
   createdAt: DateTime!
 
+  """Facilitator access token of the payment"""
+  facilitatorAccessToken: String!
+
   """Unique identifier of the payment"""
   id: String!
 
@@ -267,6 +270,9 @@ input RegisterInput {
 input SubscribeInput {
   """Amount of the payment"""
   amount: Float!
+
+  """Access token of the payment facilitator"""
+  facilitatorAccessToken: String!
 
   """Order ID of the payment"""
   orderId: String!

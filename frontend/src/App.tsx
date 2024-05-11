@@ -29,8 +29,9 @@ import { authProvider, dataProvider, liveProvider } from "./providers";
 // Components
 import { Layout } from "./components/layout";
 // Pages
-import { CancelPage } from "./pages/cancel";
 import { CheckoutPage } from "./pages/checkout";
+import { CheckoutCancelPage } from "./pages/checkout/cancel";
+import { CheckoutSuccessPage } from "./pages/checkout/success";
 import { CreatePage } from "./pages/create";
 import { HomePage } from "./pages/home";
 import { LandingPage } from "./pages/landing";
@@ -40,7 +41,6 @@ import { LoginPage } from "./pages/login";
 import { PricingPage } from "./pages/pricing";
 import { ProfilePage } from "./pages/profile";
 import { RegisterPage } from "./pages/register";
-import { SuccessPage } from "./pages/success";
 
 // Interfaces
 interface AppProps {}
@@ -120,14 +120,20 @@ export const App: FC<AppProps> = (): JSX.Element => {
                             index
                             element={<CatchAllNavigate to="/pricing" />}
                           />
-                          <Route path=":orderId" element={<SuccessPage />} />
+                          <Route
+                            path=":orderId"
+                            element={<CheckoutSuccessPage />}
+                          />
                         </Route>
                         <Route path="cancel">
                           <Route
                             index
                             element={<CatchAllNavigate to="/pricing" />}
                           />
-                          <Route path=":orderId" element={<CancelPage />} />
+                          <Route
+                            path=":orderId"
+                            element={<CheckoutCancelPage />}
+                          />
                         </Route>
                       </Route>
                     </Route>

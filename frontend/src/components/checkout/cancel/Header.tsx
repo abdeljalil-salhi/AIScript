@@ -7,10 +7,10 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 interface HeaderProps {}
 
 /**
- * Cancel Header Component
+ * Checkout Cancel Header Component
  *
  * @interface HeaderProps
- * @returns {JSX.Element} - Cancel Header Component
+ * @returns {JSX.Element} - Checkout Cancel Header Component
  * @exports Header
  */
 export const Header: FC<HeaderProps> = (): JSX.Element => {

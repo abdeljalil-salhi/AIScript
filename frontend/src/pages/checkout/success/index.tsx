@@ -1,15 +1,16 @@
 // Dependencies
 import { FC, useEffect, useState } from "react";
-
-// Constants
-import { PaypalOrderResponse } from "@/constants/types";
 import {
   NavigateFunction,
   useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { Header } from "@/components/success/Header";
+
+// Constants
+import { PaypalOrderResponse } from "@/constants/types";
+// Components
+import { Header } from "@/components/checkout/success/Header";
 
 // Interfaces
 interface CheckoutSuccessPageProps {}
@@ -60,6 +61,10 @@ export const CheckoutSuccessPage: FC<
   const { orderId }: Readonly<Partial<CheckoutSuccessPageParams>> =
     useParams<CheckoutSuccessPageParams>();
 
+  /**
+   * Get the order details from the navigation state
+   * or redirect to the pricing page if there is no state
+   */
   useEffect(() => {
     setIsLoading(true);
 

@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useParams } from "react-router-dom";
 
 // Components
-import { Header } from "@/components/cancel/Header";
+import { Header } from "@/components/checkout/cancel/Header";
 
 // Interfaces
 interface CheckoutCancelPageProps {}
@@ -27,6 +27,7 @@ export const CheckoutCancelPage: FC<
 > = (): JSX.Element => {
   /**
    * Get the order ID from the URL
+   * @type {Partial<CheckoutCancelPageParams>}
    */
   const { orderId }: Readonly<Partial<CheckoutCancelPageParams>> =
     useParams<CheckoutCancelPageParams>();

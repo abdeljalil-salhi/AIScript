@@ -1,9 +1,11 @@
 import gql from "graphql-tag";
 
-// Query to get the current user
-export const ME = gql`
-  query Me {
-    me {
+// Mutation to login a user
+export const MUTATION_LOGIN = gql`
+  mutation Login($loginInput: LoginInput!) {
+    login(loginInput: $loginInput) {
+      accessToken
+      refreshToken
       user {
         id
         username

@@ -101,8 +101,6 @@ export type MeResponse = {
 export type Mutation = {
   /** Cancels a subscription entity by ID. */
   cancelSubscription: Subscription;
-  /** Creates a new payment entity. */
-  createPayment: Payment;
   /** Creates the predefined plans in the database. */
   createPlans: Array<Plan>;
   /** Creates a new subscription entity. */
@@ -125,6 +123,8 @@ export type Mutation = {
   refreshSubscriptionsCredits: Scalars["String"]["output"];
   /** Registers a new user with the specified details. */
   register: AuthResponse;
+  /** Creates a new payment entity while subscribing to a plan. */
+  subscribe: Payment;
   /** Updates a plan by its ID. */
   updatePlan: Plan;
   /** Validates all subscriptions. */
@@ -133,10 +133,6 @@ export type Mutation = {
 
 export type MutationCancelSubscriptionArgs = {
   subscriptionId: Scalars["String"]["input"];
-};
-
-export type MutationCreatePaymentArgs = {
-  newPaymentInput: NewPaymentInput;
 };
 
 export type MutationCreateSubscriptionArgs = {
@@ -163,24 +159,13 @@ export type MutationRegisterArgs = {
   registerInput: RegisterInput;
 };
 
+export type MutationSubscribeArgs = {
+  subscribeInput: SubscribeInput;
+};
+
 export type MutationUpdatePlanArgs = {
   planId: Scalars["String"]["input"];
   updatePlanInput: UpdatePlanInput;
-};
-
-export type NewPaymentInput = {
-  /** Amount of the payment */
-  amount: Scalars["Float"]["input"];
-  /** Order ID of the payment */
-  orderId: Scalars["String"]["input"];
-  /** Source of the payment */
-  paymentSource: Scalars["String"]["input"];
-  /** PayPal subscription ID of the payment */
-  paypalSubId: Scalars["String"]["input"];
-  /** ID of the associated plan that the payment is for */
-  planId: Scalars["String"]["input"];
-  /** ID of the associated user that owns the payment */
-  userId: Scalars["String"]["input"];
 };
 
 export type NewSubscriptionInput = {
@@ -287,6 +272,21 @@ export type RegisterInput = {
   password: Scalars["String"]["input"];
   /** Username of the user */
   username: Scalars["String"]["input"];
+};
+
+export type SubscribeInput = {
+  /** Amount of the payment */
+  amount: Scalars["Float"]["input"];
+  /** Order ID of the payment */
+  orderId: Scalars["String"]["input"];
+  /** Source of the payment */
+  paymentSource: Scalars["String"]["input"];
+  /** PayPal subscription ID of the payment */
+  paypalSubId: Scalars["String"]["input"];
+  /** ID of the associated plan that the payment is for */
+  planId: Scalars["String"]["input"];
+  /** ID of the associated user that owns the payment */
+  userId: Scalars["String"]["input"];
 };
 
 export type Subscription = {

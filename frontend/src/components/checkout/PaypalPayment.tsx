@@ -5,13 +5,23 @@ import {
   PayPalButtons,
   PayPalButtonsComponentProps,
 } from "@paypal/react-paypal-js";
+import { useCustomMutation, useGetIdentity } from "@refinedev/core";
 
 // Constants
-import { CheckoutPlan } from "@/constants/types";
+import { MONTHLY_BILLING } from "@/constants/pricing";
+import { CheckoutPlan, PricingPlan } from "@/constants/types";
+// Providers
+import { API_URL } from "@/providers";
+// GraphQL Mutations
+import { MUTATION_SUBSCRIBE } from "@/graphql/mutations/subscribe";
+// GraphQL Types
+import { SubscribeMutation } from "@/graphql/types";
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface PaypalPaymentProps {
   plan: CheckoutPlan;
+  pricingPlan: PricingPlan;
 }
 
 /**
@@ -23,6 +33,7 @@ interface PaypalPaymentProps {
  */
 export const PaypalPayment: FC<PaypalPaymentProps> = ({
   plan,
+  pricingPlan,
 }): JSX.Element => {
   /**
    * Error state for the Paypal Payment component
@@ -38,6 +49,27 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
    */
   const navigate: NavigateFunction = useNavigate();
 
+  /**
+   * Subscribe mutation to subscribe the user to the plan
+   * @type {useCustomMutation}
+   */
+  const {
+    mutate: subscribe,
+    isLoading: isSubscribing,
+    isError: subscribeError,
+  } = useCustomMutation<SubscribeMutation>();
+
+  /**
+   * Get the user's identity
+   * @type {MeResponse}
+   */
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
+
+  /**
+   * Styles for the Paypal Buttons
+   * @type {PayPalButtonsComponentProps["style"]}
+   */
   const styles: PayPalButtonsComponentProps["style"] = {
     shape: "pill",
     color: "blue",
@@ -45,6 +77,10 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
     label: "subscribe",
   };
 
+  /**
+   * Create subscription function for the Paypal Buttons
+   * @type {PayPalButtonsComponentProps["createSubscription"]}
+   */
   const createSubscription: PayPalButtonsComponentProps["createSubscription"] =
     (_, actions) => {
       return actions.subscription.create({
@@ -52,7 +88,40 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
       });
     };
 
+  /**
+   * On Approve function for the Paypal Buttons;
+   * Call the subscribe mutation to subscribe the user to the plan
+   * and navigate to the success page, if successful
+   * @type {PayPalButtonsComponentProps["onApprove"]}
+   */
   const onApprove: PayPalButtonsComponentProps["onApprove"] = async (data) => {
+    subscribe({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_SUBSCRIBE,
+        variables: {
+          subscribeInput: {
+            userId: identity?.user.id,
+            planId: plan.id,
+            amount:
+              plan.period === MONTHLY_BILLING
+                ? pricingPlan.priceMonthly
+                : pricingPlan.priceYearly,
+            orderId: data.orderID,
+            paypalSubId: data.subscriptionID,
+            paymentSource: "PayPal",
+          },
+        },
+      },
+      values: {},
+    });
+
+    if (subscribeError) {
+      setShowError(true);
+      return;
+    }
+
     navigate(`/checkout/success/${data.orderID}`, {
       state: {
         ...data,
@@ -61,24 +130,40 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
     });
   };
 
+  /**
+   * On Cancel function for the Paypal Buttons;
+   * Navigate to the cancel page
+   * @type {PayPalButtonsComponentProps["onCancel"]}
+   */
   const onCancel: PayPalButtonsComponentProps["onCancel"] = (data) => {
     navigate(`/checkout/cancel/${data.orderID}`);
   };
 
+  /**
+   * On Error function for the Paypal Buttons;
+   * Set the error state to true to show the error message
+   * @type {PayPalButtonsComponentProps["onError"]}
+   */
   const onError: PayPalButtonsComponentProps["onError"] = () => {
     setShowError(true);
   };
 
   return (
     <div>
-      <PayPalButtons
-        style={styles}
-        createSubscription={createSubscription}
-        onApprove={onApprove}
-        onCancel={onCancel}
-        onError={onError}
-        forceReRender={[plan.planId]}
-      />
+      {isSubscribing || isIdentityLoading ? (
+        <div className="flex justify-center items-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      ) : (
+        <PayPalButtons
+          style={styles}
+          createSubscription={createSubscription}
+          onApprove={onApprove}
+          onCancel={onCancel}
+          onError={onError}
+          forceReRender={[plan.planId]}
+        />
+      )}
       {showError && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3">
           <strong className="font-bold mr-1">Holy smokes!</strong>

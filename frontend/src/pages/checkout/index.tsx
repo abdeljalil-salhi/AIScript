@@ -94,7 +94,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = (): JSX.Element => {
           <div className="-mx-3 md:flex items-start">
             <CheckoutSummary plan={plan} pricingPlan={pricingPlan} />
 
-            <CheckoutPayment plan={plan} />
+            <CheckoutPayment plan={plan} pricingPlan={pricingPlan} />
           </div>
         </div>
       </div>

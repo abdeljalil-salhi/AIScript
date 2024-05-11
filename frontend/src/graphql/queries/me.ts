@@ -24,6 +24,17 @@ export const QUERY_ME = gql`
           balance
           updatedAt
         }
+        subscription {
+          plan {
+            name
+            price
+            duration
+            createdAt
+          }
+          daysWithService
+          isActive
+          createdAt
+        }
         createdAt
         updatedAt
       }

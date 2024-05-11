@@ -8,10 +8,15 @@
  * @property {boolean} connection - Whether to include the user's connection.
  * @property {boolean} wallet - Whether to include the user's wallet.
  * @property {boolean} subscription - Whether to include the user's subscription.
+ * @property {boolean} subscription.plan - Whether to include the user's subscription plan.
  */
 export const userIncludes: object = {
   avatar: true,
   connection: true,
   wallet: true,
-  subscription: true,
+  subscription: {
+    include: {
+      plan: true,
+    },
+  },
 };

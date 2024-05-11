@@ -75,6 +75,24 @@ export type SubscribeMutation = {
   >;
 };
 
+export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+}>;
+
+export type GetSubscriptionsByUserIdQuery = {
+  getSubscriptionsByUserId: Array<
+    Pick<
+      Types.Subscription,
+      | "id"
+      | "isActive"
+      | "isDeactivated"
+      | "daysWithService"
+      | "createdAt"
+      | "updatedAt"
+    > & { plan?: Types.Maybe<Pick<Types.Plan, "id" | "name" | "createdAt">> }
+  >;
+};
+
 export type MeQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
@@ -97,6 +115,16 @@ export type MeQuery = {
         Pick<Types.Avatar, "defaultFilename" | "filename" | "updatedAt">
       >;
       wallet?: Types.Maybe<Pick<Types.Wallet, "balance" | "updatedAt">>;
+      subscription?: Types.Maybe<
+        Pick<
+          Types.Subscription,
+          "daysWithService" | "isActive" | "createdAt"
+        > & {
+          plan?: Types.Maybe<
+            Pick<Types.Plan, "id" | "name" | "price" | "duration" | "createdAt">
+          >;
+        }
+      >;
     };
   };
 };

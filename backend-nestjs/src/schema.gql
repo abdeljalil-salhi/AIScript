@@ -98,6 +98,30 @@ type MeResponse {
 }
 
 type Mutation {
+  """Cancels a subscription entity by ID."""
+  cancelSubscription(subscriptionId: String!): Subscription!
+
+  """Creates a new payment entity."""
+  createPayment(newPaymentInput: NewPaymentInput!): Payment!
+
+  """Creates the predefined plans in the database."""
+  createPlans: [Plan!]!
+
+  """Creates a new subscription entity."""
+  createSubscription(newSubscriptionInput: NewSubscriptionInput!): Subscription!
+
+  """Deletes all plans from the database."""
+  deleteAllPlans: [Plan!]!
+
+  """Deletes a plan by its ID."""
+  deletePlan(planId: String!): Plan!
+
+  """Deletes a subscription entity by ID."""
+  deleteSubscriptionById(subscriptionId: String!): Subscription!
+
+  """Deletes all subscription entities for a specific user."""
+  deleteSubscriptionsByUserId(userId: String!): [Subscription!]!
+
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
 
@@ -107,8 +131,48 @@ type Mutation {
   """Generates new access and refresh tokens for a user."""
   refresh: NewTokensResponse!
 
+  """Refreshes all subscriptions credits."""
+  refreshSubscriptionsCredits: String!
+
   """Registers a new user with the specified details."""
   register(registerInput: RegisterInput!): AuthResponse!
+
+  """Updates a plan by its ID."""
+  updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
+
+  """Validates all subscriptions."""
+  validateSubscriptions: String!
+}
+
+input NewPaymentInput {
+  """Amount of the payment"""
+  amount: Float!
+
+  """Order ID of the payment"""
+  orderId: String!
+
+  """Source of the payment"""
+  paymentSource: String!
+
+  """PayPal subscription ID of the payment"""
+  paypalSubId: String!
+
+  """ID of the associated plan that the payment is for"""
+  planId: String!
+
+  """ID of the associated user that owns the payment"""
+  userId: String!
+}
+
+input NewSubscriptionInput {
+  """ID of the payment that created the subscription"""
+  paymentId: String!
+
+  """ID of the subscription plan"""
+  planId: String!
+
+  """ID of the associated user that owns the subscription"""
+  userId: String!
 }
 
 type NewTokensResponse {
@@ -119,7 +183,86 @@ type NewTokensResponse {
   refreshToken: String!
 }
 
+type Payment {
+  """Amount of the payment"""
+  amount: Float!
+
+  """Date and time of the payment creation"""
+  createdAt: DateTime!
+
+  """Unique identifier of the payment"""
+  id: String!
+
+  """Order ID of the payment"""
+  orderId: String!
+
+  """Source of the payment"""
+  paymentSource: String!
+
+  """PayPal subscription ID of the payment"""
+  paypalSubId: String!
+
+  """Payment associated subscription entity"""
+  subscription: String
+
+  """Subscription ID of the payment"""
+  subscriptionId: String!
+
+  """Date and time of the payment last update"""
+  updatedAt: DateTime!
+
+  """Payment associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the payment"""
+  userId: String!
+}
+
+type Plan {
+  """Date and time of the plan creation"""
+  createdAt: DateTime!
+
+  """Number of credits given by the plan"""
+  credits: Float!
+
+  """Description of the plan"""
+  description: String!
+
+  """Duration of the plan"""
+  duration: Float!
+
+  """Unique identifier of the plan"""
+  id: String!
+
+  """Name of the plan"""
+  name: String!
+
+  """Price of the plan"""
+  price: Float!
+
+  """Date and time of the plan last update"""
+  updatedAt: DateTime!
+}
+
 type Query {
+  """Gets all the available plans."""
+  getAllPlans: [Plan!]!
+
+  """Retrieves all subscription entities."""
+  getAllSubscriptions: [Subscription!]!
+
+  """Gets a plan by its ID."""
+  getPlanById(planId: String!): Plan!
+
+  """Retrieves a single subscription entity by ID."""
+  getSubscriptionById(subscriptionId: String!): Subscription!
+
+  """Retrieves all subscription entities for a specific plan."""
+  getSubscriptionsByPlanId(planId: String!): [Subscription!]!
+
+  """Retrieves all subscription entities for a specific user."""
+  getSubscriptionsByUserId(userId: String!): [Subscription!]!
+
   """A simple hello world query to test the GraphQL API."""
   hello: String!
 
@@ -141,6 +284,64 @@ input RegisterInput {
   username: String!
 }
 
+type Subscription {
+  """Date and time of the subscription creation"""
+  createdAt: DateTime!
+
+  """Number of days with service ongoing"""
+  daysWithService: Float!
+
+  """Unique identifier of the subscription"""
+  id: String!
+
+  """Subscription is active"""
+  isActive: Boolean!
+
+  """Subscription is deactivated"""
+  isDeactivated: Boolean!
+
+  """ID of the owner user that owns the subscription"""
+  ownerUserId: String
+
+  """Subscription associated payment entity"""
+  payment: Payment
+
+  """ID of the associated payment that owns the subscription"""
+  paymentId: String!
+
+  """Subscription associated plan entity"""
+  plan: Plan
+
+  """ID of the subscription plan"""
+  planId: String!
+
+  """Date and time of the subscription last refresh"""
+  refreshedAt: DateTime!
+
+  """Date and time of the subscription last update"""
+  updatedAt: DateTime!
+
+  """Subscription associated user entity"""
+  user: User
+
+  """ID of the associated user that owns the subscription"""
+  userId: String
+}
+
+input UpdatePlanInput {
+  """Plan description"""
+  description: String
+
+  """Plan duration"""
+  duration: Int
+
+  """Plan name"""
+  name: String
+
+  """Plan price"""
+  price: Int
+}
+
 type User {
   """User associated avatar entity"""
   avatar: Avatar
@@ -160,6 +361,9 @@ type User {
   """Refresh token of the user"""
   refreshToken: String
 
+  """User associated subscription entity"""
+  subscription: Subscription
+
   """Date and time of the user last update"""
   updatedAt: DateTime!
 
@@ -177,8 +381,17 @@ type Wallet {
   """Date and time of the wallet creation"""
   createdAt: DateTime!
 
+  """Number of free credits available in the wallet"""
+  freeCredits: Float!
+
   """Unique identifier of the wallet"""
   id: String!
+
+  """Number of subscription credits available in the wallet"""
+  subscriptionCredits: Float!
+
+  """Number of top-up credits available in the wallet"""
+  topUpCredits: Float!
 
   """Date and time of the wallet last update"""
   updatedAt: DateTime!

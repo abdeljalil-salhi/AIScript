@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 // Controllers
@@ -16,6 +17,11 @@ import { ConnectionModule } from 'src/connection/connection.module';
 import { UserModule } from 'src/user/user.module';
 import { WalletModule } from 'src/wallet/wallet.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { TasksModule } from 'src/tasks/tasks.module';
+import { PaymentModule } from 'src/payment/payment.module';
+import { PlanModule } from 'src/plan/plan.module';
+import { SubscriptionModule } from 'src/subscription/subscription.module';
+import { DataModule } from 'src/data/data.module';
 // Guards
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 
@@ -41,11 +47,19 @@ import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
       includeStacktraceInErrorResponses: false, // Disable the stack trace in error responses
     }),
 
+    // Enable the scheduling module
+    ScheduleModule.forRoot(),
+
     AuthModule,
     UserModule,
     AvatarModule,
     ConnectionModule,
     WalletModule,
+    TasksModule,
+    PlanModule,
+    PaymentModule,
+    SubscriptionModule,
+    DataModule,
   ],
 
   providers: [

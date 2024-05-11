@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-    id           String      @id @default(uuid())
+    id           String        @id @default(uuid())
     avatar       Avatar?
     wallet       Wallet?
     connection   Connection?
-    username     String      @unique
-    isAdmin      Boolean     @default(false)
+    subscription Subscription?
+    username     String        @unique
+    isAdmin      Boolean       @default(false)
     refreshToken String?
+    payments     Payment[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -56,9 +58,12 @@ model Avatar {
 }
 
 model Wallet {
-    id      String @id @default(uuid())
-    userId  String @unique
-    balance Int    @default(0)
+    id                  String @id @default(uuid())
+    userId              String @unique
+    balance             Int    @default(50)
+    freeCredits         Int    @default(50)
+    subscriptionCredits Int    @default(0)
+    topUpCredits        Int    @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -66,4 +71,69 @@ model Wallet {
     user User @relation(fields: [userId], references: [id])
 
     @@map("wallets")
+}
+
+model Plan {
+    id            String         @id @default(uuid())
+    name          String         @unique
+    description   String
+    credits       Int            @default(0)
+    price         Float
+    duration      Int
+    subscriptions Subscription[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("plans")
+}
+
+model Payment {
+    id             String        @id @default(uuid())
+    userId         String
+    amount         Float
+    orderId        String        @unique
+    paypalSubId    String        @unique
+    subscriptionId String
+    paymentSource  String
+    subscription   Subscription?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("payments")
+}
+
+model Subscription {
+    id              String  @id @default(uuid())
+    userId          String? @unique
+    ownerUserId     String?
+    planId          String
+    paymentId       String? @unique
+    daysWithService Int     @default(0)
+    isActive        Boolean @default(true)
+    isDeactivated   Boolean @default(false)
+
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    refreshedAt DateTime @default(now())
+
+    user    User?    @relation(fields: [userId], references: [id])
+    plan    Plan     @relation(fields: [planId], references: [id])
+    payment Payment? @relation(fields: [paymentId], references: [id])
+
+    @@map("subscriptions")
+}
+
+model Data {
+    id    String @id @default(uuid())
+    key   String @unique
+    value String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("data")
 }

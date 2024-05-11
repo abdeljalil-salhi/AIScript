@@ -14,7 +14,6 @@ import { ChangePasswordModal } from "@/components/profile/ChangePasswordModal";
 import { Enable2FAModal } from "@/components/profile/Enable2FAModal";
 import { VerifyEmailModal } from "@/components/profile/VerifyEmailModal";
 import { SubscriptionCard } from "@/components/profile/SubscriptionCard";
-import { Link } from "react-router-dom";
 
 // Interfaces
 interface SettingsFormProps {}

@@ -40,7 +40,7 @@ export const SubscribeButton: FC<SubscribeButtonProps> = ({
       <Link
         to={
           plan.id === "0"
-            ? `/cancel`
+            ? `/subscription/cancel`
             : `/checkout/${
                 billingPeriod == MONTHLY_BILLING
                   ? plan.planIdMonthly

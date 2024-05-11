@@ -33,6 +33,7 @@ import { CheckoutPage } from "./pages/checkout";
 import { CheckoutCancelPage } from "./pages/checkout/cancel";
 import { CheckoutSuccessPage } from "./pages/checkout/success";
 import { CreatePage } from "./pages/create";
+import { Error404Page } from "./pages/404";
 import { HomePage } from "./pages/home";
 import { LandingPage } from "./pages/landing";
 import { LibraryPage } from "./pages/library";
@@ -41,6 +42,8 @@ import { LoginPage } from "./pages/login";
 import { PricingPage } from "./pages/pricing";
 import { ProfilePage } from "./pages/profile";
 import { RegisterPage } from "./pages/register";
+import { SubscriptionPage } from "./pages/subscription";
+import { SubscriptionCancelPage } from "./pages/subscription/cancel";
 
 // Interfaces
 interface AppProps {}
@@ -97,6 +100,18 @@ export const App: FC<AppProps> = (): JSX.Element => {
                       <Route path="/library" element={<LibraryPage />} />
                       <Route path="/pricing" element={<PricingPage />} />
                       <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/subscription">
+                        <Route index element={<SubscriptionPage />} />
+                        <Route
+                          path="cancel"
+                          element={<SubscriptionCancelPage />}
+                        />
+                      </Route>
+                      <Route path="/404" element={<Error404Page />} />
+                      <Route
+                        path="*"
+                        element={<CatchAllNavigate to="/404" />}
+                      />
                     </Route>
                     <Route
                       element={

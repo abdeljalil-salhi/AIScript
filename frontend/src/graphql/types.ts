@@ -1,5 +1,16 @@
 import type * as Types from "./schema.types";
 
+export type CancelSubscriptionMutationVariables = Types.Exact<{
+  subscriptionId: Types.Scalars["String"]["input"];
+}>;
+
+export type CancelSubscriptionMutation = {
+  cancelSubscription: Pick<
+    Types.Subscription,
+    "id" | "daysWithService" | "isActive" | "createdAt" | "updatedAt"
+  > & { plan?: Types.Maybe<Pick<Types.Plan, "id" | "name" | "duration">> };
+};
+
 export type LoginMutationVariables = Types.Exact<{
   loginInput: Types.LoginInput;
 }>;
@@ -69,6 +80,7 @@ export type SubscribeMutation = {
     | "orderId"
     | "paypalSubId"
     | "paymentSource"
+    | "facilitatorAccessToken"
     | "subscriptionId"
     | "createdAt"
     | "updatedAt"
@@ -118,7 +130,7 @@ export type MeQuery = {
       subscription?: Types.Maybe<
         Pick<
           Types.Subscription,
-          "daysWithService" | "isActive" | "createdAt"
+          "id" | "daysWithService" | "isActive" | "createdAt"
         > & {
           plan?: Types.Maybe<
             Pick<Types.Plan, "id" | "name" | "price" | "duration" | "createdAt">

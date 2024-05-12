@@ -189,6 +189,8 @@ export type Payment = {
   amount: Scalars["Float"]["output"];
   /** Date and time of the payment creation */
   createdAt: Scalars["DateTime"]["output"];
+  /** Facilitator access token of the payment */
+  facilitatorAccessToken: Scalars["String"]["output"];
   /** Unique identifier of the payment */
   id: Scalars["String"]["output"];
   /** Order ID of the payment */
@@ -277,6 +279,8 @@ export type RegisterInput = {
 export type SubscribeInput = {
   /** Amount of the payment */
   amount: Scalars["Float"]["input"];
+  /** Access token of the payment facilitator */
+  facilitatorAccessToken: Scalars["String"]["input"];
   /** Order ID of the payment */
   orderId: Scalars["String"]["input"];
   /** Source of the payment */

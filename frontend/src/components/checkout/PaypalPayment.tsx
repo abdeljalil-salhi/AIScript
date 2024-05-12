@@ -111,6 +111,7 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
             orderId: data.orderID,
             paypalSubId: data.subscriptionID,
             paymentSource: "PayPal",
+            facilitatorAccessToken: data.facilitatorAccessToken,
           },
         },
       },

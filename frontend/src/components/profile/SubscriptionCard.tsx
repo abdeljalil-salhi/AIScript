@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 
 // GraphQL Types
 import { MeResponse } from "@/graphql/schema.types";
+// Utils
+import { nextBillingDateFromIdentity } from "@/utils/nextBillingDate";
 
 // Interfaces
 interface SubscriptionCardProps {
@@ -50,32 +52,25 @@ export const SubscriptionCard: FC<SubscriptionCardProps> = ({
                   })}
                 .
               </div>
-              {identity?.user.subscription?.isActive ? (
-                identity.user.subscription.plan &&
-                identity.user.subscription.plan.price > 0 && (
-                  <div className="text-xs font-light">
-                    Next billing date:{" "}
-                    <span className="font-medium">
-                      {new Date(
-                        new Date(identity.user.subscription.createdAt).setMonth(
-                          new Date(
-                            identity.user.subscription.createdAt
-                          ).getMonth() +
-                            (identity.user.subscription.daysWithService /
-                              identity.user.subscription.plan.duration +
-                              1)
-                        )
-                      ).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                )
-              ) : (
-                <div>Subscription will end on </div>
-              )}
+              {identity?.user.subscription?.isActive
+                ? identity.user.subscription.plan &&
+                  identity.user.subscription.plan.price > 0 && (
+                    <div className="text-xs font-light">
+                      Next billing date:{" "}
+                      <span className="font-medium">
+                        {nextBillingDateFromIdentity(identity)}
+                      </span>
+                    </div>
+                  )
+                : identity?.user.subscription!.plan && (
+                    <div>
+                      Subscription will end on{" "}
+                      <span className="font-medium">
+                        {nextBillingDateFromIdentity(identity)}
+                      </span>
+                      .
+                    </div>
+                  )}
             </div>
           )}
         </div>

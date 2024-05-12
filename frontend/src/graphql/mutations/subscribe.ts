@@ -10,6 +10,7 @@ export const MUTATION_SUBSCRIBE = gql`
       orderId
       paypalSubId
       paymentSource
+      facilitatorAccessToken
       subscriptionId
       createdAt
       updatedAt

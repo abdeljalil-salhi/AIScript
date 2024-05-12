@@ -26,11 +26,14 @@ interface SubscriptionCancelPageProps {}
 export const SubscriptionCancelPage: FC<
   SubscriptionCancelPageProps
 > = (): JSX.Element => {
+  /**
+   * Unsubscribe mutation to cancel the user's subscription
+   * @type {useCustomMutation}
+   */
   const {
     mutate: unsubscribe,
     isLoading: isUnsubscribing,
     isError: unsubscribeError,
-    error: unsubscribeErrorData,
   } = useCustomMutation<CancelSubscriptionMutation>();
 
   /**
@@ -97,6 +100,15 @@ export const SubscriptionCancelPage: FC<
                   and your subscription will be canceled at the end of the
                   current billing cycle. You can always resubscribe later.
                 </div>
+
+                {unsubscribeError && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3">
+                    <strong className="font-bold mr-1">Holy smokes!</strong>
+                    <span className="block sm:inline">
+                      Something bad happened, retry.
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

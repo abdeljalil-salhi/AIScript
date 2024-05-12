@@ -1,10 +1,10 @@
 // Dependencies
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 // Constants
 import { MONTHLY_BILLING, YEARLY_BILLING } from "@/constants/pricing";
 import { PricingPlan } from "@/constants/types";
-import { Link } from "react-router-dom";
 
 // Interfaces
 interface SubscribeButtonProps {

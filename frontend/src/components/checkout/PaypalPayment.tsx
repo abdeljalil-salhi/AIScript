@@ -83,6 +83,14 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
    */
   const createSubscription: PayPalButtonsComponentProps["createSubscription"] =
     (_, actions) => {
+      if (identity?.user.subscription?.payment?.paypalSubId)
+        return actions.subscription.revise(
+          identity.user.subscription.payment.paypalSubId,
+          {
+            plan_id: plan.planId,
+          }
+        );
+
       return actions.subscription.create({
         plan_id: plan.planId,
       });

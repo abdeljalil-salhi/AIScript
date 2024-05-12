@@ -91,7 +91,7 @@ export const SubscriptionCancelPage: FC<
                     ? "Cancelling..."
                     : isIdentityLoading ||
                       !identity?.user.subscription?.isActive
-                    ? "Subscription Cancelled"
+                    ? "Subscription Canceled"
                     : "Cancel Subscription"}
                 </button>
 

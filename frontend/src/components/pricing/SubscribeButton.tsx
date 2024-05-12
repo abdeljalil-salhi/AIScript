@@ -49,7 +49,15 @@ export const SubscribeButton: FC<SubscribeButtonProps> = ({
         }
         className="w-full inline-flex justify-center items-center whitespace-nowrap rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-3.5 py-2.5 text-sm font-medium text-n-1 hover:text-n-1 shadow-sm transition-all duration-300 ease-in-out cursor-pointer"
       >
-        {plan.id === "0" ? "Cancel Subscription" : "Subscribe"}
+        {plan.id === "0"
+          ? "Cancel Subscription"
+          : currentPlan !== "0"
+          ? Number(currentPlan) > Number(plan.id)
+            ? "Downgrade Subscription"
+            : Number(currentPlan) < Number(plan.id)
+            ? "Upgrade Subscription"
+            : "Subscribe"
+          : "Subscribe"}
       </Link>
 
       <div className="absolute -bottom-6 w-full flex items-center justify-center">

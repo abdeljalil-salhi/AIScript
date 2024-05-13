@@ -5,6 +5,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 // Controllers
@@ -24,6 +25,8 @@ import { SubscriptionModule } from 'src/subscription/subscription.module';
 import { DataModule } from 'src/data/data.module';
 // Guards
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+// Config
+import { mailerConfig } from 'src/config/mailer.config';
 
 /**
  * The root module of the application.
@@ -46,6 +49,9 @@ import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
       sortSchema: true, // Sort the schema alphabetically
       includeStacktraceInErrorResponses: false, // Disable the stack trace in error responses
     }),
+
+    // Configure the mailer module
+    MailerModule.forRoot(mailerConfig),
 
     // Enable the scheduling module
     ScheduleModule.forRoot(),

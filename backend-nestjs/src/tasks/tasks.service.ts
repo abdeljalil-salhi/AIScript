@@ -5,6 +5,7 @@ import { Cron } from '@nestjs/schedule';
 // Services
 import { SubscriptionService } from 'src/subscription/subscription.service';
 import { WalletService } from 'src/wallet/wallet.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
 
 /**
  * Service dealing with scheduled tasks.
@@ -22,6 +23,7 @@ export class TasksService {
   constructor(
     private readonly walletService: WalletService,
     private readonly subscriptionService: SubscriptionService,
+    public readonly emailVerificationService: EmailVerificationService,
   ) {}
 
   /**
@@ -52,5 +54,15 @@ export class TasksService {
   @Cron('0,30 * * * * *') // Every 30 seconds.
   public async validateWallets(): Promise<void> {
     await this.walletService.validateWallets();
+  }
+
+  /**
+   * @description
+   * This method is scheduled to run every 10 minutes.
+   * It deletes all expired email verifications.
+   */
+  @Cron('0 */10 * * * *') // Every 10 minutes.
+  public async deleteExpiredEmailVerifications(): Promise<void> {
+    await this.emailVerificationService.deleteExpiredEmailVerifications();
   }
 }

@@ -25,15 +25,16 @@ model User {
 }
 
 model Connection {
-    id              String    @id @default(uuid())
-    userId          String    @unique
-    email           String    @unique
-    password        String?
-    isEmailVerified Boolean   @default(false)
-    is2faEnabled    Boolean   @default(false)
-    provider        String
-    otp             String?
-    otpCreatedAt    DateTime?
+    id                String             @id @default(uuid())
+    userId            String             @unique
+    email             String             @unique
+    password          String?
+    isEmailVerified   Boolean            @default(false)
+    emailVerification EmailVerification?
+    is2faEnabled      Boolean            @default(false)
+    provider          String
+    otp               String?
+    otpCreatedAt      DateTime?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -137,4 +138,19 @@ model Data {
     updatedAt DateTime @updatedAt
 
     @@map("data")
+}
+
+model EmailVerification {
+    id           String @id @default(uuid())
+    connectionId String @unique
+    email        String @unique
+    token        String
+
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    connection Connection @relation(fields: [connectionId], references: [id])
+
+    @@map("email_verifications")
 }

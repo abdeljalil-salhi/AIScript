@@ -10,8 +10,11 @@ import { JwtService } from '@nestjs/jwt';
 
 // Services
 import { UserService } from 'src/user/user.service';
+import { MailService } from 'src/mail/mail.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
 // Entities
 import { User } from 'src/user/entities/user.entity';
+import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
 // DTOs
 import { AuthResponse } from './dtos/auth.response';
 import { LoginInput } from './dtos/login.input';
@@ -38,6 +41,8 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
+    private readonly emailVerificationService: EmailVerificationService,
   ) {}
 
   /**
@@ -91,6 +96,24 @@ export class AuthService {
      */
     const { accessToken, refreshToken } = await this.createTokens(user);
     await this.updateRefreshToken(user.id, refreshToken);
+
+    /**
+     * Create an email verification for the user.
+     * This is done to ensure that the user's email is verified.
+     */
+    const emailVerification: EmailVerification =
+      await this.emailVerificationService.createEmailVerification(
+        user.connection.id,
+        user.connection.email,
+      );
+
+    // Send a verification email to the user
+    await this.mailService.sendMail(
+      user.connection.email,
+      'Verify your email address',
+      'Click the link below to verify your email address',
+      `${process.env.FRONTEND_URL}/verify-email?token=${emailVerification.token}`,
+    );
 
     // Return the authentication response with the access token and refresh token
     return {

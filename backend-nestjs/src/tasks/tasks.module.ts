@@ -8,6 +8,8 @@ import { SubscriptionService } from 'src/subscription/subscription.service';
 import { PlanService } from 'src/plan/plan.service';
 import { TasksService } from './tasks.service';
 import { WalletService } from 'src/wallet/wallet.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
+import { ConnectionService } from 'src/connection/connection.service';
 
 /**
  * Represents the tasks module that encapsulates all scheduled tasks.
@@ -23,6 +25,8 @@ import { WalletService } from 'src/wallet/wallet.service';
     SubscriptionService,
     PlanService,
     DataService,
+    EmailVerificationService,
+    ConnectionService,
   ],
 })
 export class TasksModule {}

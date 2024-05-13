@@ -45,4 +45,21 @@ export class ConnectionService {
       },
     });
   }
+
+  /**
+   * Verifies the email of the specified connection.
+   *
+   * @param connectionId - The connection ID to verify the email.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async verifyEmail(connectionId: string): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        id: connectionId,
+      },
+      data: {
+        isEmailVerified: true,
+      },
+    });
+  }
 }

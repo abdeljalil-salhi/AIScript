@@ -1,6 +1,10 @@
 // Dependencies
-import { ChangeEvent, FC, useEffect, useState } from "react";
-import { useGetIdentity } from "@refinedev/core";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import {
+  useCustomMutation,
+  useGetIdentity,
+  useNotification,
+} from "@refinedev/core";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -14,6 +18,12 @@ import { ChangePasswordModal } from "@/components/profile/ChangePasswordModal";
 import { Enable2FAModal } from "@/components/profile/Enable2FAModal";
 import { VerifyEmailModal } from "@/components/profile/VerifyEmailModal";
 import { SubscriptionCard } from "@/components/profile/SubscriptionCard";
+// GraphQL Mutations
+import { MUTATION_UPDATE_USER } from "@/graphql/mutations/updateUser";
+// GraphQL Types
+import { UpdateUserMutation } from "@/graphql/types";
+// Providers
+import { API_URL } from "@/providers";
 
 // Interfaces
 interface SettingsFormProps {}
@@ -45,12 +55,35 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
 
   /**
+   * Notification hook to show notifications to the user
+   */
+  const { open } = useNotification();
+
+  /**
+   * Mutation to update the user's information
+   * @type {useCustomMutation}
+   */
+  const {
+    mutate: updateUser,
+    isLoading: isUpdatingUser,
+    isError: updateUserError,
+  } = useCustomMutation<UpdateUserMutation>();
+
+  /**
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity, isLoading: isIdentityLoading } =
-    useGetIdentity<MeResponse>();
+  const {
+    data: identity,
+    isLoading: isIdentityLoading,
+    refetch: refetchIdentity,
+  } = useGetIdentity<MeResponse>();
 
+  /**
+   * Set the username and email when the identity is loaded
+   * @returns {void}
+   * @sideeffects {setUsername, setEmail}
+   */
   useEffect(() => {
     if (identity) {
       setUsername(identity.user.username);
@@ -58,9 +91,50 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
     }
   }, [identity]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  /**
+   * Handle the form submission to update the user's information
+   * @param {FormEvent<HTMLFormElement>} e - Event
+   * @returns {void}
+   */
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    alert("Settings saved successfully!");
+
+    if (isUpdatingUser || isIdentityLoading) return;
+
+    updateUser({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_UPDATE_USER,
+        variables: {
+          updateUserInput: {
+            userId: identity!.user.id,
+            username,
+            email,
+          },
+        },
+      },
+      values: {},
+    });
+
+    refetchIdentity();
+
+    if (updateUserError) {
+      // Show an error notification
+      open?.({
+        type: "error",
+        description: "Error!",
+        message: "An error occurred while updating your profile.",
+      });
+      return;
+    }
+
+    // Show a success notification
+    open?.({
+      type: "success",
+      description: "Success!",
+      message: "Your profile has been updated successfully.",
+    });
   };
 
   return (

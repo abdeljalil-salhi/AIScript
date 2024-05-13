@@ -1,6 +1,10 @@
 // Dependencies
 import * as argon from 'argon2';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -150,6 +154,34 @@ export class UserService {
     });
 
     return user;
+  }
+
+  /**
+   * Updates the avatar of a user.
+   *
+   * @param {string} userId - The ID of the user to update.
+   * @param {string} avatar - The new avatar of the user.
+   * @returns {Promise<User>} A promise that resolves to the updated user.
+   * @throws {ForbiddenException} If the avatar cannot be updated.
+   */
+  updateAvatar(userId: string, avatar: string): Promise<User> {
+    try {
+      return this.prismaService.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          avatar: {
+            update: {
+              filename: avatar,
+            },
+          },
+        },
+        include: userIncludes,
+      });
+    } catch (e) {
+      throw new ForbiddenException('Unable to update avatar');
+    }
   }
 
   /**

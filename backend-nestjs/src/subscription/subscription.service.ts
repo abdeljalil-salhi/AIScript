@@ -1,6 +1,8 @@
 // Dependencies
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
+// Constants
+import { PAYPAL_API_URL } from 'src/constants/subscription';
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DataService } from 'src/data/data.service';
@@ -103,6 +105,7 @@ export class SubscriptionService {
    *
    * @param {string} id - The ID of the subscription entity to cancel.
    * @returns {Promise<Subscription>} - The updated subscription entity.
+   * @throws {InternalServerErrorException} - If the request to the PayPal API fails.
    */
   public async cancelSubscription(id: string): Promise<Subscription> {
     const subscription: Subscription =
@@ -139,6 +142,32 @@ export class SubscriptionService {
         'canceledSubscriptionsIds',
         JSON.stringify(Array.from(canceledSubscriptionsIdsSet)),
       );
+
+    const url: string = `${PAYPAL_API_URL}/v1/billing/subscriptions/${subscription.payment.paypalSubId}/cancel`;
+    const requestBody: object = {
+      reason: 'Customer-requested cancelation',
+    };
+
+    /**
+     * Send a request to the PayPal API to cancel the subscription.
+     * If the request fails, throw an exception.
+     * If the request is successful, return the subscription entity.
+     */
+    const response: Response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${btoa(process.env.PAYPAL_APP_CLIENT_ID + ':' + process.env.PAYPAL_APP_CLIENT_SECRET)}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorMessage: string = await response.text();
+      throw new InternalServerErrorException(
+        `Failed to suspend subscription: ${errorMessage}`,
+      );
+    }
 
     return subscription;
   }

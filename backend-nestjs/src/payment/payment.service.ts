@@ -45,6 +45,7 @@ export class PaymentService {
         paymentSource: subscribeInput.paymentSource,
         paypalSubId: subscribeInput.paypalSubId,
         subscriptionId: 'subscriptionId',
+        facilitatorAccessToken: subscribeInput.facilitatorAccessToken,
         user: {
           connect: {
             id: subscribeInput.userId,

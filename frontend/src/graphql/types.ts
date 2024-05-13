@@ -1,5 +1,16 @@
 import type * as Types from "./schema.types";
 
+export type CancelSubscriptionMutationVariables = Types.Exact<{
+  subscriptionId: Types.Scalars["String"]["input"];
+}>;
+
+export type CancelSubscriptionMutation = {
+  cancelSubscription: Pick<
+    Types.Subscription,
+    "id" | "daysWithService" | "isActive" | "createdAt" | "updatedAt"
+  > & { plan?: Types.Maybe<Pick<Types.Plan, "id" | "name" | "duration">> };
+};
+
 export type LoginMutationVariables = Types.Exact<{
   loginInput: Types.LoginInput;
 }>;
@@ -69,9 +80,28 @@ export type SubscribeMutation = {
     | "orderId"
     | "paypalSubId"
     | "paymentSource"
+    | "facilitatorAccessToken"
     | "subscriptionId"
     | "createdAt"
     | "updatedAt"
+  >;
+};
+
+export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+}>;
+
+export type GetSubscriptionsByUserIdQuery = {
+  getSubscriptionsByUserId: Array<
+    Pick<
+      Types.Subscription,
+      | "id"
+      | "isActive"
+      | "isDeactivated"
+      | "daysWithService"
+      | "createdAt"
+      | "updatedAt"
+    > & { plan?: Types.Maybe<Pick<Types.Plan, "id" | "name" | "createdAt">> }
   >;
 };
 
@@ -97,6 +127,16 @@ export type MeQuery = {
         Pick<Types.Avatar, "defaultFilename" | "filename" | "updatedAt">
       >;
       wallet?: Types.Maybe<Pick<Types.Wallet, "balance" | "updatedAt">>;
+      subscription?: Types.Maybe<
+        Pick<
+          Types.Subscription,
+          "id" | "daysWithService" | "isActive" | "createdAt"
+        > & {
+          plan?: Types.Maybe<
+            Pick<Types.Plan, "id" | "name" | "price" | "duration" | "createdAt">
+          >;
+        }
+      >;
     };
   };
 };

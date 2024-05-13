@@ -1,6 +1,7 @@
 // Dependencies
 import { FC, useEffect, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { useGetIdentity } from "@refinedev/core";
 
 // Constants
 import { checkoutPlans } from "@/constants/checkout";
@@ -12,6 +13,8 @@ import { LoadingPage } from "../loading";
 import { CheckoutSummary } from "./CheckoutSummary";
 import { Header } from "@/components/checkout/Header";
 import { CheckoutPayment } from "./CheckoutPayment";
+// GraphQL Types
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface CheckoutPageProps {}
@@ -58,30 +61,51 @@ export const CheckoutPage: FC<CheckoutPageProps> = (): JSX.Element => {
   const navigate: NavigateFunction = useNavigate();
 
   /**
+   * Get the user's identity
+   * @type {MeResponse}
+   */
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
+
+  /**
    * Effect to set the plan and pricing plan states based on the plan ID
    * from the URL
    */
   useEffect(() => {
     setIsLoading(true);
 
-    // Get the plan from the list of checkout plans
-    const selectedPlan = checkoutPlans.find(
-      (p: CheckoutPlan) => p.id === planId
-    );
+    if (isIdentityLoading) return;
 
-    // Set the plan and pricing plan states if the plan is found
-    if (selectedPlan) {
-      setPlan(selectedPlan);
-      setPricingPlan(
-        pricingPlans.find(
-          (p: PricingPlan) => p.id === selectedPlan.pricingPlanId
-        ) as PricingPlan
+    if (identity?.user.subscription?.plan) {
+      // Get the plan from the list of checkout plans
+      const selectedPlan = checkoutPlans.find(
+        (p: CheckoutPlan) => p.id === planId
       );
-      setIsLoading(false);
+
+      // Set the plan and pricing plan states if the plan is found
+      if (selectedPlan) {
+        setPlan(selectedPlan);
+        setPricingPlan(
+          pricingPlans.find(
+            (p: PricingPlan) => p.id === selectedPlan.pricingPlanId
+          ) as PricingPlan
+        );
+
+        if (plan.id === identity.user.subscription.plan.id)
+          navigate("/pricing");
+
+        setIsLoading(false);
+      }
+      // Redirect to pricing page if plan is not found
+      else navigate("/pricing");
     }
-    // Redirect to pricing page if plan is not found
-    else navigate("/pricing");
-  }, [navigate, planId]);
+  }, [
+    identity?.user.subscription?.plan,
+    isIdentityLoading,
+    navigate,
+    plan,
+    planId,
+  ]);
 
   return isLoading ? (
     <LoadingPage />

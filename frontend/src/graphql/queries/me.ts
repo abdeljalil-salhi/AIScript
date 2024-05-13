@@ -25,6 +25,7 @@ export const QUERY_ME = gql`
           updatedAt
         }
         subscription {
+          id
           plan {
             id
             name

@@ -44,13 +44,14 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity } = useGetIdentity<MeResponse>();
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
 
   /**
    * Set the current plan based on the user's subscription
    */
   useEffect(() => {
-    if (identity) {
+    if (!isIdentityLoading && identity) {
       const currentCheckoutPlan = checkoutPlans.find(
         (plan: CheckoutPlan) => plan.id === identity.user.subscription!.plan!.id
       );
@@ -58,7 +59,7 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
       if (currentCheckoutPlan)
         setCurrentPlan(currentCheckoutPlan.pricingPlanId);
     }
-  }, [identity]);
+  }, [identity, isIdentityLoading]);
 
   return (
     <div className="p-4 md:p-6 w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col gap-6 overflow-y-auto">

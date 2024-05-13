@@ -102,10 +102,6 @@ export const App: FC<AppProps> = (): JSX.Element => {
                       <Route path="/profile" element={<ProfilePage />} />
                       <Route path="/subscription">
                         <Route index element={<SubscriptionPage />} />
-                        <Route
-                          path="cancel"
-                          element={<SubscriptionCancelPage />}
-                        />
                       </Route>
                       <Route path="/404" element={<Error404Page />} />
                       <Route
@@ -150,6 +146,12 @@ export const App: FC<AppProps> = (): JSX.Element => {
                             element={<CheckoutCancelPage />}
                           />
                         </Route>
+                      </Route>
+                      <Route path="/subscription">
+                        <Route
+                          path="cancel"
+                          element={<SubscriptionCancelPage />}
+                        />
                       </Route>
                     </Route>
                   </Routes>

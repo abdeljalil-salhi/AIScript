@@ -164,7 +164,7 @@ export class UserService {
    * @returns {Promise<User>} A promise that resolves to the updated user.
    * @throws {ForbiddenException} If the avatar cannot be updated.
    */
-  updateAvatar(userId: string, avatar: string): Promise<User> {
+  public async updateAvatar(userId: string, avatar: string): Promise<User> {
     try {
       return this.prismaService.user.update({
         where: {
@@ -182,6 +182,37 @@ export class UserService {
     } catch (e) {
       throw new ForbiddenException('Unable to update avatar');
     }
+  }
+
+  /**
+   * Resets the avatar of a user to the default avatar.
+   *
+   * @param {string} userId - The ID of the user to reset the avatar for.
+   * @returns {Promise<User>} A promise that resolves to the updated user.
+   */
+  public async resetDefaultAvatar(userId: string): Promise<User> {
+    const user: User = await this.prismaService.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        avatar: true,
+      },
+    });
+
+    return this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        avatar: {
+          update: {
+            filename: user.avatar.defaultFilename,
+          },
+        },
+      },
+      include: userIncludes,
+    });
   }
 
   /**

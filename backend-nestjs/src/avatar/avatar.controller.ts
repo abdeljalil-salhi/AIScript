@@ -70,7 +70,7 @@ export class AvatarController {
       },
     }),
   )
-  uploadAvatar(
+  public async uploadAvatar(
     @Req() req: Request,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<User> {
@@ -78,6 +78,19 @@ export class AvatarController {
       req.body.userId,
       `${process.env.BASE_URL}/avatar/${file.filename}`,
     );
+  }
+
+  /**
+   * Resets the user's avatar to the default one.
+   *
+   * @public
+   * @param {Request} req - The request object.
+   * @returns {Promise<User>} The updated user.
+   */
+  @Public()
+  @Post('default')
+  public async setDefaultAvatar(@Req() req: Request): Promise<User> {
+    return this.userService.resetDefaultAvatar(req.body.userId);
   }
 
   /**
@@ -91,7 +104,10 @@ export class AvatarController {
    */
   @Public()
   @Get(':filename')
-  getAvatar(@Param('filename') filename: string, @Res() res: Response): void {
+  public getAvatar(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): void {
     try {
       return res.sendFile(filename, {
         root: 'uploads',

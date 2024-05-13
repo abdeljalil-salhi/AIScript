@@ -109,8 +109,8 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         variables: {
           updateUserInput: {
             userId: identity!.user.id,
-            username,
-            email,
+            username: username.trim().length > 3 ? username : undefined,
+            email: email.trim().length > 5 ? email : undefined,
           },
         },
       },

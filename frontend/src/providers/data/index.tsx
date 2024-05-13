@@ -12,6 +12,7 @@ import {
 // Utils
 import fetchWrapper from "./fetch-wrapper";
 
+export const BASE_URL = import.meta.env.VITE_API_URL as string;
 export const API_URL = import.meta.env.VITE_API_URL_GQL as string;
 export const WS_URL = import.meta.env.VITE_API_URL_WS as string;
 

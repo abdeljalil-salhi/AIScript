@@ -6,6 +6,7 @@ import { useGetIdentity, useNotification } from "@refinedev/core";
 import { defaultProfilePicture } from "@/constants";
 // Types
 import { MeResponse } from "@/graphql/schema.types";
+import { BASE_URL } from "@/providers";
 
 // Interfaces
 interface ProfilePictureProps {}
@@ -24,12 +25,17 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
    */
   const [previewAvatar, setPreviewAvatar] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
 
   /**
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity, isLoading } = useGetIdentity<MeResponse>();
+  const {
+    data: identity,
+    isLoading: isIdentityLoading,
+    refetch: refetchIdentity,
+  } = useGetIdentity<MeResponse>();
 
   /**
    * Notification hook to show notifications to the user
@@ -63,15 +69,35 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
 
     // Read the file as a base64 data URL
     reader.readAsDataURL(file);
+
+    // Set the file to the state
+    setFile(file);
   };
 
   /**
    * Handle save avatar when user clicks on the save button
-   * @returns {void}
+   * @returns {Promise<void>}
    * @sideeffects {setPreviewAvatar}
    */
-  const handleSave = (): void => {
+  const handleSave = async (): Promise<void> => {
+    // Check if the identity is loaded or not
+    if (!identity || isIdentityLoading || !file) return;
+
     // Save the image to the server
+    const formData = new FormData();
+
+    formData.append("userId", identity.user.id);
+    formData.append("avatar", file, file.name);
+
+    await fetch(`${BASE_URL}/avatar/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    // Refetch the identity
+    refetchIdentity();
+
+    // Reset the preview avatar
     setPreviewAvatar("");
 
     // Show a success notification
@@ -82,10 +108,44 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
     });
   };
 
+  /**
+   * Handle reset default avatar when user clicks on the remove image button
+   * @returns {Promise<void>}
+   * @sideeffects {setPreviewAvatar}
+   */
+  const handleResetDefaultAvatar = async (): Promise<void> => {
+    // Check if the identity is loaded or not
+    if (!identity || isIdentityLoading) return;
+
+    // Reset the image to the default one
+    await fetch(`${BASE_URL}/avatar/default`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: identity.user.id,
+      }),
+    });
+
+    // Refetch the identity
+    refetchIdentity();
+
+    // Reset the preview avatar
+    setPreviewAvatar("");
+
+    // Show a success notification
+    open?.({
+      type: "success",
+      description: "Success!",
+      message: "Your profile picture has been reset to the default one.",
+    });
+  };
+
   return (
     <>
       <label htmlFor="profile-picture">
-        {isLoading && !avatar ? (
+        {isIdentityLoading && !avatar ? (
           <div className="w-40 h-40 p-1 rounded-full ring-2 ring-n-5 bg-n-6 animate-pulse"></div>
         ) : (
           <img
@@ -124,12 +184,12 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
           Save
         </button>
       ) : (
-        !isLoading &&
+        !isIdentityLoading &&
         avatar &&
         avatar !== defaultProfilePicture && (
           <button
             className="w-40 mt-3 px-4 text-red-500 hover:text-red-600 cursor-pointer transition-all ease-in-out"
-            onClick={() => setPreviewAvatar(defaultProfilePicture)}
+            onClick={handleResetDefaultAvatar}
           >
             Remove image
           </button>

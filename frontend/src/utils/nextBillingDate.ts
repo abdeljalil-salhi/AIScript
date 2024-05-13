@@ -19,7 +19,8 @@ export const nextBillingDateFromIdentity = (
         new Date(identity.user.subscription.createdAt).setMonth(
           new Date(identity.user.subscription.createdAt).getMonth() +
             identity.user.subscription.daysWithService /
-              (identity.user.subscription.plan!.duration + 1)
+              identity.user.subscription.plan!.duration +
+            1
         )
       ).toLocaleDateString("en-US", {
         year: "numeric",
@@ -34,7 +35,8 @@ export const nextBillingDateFromIdentity = (
         new Date(identity.user.subscription.createdAt).setFullYear(
           new Date(identity.user.subscription.createdAt).getFullYear() +
             identity.user.subscription.daysWithService /
-              (identity.user.subscription.plan!.duration + 1)
+              identity.user.subscription.plan!.duration +
+            1
         )
       ).toLocaleDateString("en-US", {
         year: "numeric",

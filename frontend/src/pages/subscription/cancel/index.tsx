@@ -43,6 +43,11 @@ export const SubscriptionCancelPage: FC<
   const { data: identity, isLoading: isIdentityLoading } =
     useGetIdentity<MeResponse>();
 
+  /**
+   * Handle the unsubscribe action to cancel the user's subscription
+   * @function
+   * @returns {Promise<void>}
+   */
   const handleUnsubscribe = async (): Promise<void> => {
     if (
       isUnsubscribing ||
@@ -63,6 +68,8 @@ export const SubscriptionCancelPage: FC<
       },
       values: {},
     });
+
+    window.location.reload();
   };
 
   return (

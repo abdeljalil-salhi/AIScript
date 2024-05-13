@@ -13,6 +13,7 @@ import { PlanService } from 'src/plan/plan.service';
 import { User } from './entities/user.entity';
 // DTOs
 import { NewUserInput } from './dtos/new-user.input';
+import { UpdateUserInput } from './dtos/update-user.input';
 // Includes
 import { userIncludes } from './includes/user.includes';
 
@@ -154,6 +155,33 @@ export class UserService {
     });
 
     return user;
+  }
+
+  /**
+   * Updates a user with the specified details.
+   *
+   * @param {UpdateUserInput} updateUserInput - The details of the user to update.
+   * @returns {Promise<User>} - The updated user.
+   */
+  public async updateUser(updateUserInput: UpdateUserInput): Promise<User> {
+    const { userId, username, email } = updateUserInput;
+
+    return this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        username: username && {
+          set: username,
+        },
+        connection: email && {
+          update: {
+            email,
+          },
+        },
+      },
+      include: userIncludes,
+    });
   }
 
   /**

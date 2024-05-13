@@ -140,6 +140,9 @@ type Mutation {
   """Updates a plan by its ID."""
   updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
 
+  """Update a user by their ID"""
+  updateUser(updateUserInput: UpdateUserInput!): User!
+
   """Validates all subscriptions."""
   validateSubscriptions: String!
 }
@@ -246,9 +249,6 @@ type Query {
   """Retrieves all subscription entities for a specific user."""
   getSubscriptionsByUserId(userId: String!): [Subscription!]!
 
-  """A simple hello world query to test the GraphQL API."""
-  hello: String!
-
   """Returns the currently authenticated user."""
   me: MeResponse!
 }
@@ -346,6 +346,17 @@ input UpdatePlanInput {
 
   """Plan price"""
   price: Int
+}
+
+input UpdateUserInput {
+  """The new email of the user"""
+  email: String
+
+  """The ID of the user to update"""
+  userId: String!
+
+  """The new username of the user"""
+  username: String
 }
 
 type User {

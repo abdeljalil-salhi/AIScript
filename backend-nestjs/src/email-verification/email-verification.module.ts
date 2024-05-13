@@ -5,6 +5,8 @@ import { Module } from '@nestjs/common';
 import { EmailVerificationService } from './email-verification.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConnectionService } from 'src/connection/connection.service';
+// Resolvers
+import { EmailVerificationResolver } from './email-verification.resolver';
 
 /**
  * The email verification module, containing all email verification-related functionality.
@@ -13,7 +15,12 @@ import { ConnectionService } from 'src/connection/connection.service';
  * @class EmailVerificationModule
  */
 @Module({
-  providers: [EmailVerificationService, PrismaService, ConnectionService],
+  providers: [
+    EmailVerificationResolver,
+    EmailVerificationService,
+    PrismaService,
+    ConnectionService,
+  ],
   exports: [EmailVerificationService],
 })
 export class EmailVerificationModule {}

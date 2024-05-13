@@ -1,5 +1,11 @@
 // Dependencies
-import { IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 
 /**
@@ -25,6 +31,14 @@ export class UpdateUserInput {
    * The new username of the user
    * @type {string}
    */
+  @IsNotEmpty({ message: 'New username must not be empty' })
+  @IsString({ message: 'New username must be a string' })
+  @MinLength(3, {
+    message: 'New username must be at least 3 characters long',
+  })
+  @MaxLength(20, {
+    message: 'New username must be at most 20 characters long',
+  })
   @Field(() => String, {
     description: 'The new username of the user',
     nullable: true,
@@ -35,6 +49,14 @@ export class UpdateUserInput {
    * The new email of the user
    * @type {string}
    */
+  @IsNotEmpty({ message: 'New email must not be empty' })
+  @IsEmail({}, { message: 'New email must be a valid email' })
+  @MinLength(5, {
+    message: 'New email must be at least 5 characters long',
+  })
+  @MaxLength(50, {
+    message: 'New email must be at most 50 characters long',
+  })
   @Field(() => String, {
     description: 'The new email of the user',
     nullable: true,

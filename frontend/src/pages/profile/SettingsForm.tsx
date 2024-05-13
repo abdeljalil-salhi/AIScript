@@ -101,21 +101,61 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
 
     if (isUpdatingUser || isIdentityLoading) return;
 
-    updateUser({
-      url: API_URL,
-      method: "post",
-      meta: {
-        gqlMutation: MUTATION_UPDATE_USER,
-        variables: {
-          updateUserInput: {
-            userId: identity!.user.id,
-            username: username.trim().length > 3 ? username : undefined,
-            email: email.trim().length > 5 ? email : undefined,
+    if (!username || username.trim().length < 3 || username.trim().length > 20)
+      return open?.({
+        type: "error",
+        description: "Error!",
+        message: "Username must be between 3 and 20 characters long.",
+      });
+
+    if (!email || email.trim().length < 5 || email.trim().length > 50)
+      return open?.({
+        type: "error",
+        description: "Error!",
+        message: "Email must be between 5 and 50 characters long.",
+      });
+
+    if (
+      email === identity?.user.connection?.email &&
+      username === identity?.user.username
+    )
+      return open?.({
+        type: "error",
+        description: "Hmmm?",
+        message: "No changes detected.",
+      });
+
+    if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/))
+      return open?.({
+        type: "error",
+        description: "Error!",
+        message: "Please enter a valid email address.",
+      });
+
+    try {
+      updateUser({
+        url: API_URL,
+        method: "post",
+        meta: {
+          gqlMutation: MUTATION_UPDATE_USER,
+          variables: {
+            updateUserInput: {
+              userId: identity!.user.id,
+              username: username.trim().length > 3 ? username : undefined,
+              email: email.trim().length > 5 ? email : undefined,
+            },
           },
         },
-      },
-      values: {},
-    });
+        values: {},
+      });
+    } catch (error) {
+      open?.({
+        type: "error",
+        description: "Error!",
+        message: "An error occurred while updating your profile.",
+      });
+      return;
+    }
 
     refetchIdentity();
 

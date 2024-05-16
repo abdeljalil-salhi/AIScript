@@ -55,10 +55,16 @@ export class EmailVerificationService {
   /**
    * Verifies the email verification with the specified token.
    *
+   * @param {string} email - The email to verify.
    * @param {string} token - The token to verify.
    * @returns {Promise<string>} - A Promise that resolves with a message indicating the result of the email verification.
+   * @throws {NotFoundException} - Thrown if the token is invalid or expired.
+   * @throws {NotFoundException} - Thrown if the email is invalid.
    */
-  public async verifyEmailVerification(token: string): Promise<string> {
+  public async verifyEmailVerification(
+    email: string,
+    token: string,
+  ): Promise<string> {
     // Find the email verification by the token
     const emailVerification: EmailVerification =
       await this.findEmailVerificationByToken(token);
@@ -66,6 +72,9 @@ export class EmailVerificationService {
     // Check if the email verification exists
     if (!emailVerification)
       throw new NotFoundException('Invalid token or token expired');
+
+    if (emailVerification.email !== email)
+      throw new NotFoundException('Invalid email');
 
     // Verify the email of the connection
     await this.connectionService.verifyEmail(emailVerification.connectionId);

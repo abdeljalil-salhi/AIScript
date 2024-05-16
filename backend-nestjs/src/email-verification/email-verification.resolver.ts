@@ -56,4 +56,29 @@ export class EmailVerificationResolver {
       requestEmailVerification.email,
     );
   }
+
+  /**
+   * Verifies the email verification with the specified token.
+   *
+   * @mutation
+   * @param {string} email - The email to verify.
+   * @param {string} token - The token to verify.
+   * @returns {Promise<string>} - A message indicating the result of the email verification.
+   * @throws {ForbiddenException} - Thrown if the user is not authenticated.
+   */
+  @Mutation(() => String, {
+    name: 'verifyEmail',
+    description: 'Verifies the email verification with the specified token.',
+  })
+  public async verifyEmail(
+    @CurrentUser('email') email: string,
+    @Args('token') token: string,
+  ): Promise<string> {
+    if (!email)
+      throw new ForbiddenException(
+        'You must be authenticated to verify your email.',
+      );
+
+    return this.emailVerificationService.verifyEmailVerification(email, token);
+  }
 }

@@ -23,6 +23,8 @@ import { PaymentModule } from 'src/payment/payment.module';
 import { PlanModule } from 'src/plan/plan.module';
 import { SubscriptionModule } from 'src/subscription/subscription.module';
 import { DataModule } from 'src/data/data.module';
+import { EmailVerificationModule } from 'src/email-verification/email-verification.module';
+import { ForgotPasswordModule } from 'src/forgot-password/forgot-password.module';
 // Guards
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 // Config
@@ -66,6 +68,8 @@ import { mailerConfig } from 'src/config/mailer.config';
     PaymentModule,
     SubscriptionModule,
     DataModule,
+    EmailVerificationModule,
+    ForgotPasswordModule,
   ],
 
   providers: [

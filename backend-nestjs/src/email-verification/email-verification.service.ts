@@ -21,6 +21,7 @@ export class EmailVerificationService {
    * Creates an instance of EmailVerificationService.
    *
    * @param {PrismaService} prismaService - The Prisma service for database operations.
+   * @param {ConnectionService} connectionService - The connection service for connection operations.
    */
   constructor(
     private readonly prismaService: PrismaService,

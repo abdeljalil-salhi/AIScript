@@ -6,6 +6,9 @@ import { JwtService } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 // Services
 import { AuthService } from './auth.service';
+import { MailService } from 'src/mail/mail.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
+import { ConnectionService } from 'src/connection/connection.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 // Resolvers
 import { AuthResolver } from './auth.resolver';
@@ -25,6 +28,9 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
   providers: [
     AuthResolver,
     AuthService,
+    MailService,
+    EmailVerificationService,
+    ConnectionService,
     PrismaService,
     JwtService,
     AccessTokenStrategy,

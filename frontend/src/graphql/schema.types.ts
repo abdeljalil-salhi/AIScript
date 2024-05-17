@@ -127,6 +127,8 @@ export type Mutation = {
   subscribe: Payment;
   /** Updates a plan by its ID. */
   updatePlan: Plan;
+  /** Update a user by their ID */
+  updateUser: User;
   /** Validates all subscriptions. */
   validateSubscriptions: Scalars["String"]["output"];
 };
@@ -166,6 +168,10 @@ export type MutationSubscribeArgs = {
 export type MutationUpdatePlanArgs = {
   planId: Scalars["String"]["input"];
   updatePlanInput: UpdatePlanInput;
+};
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUserInput;
 };
 
 export type NewSubscriptionInput = {
@@ -243,8 +249,6 @@ export type Query = {
   getSubscriptionsByPlanId: Array<Subscription>;
   /** Retrieves all subscription entities for a specific user. */
   getSubscriptionsByUserId: Array<Subscription>;
-  /** A simple hello world query to test the GraphQL API. */
-  hello: Scalars["String"]["output"];
   /** Returns the currently authenticated user. */
   me: MeResponse;
 };
@@ -333,6 +337,15 @@ export type UpdatePlanInput = {
   name?: InputMaybe<Scalars["String"]["input"]>;
   /** Plan price */
   price?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type UpdateUserInput = {
+  /** The new email of the user */
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  /** The ID of the user to update */
+  userId: Scalars["String"]["input"];
+  /** The new username of the user */
+  username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type User = {

@@ -45,4 +45,38 @@ export class ConnectionService {
       },
     });
   }
+
+  /**
+   * Verifies the email of the specified connection.
+   *
+   * @param connectionId - The connection ID to verify the email.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async verifyEmail(connectionId: string): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        id: connectionId,
+      },
+      data: {
+        isEmailVerified: true,
+      },
+    });
+  }
+
+  /**
+   * Finds a connection by their email.
+   *
+   * @param {string} email - The email of the connection to find.
+   * @returns {Promise<Connection>} - The connection with the specified email.
+   */
+  public async findConnectionByEmail(email: string): Promise<Connection> {
+    return this.prismaService.connection.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
 }

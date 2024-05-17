@@ -1,8 +1,15 @@
 // Dependencies
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { ForbiddenException } from '@nestjs/common';
 
 // Services
 import { UserService } from './user.service';
+// DTOs
+import { UpdateUserInput } from './dtos/update-user.input';
+// Entities
+import { User } from './entities/user.entity';
+// Decorators
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 /**
  * Resolver for handling user-related GraphQL queries and mutations.
@@ -21,15 +28,24 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   /**
-   * A simple hello world query to test the GraphQL API.
+   * Mutation to update a user by their ID.
    *
-   * @returns {Promise<string>} The hello world message
+   * @mutation
+   * @param {UpdateUserInput} updateUserInput - The input data to update a user.
+   * @returns {Promise<User>} - The updated user entity.
+   * @throws {ForbiddenException} - Thrown if the authenticated user is trying to update another user.
    */
-  @Query(() => String, {
-    name: 'hello',
-    description: 'A simple hello world query to test the GraphQL API.',
+  @Mutation(() => User, {
+    name: 'updateUser',
+    description: 'Update a user by their ID',
   })
-  public async hello(): Promise<string> {
-    return 'Hello World!';
+  public async updateUser(
+    @CurrentUser('id') userId: string,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+  ): Promise<User> {
+    if (updateUserInput.userId !== userId)
+      throw new ForbiddenException('You can only update your own user');
+
+    return this.userService.updateUser(updateUserInput);
   }
 }

@@ -79,6 +79,58 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type EmailVerification {
+  """Email verification associated connection entity"""
+  connection: Connection
+
+  """ID of the associated connection"""
+  connectionId: String!
+
+  """Verification token creation date"""
+  createdAt: DateTime
+
+  """Email address to verify"""
+  email: String!
+
+  """Verification token expiration date"""
+  expiresAt: DateTime!
+
+  """Unique identifier of the email verification"""
+  id: String!
+
+  """Verification token"""
+  token: String!
+
+  """Verification token update date"""
+  updatedAt: DateTime!
+}
+
+type ForgotPassword {
+  """Forgot password associated connection entity"""
+  connection: Connection
+
+  """ID of the associated connection"""
+  connectionId: String!
+
+  """Creation date of the password reset token"""
+  createdAt: DateTime!
+
+  """Email address of the account requesting the password reset"""
+  email: String!
+
+  """Expiration date of the password reset token"""
+  expiresAt: DateTime!
+
+  """Unique identifier of the forgot password"""
+  id: String!
+
+  """Reset token"""
+  token: String!
+
+  """Update date of the password reset token"""
+  updatedAt: DateTime!
+}
+
 input LoginInput {
   """Password of the user"""
   password: String!
@@ -119,6 +171,9 @@ type Mutation {
   """Deletes all subscription entities for a specific user."""
   deleteSubscriptionsByUserId(userId: String!): [Subscription!]!
 
+  """Verifies the forgot password token and updates the user password."""
+  forgotPassword(verifyForgotPasswordInput: VerifyForgotPasswordInput!): AuthResponse!
+
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
 
@@ -134,14 +189,26 @@ type Mutation {
   """Registers a new user with the specified details."""
   register(registerInput: RegisterInput!): AuthResponse!
 
+  """Requests an email verification for the specified email."""
+  requestEmailVerification(requestEmailVerificationInput: RequestEmailVerificationInput!): EmailVerification!
+
+  """Requests a forgot password token for the specified email."""
+  requestForgotPassword(requestForgotPasswordInput: RequestForgotPasswordInput!): ForgotPassword!
+
   """Creates a new payment entity while subscribing to a plan."""
   subscribe(subscribeInput: SubscribeInput!): Payment!
 
   """Updates a plan by its ID."""
   updatePlan(planId: String!, updatePlanInput: UpdatePlanInput!): Plan!
 
+  """Update a user by their ID"""
+  updateUser(updateUserInput: UpdateUserInput!): User!
+
   """Validates all subscriptions."""
   validateSubscriptions: String!
+
+  """Verifies the email verification with the specified token."""
+  verifyEmail(token: String!): String!
 }
 
 input NewSubscriptionInput {
@@ -246,9 +313,6 @@ type Query {
   """Retrieves all subscription entities for a specific user."""
   getSubscriptionsByUserId(userId: String!): [Subscription!]!
 
-  """A simple hello world query to test the GraphQL API."""
-  hello: String!
-
   """Returns the currently authenticated user."""
   me: MeResponse!
 }
@@ -265,6 +329,22 @@ input RegisterInput {
 
   """Username of the user"""
   username: String!
+}
+
+input RequestEmailVerificationInput {
+  """ID of the connection requesting the email verification"""
+  connectionId: String!
+
+  """Email of the user requesting the email verification"""
+  email: String!
+
+  """ID of the user requesting the email verification"""
+  userId: String!
+}
+
+input RequestForgotPasswordInput {
+  """Email of the user requesting the password reset"""
+  email: String!
 }
 
 input SubscribeInput {
@@ -348,6 +428,17 @@ input UpdatePlanInput {
   price: Int
 }
 
+input UpdateUserInput {
+  """The new email of the user"""
+  email: String
+
+  """The ID of the user to update"""
+  userId: String!
+
+  """The new username of the user"""
+  username: String
+}
+
 type User {
   """User associated avatar entity"""
   avatar: Avatar
@@ -378,6 +469,20 @@ type User {
 
   """User associated wallet entity"""
   wallet: Wallet
+}
+
+input VerifyForgotPasswordInput {
+  """New password confirmation for the user"""
+  confirmPassword: String!
+
+  """Email of the user changing the password"""
+  email: String!
+
+  """New password for the user"""
+  password: String!
+
+  """Token for the forgot password reset"""
+  token: String!
 }
 
 type Wallet {

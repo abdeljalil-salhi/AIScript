@@ -9,10 +9,14 @@ import {
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PlanService } from 'src/plan/plan.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
+import { MailService } from 'src/mail/mail.service';
 // Entities
 import { User } from './entities/user.entity';
+import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
 // DTOs
 import { NewUserInput } from './dtos/new-user.input';
+import { UpdateUserInput } from './dtos/update-user.input';
 // Includes
 import { userIncludes } from './includes/user.includes';
 
@@ -29,6 +33,8 @@ export class UserService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly planService: PlanService,
+    private readonly emailVerificationService: EmailVerificationService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -157,6 +163,49 @@ export class UserService {
   }
 
   /**
+   * Updates a user with the specified details.
+   * Sends an email verification if the email is updated.
+   *
+   * @param {UpdateUserInput} updateUserInput - The details of the user to update.
+   * @returns {Promise<User>} - The updated user.
+   * @throws {ForbiddenException} - Thrown if the email verification cannot be sent.
+   */
+  public async updateUser(updateUserInput: UpdateUserInput): Promise<User> {
+    const { userId, username, email } = updateUserInput;
+
+    const user: User = await this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        username: username && {
+          set: username,
+        },
+        connection: email && {
+          update: {
+            email,
+            isEmailVerified: false,
+          },
+        },
+      },
+      include: userIncludes,
+    });
+
+    if (email) {
+      const emailVerification: EmailVerification =
+        await this.emailVerificationService.createEmailVerification(
+          user.connection.id,
+          email,
+        );
+
+      if (!emailVerification)
+        throw new ForbiddenException('Unable to send email verification');
+    }
+
+    return user;
+  }
+
+  /**
    * Updates the avatar of a user.
    *
    * @param {string} userId - The ID of the user to update.
@@ -208,6 +257,30 @@ export class UserService {
         avatar: {
           update: {
             filename: user.avatar.defaultFilename,
+          },
+        },
+      },
+      include: userIncludes,
+    });
+  }
+
+  /**
+   * Updates the password of a user.
+   * THE PASSWORD SHOULD BE HASHED BEFORE CALLING THIS FUNCTION.
+   *
+   * @param {string} userId - The ID of the user to update the password for.
+   * @param {string} password - The new password to set.
+   * @returns {Promise<User>} A promise that resolves to the updated user.
+   */
+  public async updatePassword(userId: string, password: string): Promise<User> {
+    return this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        connection: {
+          update: {
+            password,
           },
         },
       },

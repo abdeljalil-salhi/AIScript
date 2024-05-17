@@ -1,6 +1,10 @@
 // Dependencies
-import { ChangeEvent, FC, useEffect, useState } from "react";
-import { useGetIdentity } from "@refinedev/core";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import {
+  useCustomMutation,
+  useGetIdentity,
+  useNotification,
+} from "@refinedev/core";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -14,6 +18,12 @@ import { ChangePasswordModal } from "@/components/profile/ChangePasswordModal";
 import { Enable2FAModal } from "@/components/profile/Enable2FAModal";
 import { VerifyEmailModal } from "@/components/profile/VerifyEmailModal";
 import { SubscriptionCard } from "@/components/profile/SubscriptionCard";
+// GraphQL Mutations
+import { MUTATION_UPDATE_USER } from "@/graphql/mutations/updateUser";
+// GraphQL Types
+import { UpdateUserMutation } from "@/graphql/types";
+// Providers
+import { API_URL } from "@/providers";
 
 // Interfaces
 interface SettingsFormProps {}
@@ -45,12 +55,35 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
 
   /**
+   * Notification hook to show notifications to the user
+   */
+  const { open } = useNotification();
+
+  /**
+   * Mutation to update the user's information
+   * @type {useCustomMutation}
+   */
+  const {
+    mutate: updateUser,
+    isLoading: isUpdatingUser,
+    isError: updateUserError,
+  } = useCustomMutation<UpdateUserMutation>();
+
+  /**
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity, isLoading: isIdentityLoading } =
-    useGetIdentity<MeResponse>();
+  const {
+    data: identity,
+    isLoading: isIdentityLoading,
+    refetch: refetchIdentity,
+  } = useGetIdentity<MeResponse>();
 
+  /**
+   * Set the username and email when the identity is loaded
+   * @returns {void}
+   * @sideeffects {setUsername, setEmail}
+   */
   useEffect(() => {
     if (identity) {
       setUsername(identity.user.username);
@@ -58,9 +91,90 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
     }
   }, [identity]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  /**
+   * Handle the form submission to update the user's information
+   * @param {FormEvent<HTMLFormElement>} e - Event
+   * @returns {void}
+   */
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    alert("Settings saved successfully!");
+
+    if (isUpdatingUser || isIdentityLoading) return;
+
+    if (!username || username.trim().length < 3 || username.trim().length > 20)
+      return open?.({
+        type: "error",
+        description: "Error!",
+        message: "Username must be between 3 and 20 characters long.",
+      });
+
+    if (!email || email.trim().length < 5 || email.trim().length > 50)
+      return open?.({
+        type: "error",
+        description: "Error!",
+        message: "Email must be between 5 and 50 characters long.",
+      });
+
+    if (
+      email === identity?.user.connection?.email &&
+      username === identity?.user.username
+    )
+      return open?.({
+        type: "error",
+        description: "Hmmm?",
+        message: "No changes detected.",
+      });
+
+    if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/))
+      return open?.({
+        type: "error",
+        description: "Error!",
+        message: "Please enter a valid email address.",
+      });
+
+    try {
+      updateUser({
+        url: API_URL,
+        method: "post",
+        meta: {
+          gqlMutation: MUTATION_UPDATE_USER,
+          variables: {
+            updateUserInput: {
+              userId: identity!.user.id,
+              username: username.trim().length > 3 ? username : undefined,
+              email: email.trim().length > 5 ? email : undefined,
+            },
+          },
+        },
+        values: {},
+      });
+    } catch (error) {
+      open?.({
+        type: "error",
+        description: "Error!",
+        message: "An error occurred while updating your profile.",
+      });
+      return;
+    }
+
+    refetchIdentity();
+
+    if (updateUserError) {
+      // Show an error notification
+      open?.({
+        type: "error",
+        description: "Error!",
+        message: "An error occurred while updating your profile.",
+      });
+      return;
+    }
+
+    // Show a success notification
+    open?.({
+      type: "success",
+      description: "Success!",
+      message: "Your profile has been updated successfully.",
+    });
   };
 
   return (

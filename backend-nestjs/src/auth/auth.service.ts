@@ -10,8 +10,11 @@ import { JwtService } from '@nestjs/jwt';
 
 // Services
 import { UserService } from 'src/user/user.service';
+import { MailService } from 'src/mail/mail.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
 // Entities
 import { User } from 'src/user/entities/user.entity';
+import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
 // DTOs
 import { AuthResponse } from './dtos/auth.response';
 import { LoginInput } from './dtos/login.input';
@@ -19,6 +22,7 @@ import { LogoutResponse } from './dtos/logout.response';
 import { MeResponse } from './dtos/me.response';
 import { NewTokensResponse } from './dtos/new-tokens.response';
 import { RegisterInput } from './dtos/register.input';
+import { ForgotPasswordInput } from './dtos/forgot-password.input';
 
 /**
  * The authentication service that encapsulates all authentication-related features and functionalities.
@@ -38,6 +42,8 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly mailService: MailService,
+    private readonly emailVerificationService: EmailVerificationService,
   ) {}
 
   /**
@@ -46,6 +52,7 @@ export class AuthService {
    * @param {RegisterInput} registerInput - The input details for the user to register.
    * @returns {Promise<AuthResponse>} - The result of the registration operation.
    * @throws {ConflictException} - Thrown if the username already exists.
+   * @throws {NotFoundException} - Thrown if the email verification is not created.
    */
   public async register(registerInput: RegisterInput): Promise<AuthResponse> {
     /**
@@ -91,6 +98,20 @@ export class AuthService {
      */
     const { accessToken, refreshToken } = await this.createTokens(user);
     await this.updateRefreshToken(user.id, refreshToken);
+
+    /**
+     * Create an email verification for the user.
+     * Send an email to the user to verify their email address.
+     * This is done to ensure that the user owns the email address.
+     */
+    const emailVerification: EmailVerification =
+      await this.emailVerificationService.createEmailVerification(
+        user.connection.id,
+        user.connection.email,
+      );
+
+    if (!emailVerification)
+      throw new NotFoundException('Email verification not created');
 
     // Return the authentication response with the access token and refresh token
     return {
@@ -201,6 +222,66 @@ export class AuthService {
 
     // Return the user details
     return {
+      user,
+    };
+  }
+
+  /**
+   * Resets the password for the user with the specified email.
+   *
+   * @param {ForgotPasswordInput} forgotPasswordInput - The input details for the user to reset the password.
+   * @returns {Promise<AuthResponse>} - The result of the password reset operation.
+   * @throws {NotFoundException} - Thrown if the user is not found.
+   * @throws {ForbiddenException} - Thrown if the passwords do not match.
+   */
+  public async forgotPassword(
+    forgotPasswordInput: ForgotPasswordInput,
+  ): Promise<AuthResponse> {
+    /**
+     * Find the user by the specified email.
+     * If the user is not found, throw a NotFoundException.
+     * Otherwise, continue with the forgot password process.
+     */
+    const userId: string = await this.userService
+      .findByUsernameOrEmail(forgotPasswordInput.email)
+      .then((user: User) => {
+        if (!user) throw new NotFoundException('User not found');
+        return user.id;
+      });
+
+    /**
+     * Check if the new password and confirm password match.
+     * If they do not match, throw a ForbiddenException.\
+     */
+    if (forgotPasswordInput.password !== forgotPasswordInput.confirmPassword)
+      throw new ForbiddenException('Passwords do not match');
+
+    /**
+     * Hash the new password of the user.
+     * This is done to ensure that the password is not stored in plain text.
+     * The hashed password is then used to update the user's password.
+     */
+    const hashedPassword: string = await this.userService.hashPassword(
+      forgotPasswordInput.password,
+    );
+
+    // Change the user's password with the new hashed password.
+    const user: User = await this.userService.updatePassword(
+      userId,
+      hashedPassword,
+    );
+
+    /**
+     * Create tokens and update refresh token in the database.
+     * This is done to ensure that the user is authenticated and authorized.
+     */
+    const { accessToken, refreshToken } = await this.createTokens(user);
+    await this.updateRefreshToken(user.id, refreshToken);
+
+    // Return the authentication response with the access token and refresh token
+    return {
+      accessToken,
+      refreshToken,
       user,
     };
   }

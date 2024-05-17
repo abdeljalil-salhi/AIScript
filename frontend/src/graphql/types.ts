@@ -87,6 +87,17 @@ export type SubscribeMutation = {
   >;
 };
 
+export type UpdateUserMutationVariables = Types.Exact<{
+  updateUserInput: Types.UpdateUserInput;
+}>;
+
+export type UpdateUserMutation = {
+  updateUser: Pick<
+    Types.User,
+    "id" | "username" | "createdAt" | "updatedAt"
+  > & { connection?: Types.Maybe<Pick<Types.Connection, "email">> };
+};
+
 export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];
 }>;

@@ -52,4 +52,49 @@ export class ForgotPasswordService {
       },
     });
   }
+
+  /**
+   * Finds a forgot password entity by the specified token.
+   *
+   * @param {string} token - The token to search for.
+   * @returns {Promise<ForgotPassword | null>} - A Promise that resolves with the found forgot password entity, or null if not found.
+   */
+  public async findForgotPasswordByToken(
+    token: string,
+  ): Promise<ForgotPassword | null> {
+    return this.prismaService.forgotPassword.findFirst({
+      where: {
+        token,
+      },
+    });
+  }
+
+  /**
+   * Deletes the forgot password entity with the specified ID
+   *
+   * @param {string} id - The ID of the forgot password entity to delete.
+   * @returns {Promise<ForgotPassword>} - A Promise that resolves with the deleted forgot password entity.
+   */
+  public async deleteForgotPassword(id: string): Promise<ForgotPassword> {
+    return this.prismaService.forgotPassword.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  /**
+   * Deletes all expired forgot password tokens.
+   *
+   * @returns {Promise<void>} - A Promise that resolves when all expired forgot password tokens are deleted.
+   */
+  public async deleteExpiredForgotPasswords(): Promise<void> {
+    await this.prismaService.forgotPassword.deleteMany({
+      where: {
+        expiresAt: {
+          lt: new Date(),
+        },
+      },
+    });
+  }
 }

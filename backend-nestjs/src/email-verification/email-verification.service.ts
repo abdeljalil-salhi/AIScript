@@ -5,6 +5,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ConnectionService } from 'src/connection/connection.service';
+import { MailService } from 'src/mail/mail.service';
 // Entities
 import { EmailVerification } from './entities/email-verification.entity';
 
@@ -26,10 +27,12 @@ export class EmailVerificationService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly connectionService: ConnectionService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
    * Creates an email verification for the specified email.
+   * Sends an email to the user with a link to verify their email address.
    *
    * @param {string} connectionId - The connection ID.
    * @param {string} email - The email address.
@@ -39,18 +42,29 @@ export class EmailVerificationService {
     connectionId: string,
     email: string,
   ): Promise<EmailVerification> {
-    return this.prismaService.emailVerification.create({
-      data: {
-        connection: {
-          connect: {
-            id: connectionId,
+    const emailVerification: EmailVerification =
+      await this.prismaService.emailVerification.create({
+        data: {
+          connection: {
+            connect: {
+              id: connectionId,
+            },
           },
+          email,
+          token: randomUUID(), // Generate a random token.
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
         },
-        email,
-        token: randomUUID(), // Generate a random token.
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
-      },
-    });
+      });
+
+    // Send a verification email to the user
+    await this.mailService.sendMail(
+      email,
+      'Verify your email address',
+      'Click the link below to verify your email address; the link will expire in 24 hours.',
+      `${process.env.FRONTEND_URL}/verify-email/${emailVerification.token}`,
+    );
+
+    return emailVerification;
   }
 
   /**

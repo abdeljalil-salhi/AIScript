@@ -52,6 +52,7 @@ export class AuthService {
    * @param {RegisterInput} registerInput - The input details for the user to register.
    * @returns {Promise<AuthResponse>} - The result of the registration operation.
    * @throws {ConflictException} - Thrown if the username already exists.
+   * @throws {NotFoundException} - Thrown if the email verification is not created.
    */
   public async register(registerInput: RegisterInput): Promise<AuthResponse> {
     /**
@@ -100,7 +101,8 @@ export class AuthService {
 
     /**
      * Create an email verification for the user.
-     * This is done to ensure that the user's email is verified.
+     * Send an email to the user to verify their email address.
+     * This is done to ensure that the user owns the email address.
      */
     const emailVerification: EmailVerification =
       await this.emailVerificationService.createEmailVerification(
@@ -108,13 +110,8 @@ export class AuthService {
         user.connection.email,
       );
 
-    // Send a verification email to the user
-    await this.mailService.sendMail(
-      user.connection.email,
-      'Verify your email address',
-      'Click the link below to verify your email address',
-      `${process.env.FRONTEND_URL}/verify-email?token=${emailVerification.token}`,
-    );
+    if (!emailVerification)
+      throw new NotFoundException('Email verification not created');
 
     // Return the authentication response with the access token and refresh token
     return {

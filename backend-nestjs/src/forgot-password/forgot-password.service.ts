@@ -5,6 +5,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
+import { MailService } from 'src/mail/mail.service';
 // Entities
 import { ForgotPassword } from './entities/forgot-password.entity';
 // DTOs
@@ -30,10 +31,12 @@ export class ForgotPasswordService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
    * Creates a forgot password token for the specified email.
+   * Sends an email to the user with a link to reset their password.
    *
    * @param {string} connectionId - The connection ID.
    * @param {string} email - The email address.
@@ -43,18 +46,29 @@ export class ForgotPasswordService {
     connectionId: string,
     email: string,
   ): Promise<ForgotPassword> {
-    return this.prismaService.forgotPassword.create({
-      data: {
-        connection: {
-          connect: {
-            id: connectionId,
+    const forgotPassword: ForgotPassword =
+      await this.prismaService.forgotPassword.create({
+        data: {
+          connection: {
+            connect: {
+              id: connectionId,
+            },
           },
+          email,
+          token: randomUUID(), // Generate a random token.
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 12 hours
         },
-        email,
-        token: randomUUID(), // Generate a random token.
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 12 hours
-      },
-    });
+      });
+
+    // Send a forgot password email to the user
+    await this.mailService.sendMail(
+      email,
+      'Forgot Password',
+      'Click the following link to reset your password; the link will expire in 24 hours.',
+      `${process.env.FRONTEND_URL}/forgot-password/${forgotPassword.token}`,
+    );
+
+    return forgotPassword;
   }
 
   /**

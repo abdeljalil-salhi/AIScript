@@ -30,6 +30,7 @@ export class EmailVerificationResolver {
 
   /**
    * Requests an email verification for the specified email.
+   * Sends an email to the user with a link to verify their email.
    *
    * @mutation
    * @param {string} userId - The user ID requesting the email verification.

@@ -168,6 +168,7 @@ export class UserService {
    *
    * @param {UpdateUserInput} updateUserInput - The details of the user to update.
    * @returns {Promise<User>} - The updated user.
+   * @throws {ForbiddenException} - Thrown if the email verification cannot be sent.
    */
   public async updateUser(updateUserInput: UpdateUserInput): Promise<User> {
     const { userId, username, email } = updateUserInput;
@@ -197,13 +198,8 @@ export class UserService {
           email,
         );
 
-      if (emailVerification)
-        await this.mailService.sendMail(
-          user.connection.email,
-          'Verify your email address',
-          'Click the link below to verify your email address; this link will expire in 24 hours.',
-          `${process.env.FRONTEND_URL}/verify-email/${emailVerification.token}`,
-        );
+      if (!emailVerification)
+        throw new ForbiddenException('Unable to send email verification');
     }
 
     return user;

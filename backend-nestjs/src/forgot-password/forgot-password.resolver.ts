@@ -32,6 +32,7 @@ export class ForgotPasswordResolver {
 
   /**
    * Requests a forgot password token for the specified email.
+   * Sends an email to the user with a link to reset their password.
    *
    * @mutation
    * @param {string} userId - The user ID requesting the forgot password token.

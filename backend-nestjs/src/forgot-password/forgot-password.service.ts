@@ -6,10 +6,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
 import { MailService } from 'src/mail/mail.service';
+import { ConnectionService } from 'src/connection/connection.service';
 // Entities
 import { ForgotPassword } from './entities/forgot-password.entity';
+import { Connection } from 'src/connection/entities/connection.entity';
 // DTOs
 import { VerifyForgotPasswordInput } from './dtos/verify-forgot-password.input';
+import { RequestForgotPasswordInput } from './dtos/request-forgot-password.input';
 import { AuthResponse } from 'src/auth/dtos/auth.response';
 import { ForgotPasswordInput } from 'src/auth/dtos/forgot-password.input';
 
@@ -32,29 +35,36 @@ export class ForgotPasswordService {
     private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
     private readonly mailService: MailService,
+    private readonly connectionService: ConnectionService,
   ) {}
 
   /**
    * Creates a forgot password token for the specified email.
    * Sends an email to the user with a link to reset their password.
    *
-   * @param {string} connectionId - The connection ID.
-   * @param {string} email - The email address.
+   * @param {RequestForgotPasswordInput} requestForgotPasswordInput - The input data to request a forgot password token.
    * @returns {Promise<ForgotPassword>} - A Promise that resolves with the created forgot password token.
+   * @throws {NotFoundException} - Thrown if the connection is not found.
    */
   public async createForgotPassword(
-    connectionId: string,
-    email: string,
+    requestForgotPasswordInput: RequestForgotPasswordInput,
   ): Promise<ForgotPassword> {
+    const connection: Connection =
+      await this.connectionService.findConnectionByEmail(
+        requestForgotPasswordInput.email,
+      );
+
+    if (!connection) throw new NotFoundException('Connection not found');
+
     const forgotPassword: ForgotPassword =
       await this.prismaService.forgotPassword.create({
         data: {
           connection: {
             connect: {
-              id: connectionId,
+              id: connection.id,
             },
           },
-          email,
+          email: requestForgotPasswordInput.email,
           token: randomUUID(), // Generate a random token.
           expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 12 hours
         },
@@ -62,7 +72,7 @@ export class ForgotPasswordService {
 
     // Send a forgot password email to the user
     await this.mailService.sendMail(
-      email,
+      requestForgotPasswordInput.email,
       'Forgot Password',
       'Click the following link to reset your password; the link will expire in 24 hours.',
       `${process.env.FRONTEND_URL}/forgot-password/${forgotPassword.token}`,

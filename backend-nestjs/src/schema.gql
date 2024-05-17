@@ -343,14 +343,8 @@ input RequestEmailVerificationInput {
 }
 
 input RequestForgotPasswordInput {
-  """ID of the connection requesting the password reset"""
-  connectionId: String!
-
   """Email of the user requesting the password reset"""
   email: String!
-
-  """ID of the user requesting the password reset"""
-  userId: String!
 }
 
 input SubscribeInput {

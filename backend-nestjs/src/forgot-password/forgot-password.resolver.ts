@@ -1,6 +1,5 @@
 // Dependencies
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { ForbiddenException } from '@nestjs/common';
 
 // Services
 import { ForgotPasswordService } from './forgot-password.service';
@@ -11,7 +10,6 @@ import { RequestForgotPasswordInput } from './dtos/request-forgot-password.input
 import { VerifyForgotPasswordInput } from './dtos/verify-forgot-password.input';
 import { AuthResponse } from 'src/auth/dtos/auth.response';
 // Decorators
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { Public } from 'src/auth/decorators/public.decorator';
 
 /**
@@ -34,29 +32,23 @@ export class ForgotPasswordResolver {
    * Requests a forgot password token for the specified email.
    * Sends an email to the user with a link to reset their password.
    *
+   * @public
    * @mutation
-   * @param {string} userId - The user ID requesting the forgot password token.
-   * @param {RequestForgotPasswordInput} requestForgotPassword - The input data to request a forgot password token.
+   * @param {RequestForgotPasswordInput} requestForgotPasswordInput - The input data to request a forgot password token.
    * @returns {Promise<ForgotPassword>} - The created forgot password entity.
    * @throws {ForbiddenException} - Thrown if the authenticated user is trying to request a forgot password token for another user.
    */
+  @Public()
   @Mutation(() => ForgotPassword, {
     name: 'requestForgotPassword',
     description: 'Requests a forgot password token for the specified email.',
   })
   public async requestForgotPassword(
-    @CurrentUser('id') userId: string,
     @Args('requestForgotPasswordInput')
     requestForgotPasswordInput: RequestForgotPasswordInput,
   ): Promise<ForgotPassword> {
-    if (userId !== requestForgotPasswordInput.userId)
-      throw new ForbiddenException(
-        'You can only request a forgot password token for your own account',
-      );
-
     return this.forgotPasswordService.createForgotPassword(
-      requestForgotPasswordInput.connectionId,
-      requestForgotPasswordInput.email,
+      requestForgotPasswordInput,
     );
   }
 

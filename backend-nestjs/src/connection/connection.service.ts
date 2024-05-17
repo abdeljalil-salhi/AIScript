@@ -62,4 +62,21 @@ export class ConnectionService {
       },
     });
   }
+
+  /**
+   * Finds a connection by their email.
+   *
+   * @param {string} email - The email of the connection to find.
+   * @returns {Promise<Connection>} - The connection with the specified email.
+   */
+  public async findConnectionByEmail(email: string): Promise<Connection> {
+    return this.prismaService.connection.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
 }

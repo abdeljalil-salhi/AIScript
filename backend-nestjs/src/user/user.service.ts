@@ -13,12 +13,12 @@ import { EmailVerificationService } from 'src/email-verification/email-verificat
 import { MailService } from 'src/mail/mail.service';
 // Entities
 import { User } from './entities/user.entity';
+import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
 // DTOs
 import { NewUserInput } from './dtos/new-user.input';
 import { UpdateUserInput } from './dtos/update-user.input';
 // Includes
 import { userIncludes } from './includes/user.includes';
-import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
 
 /**
  * Service for handling user-related operations.
@@ -201,8 +201,8 @@ export class UserService {
         await this.mailService.sendMail(
           user.connection.email,
           'Verify your email address',
-          'Click the link below to verify your email address',
-          `${process.env.FRONTEND_URL}/verify-email?token=${emailVerification.token}`,
+          'Click the link below to verify your email address; this link will expire in 24 hours.',
+          `${process.env.FRONTEND_URL}/verify-email/${emailVerification.token}`,
         );
     }
 
@@ -261,6 +261,30 @@ export class UserService {
         avatar: {
           update: {
             filename: user.avatar.defaultFilename,
+          },
+        },
+      },
+      include: userIncludes,
+    });
+  }
+
+  /**
+   * Updates the password of a user.
+   * THE PASSWORD SHOULD BE HASHED BEFORE CALLING THIS FUNCTION.
+   *
+   * @param {string} userId - The ID of the user to update the password for.
+   * @param {string} password - The new password to set.
+   * @returns {Promise<User>} A promise that resolves to the updated user.
+   */
+  public async updatePassword(userId: string, password: string): Promise<User> {
+    return this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        connection: {
+          update: {
+            password,
           },
         },
       },

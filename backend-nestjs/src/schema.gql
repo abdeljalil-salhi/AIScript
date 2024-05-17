@@ -171,6 +171,9 @@ type Mutation {
   """Deletes all subscription entities for a specific user."""
   deleteSubscriptionsByUserId(userId: String!): [Subscription!]!
 
+  """Verifies the forgot password token and updates the user password."""
+  forgotPassword(verifyForgotPasswordInput: VerifyForgotPasswordInput!): AuthResponse!
+
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
 
@@ -472,6 +475,20 @@ type User {
 
   """User associated wallet entity"""
   wallet: Wallet
+}
+
+input VerifyForgotPasswordInput {
+  """New password confirmation for the user"""
+  confirmPassword: String!
+
+  """Email of the user changing the password"""
+  email: String!
+
+  """New password for the user"""
+  password: String!
+
+  """Token for the forgot password reset"""
+  token: String!
 }
 
 type Wallet {

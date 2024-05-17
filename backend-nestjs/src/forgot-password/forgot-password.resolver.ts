@@ -8,8 +8,11 @@ import { ForgotPasswordService } from './forgot-password.service';
 import { ForgotPassword } from './entities/forgot-password.entity';
 // DTOs
 import { RequestForgotPasswordInput } from './dtos/request-forgot-password.input';
+import { VerifyForgotPasswordInput } from './dtos/verify-forgot-password.input';
+import { AuthResponse } from 'src/auth/dtos/auth.response';
 // Decorators
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 /**
  * The resolver that contains all the forgot password-related GraphQL queries and mutations.
@@ -43,16 +46,40 @@ export class ForgotPasswordResolver {
   public async requestForgotPassword(
     @CurrentUser('id') userId: string,
     @Args('requestForgotPasswordInput')
-    requestForgotPassword: RequestForgotPasswordInput,
+    requestForgotPasswordInput: RequestForgotPasswordInput,
   ): Promise<ForgotPassword> {
-    if (userId !== requestForgotPassword.userId)
+    if (userId !== requestForgotPasswordInput.userId)
       throw new ForbiddenException(
         'You can only request a forgot password token for your own account',
       );
 
     return this.forgotPasswordService.createForgotPassword(
-      requestForgotPassword.connectionId,
-      requestForgotPassword.email,
+      requestForgotPasswordInput.connectionId,
+      requestForgotPasswordInput.email,
+    );
+  }
+
+  /**
+   * Verifies the forgot password token and updates the user password.
+   *
+   * @public
+   * @mutation
+   * @param {VerifyForgotPasswordInput} verifyForgotPasswordInput - The input data to verify the forgot password token.
+   * @returns {Promise<AuthResponse>} - The result of the forgot password operation.
+   */
+  @Public()
+  @Mutation(() => AuthResponse, {
+    name: 'forgotPassword',
+    description:
+      'Verifies the forgot password token and updates the user password.',
+  })
+  public async forgotPassword(
+    @Args('verifyForgotPasswordInput')
+    verifyForgotPasswordInput: VerifyForgotPasswordInput,
+  ): Promise<AuthResponse> {
+    // Delegate the forgot password operation to the ForgotPassword Service
+    return this.forgotPasswordService.verifyForgotPassword(
+      verifyForgotPasswordInput,
     );
   }
 }

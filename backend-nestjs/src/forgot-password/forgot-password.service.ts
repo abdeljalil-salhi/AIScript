@@ -1,12 +1,16 @@
 // Dependencies
 import { randomUUID } from 'crypto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
 // Entities
 import { ForgotPassword } from './entities/forgot-password.entity';
+// DTOs
+import { VerifyForgotPasswordInput } from './dtos/verify-forgot-password.input';
+import { AuthResponse } from 'src/auth/dtos/auth.response';
+import { ForgotPasswordInput } from 'src/auth/dtos/forgot-password.input';
 
 /**
  * Service for handling forgot password-related operations.
@@ -51,6 +55,52 @@ export class ForgotPasswordService {
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 12 hours
       },
     });
+  }
+
+  /**
+   * Verifies the forgot password with the specified token.
+   *
+   * @param {VerifyForgotPasswordInput} forgotPasswordInput - The input data to verify the forgot password token.
+   * @returns {Promise<AuthResponse>} - A Promise that resolves with the authentication response.
+   * @throws {NotFoundException} - Thrown if the forgot password token is invalid or expired.
+   * @throws {NotFoundException} - Thrown if the email is invalid.
+   * @throws {NotFoundException} - Thrown if the user is not found or the password is not updated.
+   */
+  public async verifyForgotPassword(
+    verifyForgotPasswordInput: VerifyForgotPasswordInput,
+  ): Promise<AuthResponse> {
+    // Find the forgot password request by the token
+    const forgotPassword: ForgotPassword = await this.findForgotPasswordByToken(
+      verifyForgotPasswordInput.token,
+    );
+
+    // Check if the forgot password request exists
+    if (!forgotPassword)
+      throw new NotFoundException('Invalid or expired forgot password token');
+
+    // Check if the email matches
+    if (forgotPassword.email !== verifyForgotPasswordInput.email)
+      throw new NotFoundException('Invalid email');
+
+    // Prepare the authentication service's forgot password input
+    const forgotPasswordInput: ForgotPasswordInput = {
+      email: verifyForgotPasswordInput.email,
+      password: verifyForgotPasswordInput.password,
+      confirmPassword: verifyForgotPasswordInput.confirmPassword,
+    };
+
+    // Change the user's password
+    const authResponse: AuthResponse =
+      await this.authService.forgotPassword(forgotPasswordInput);
+
+    // Check if the user was successfully updated
+    if (!authResponse.user)
+      throw new NotFoundException('User not found or password not updated');
+
+    // Delete the forgot password request
+    await this.deleteForgotPassword(forgotPassword.id);
+
+    return authResponse;
   }
 
   /**

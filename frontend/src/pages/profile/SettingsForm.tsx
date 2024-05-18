@@ -1,5 +1,12 @@
 // Dependencies
-import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from "react";
 import {
   useCustomMutation,
   useGetIdentity,
@@ -20,8 +27,12 @@ import { VerifyEmailModal } from "@/components/profile/VerifyEmailModal";
 import { SubscriptionCard } from "@/components/profile/SubscriptionCard";
 // GraphQL Mutations
 import { MUTATION_UPDATE_USER } from "@/graphql/mutations/updateUser";
+import { MUTATION_REQUEST_EMAIL_VERIFICATION } from "@/graphql/mutations/requestEmailVerification";
 // GraphQL Types
-import { UpdateUserMutation } from "@/graphql/types";
+import {
+  RequestEmailVerificationMutation,
+  UpdateUserMutation,
+} from "@/graphql/types";
 // Providers
 import { API_URL } from "@/providers";
 
@@ -61,13 +72,23 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
 
   /**
    * Mutation to update the user's information
-   * @type {useCustomMutation}
+   * @type {UpdateUserMutation}
    */
   const {
     mutate: updateUser,
     isLoading: isUpdatingUser,
     isError: updateUserError,
   } = useCustomMutation<UpdateUserMutation>();
+
+  /**
+   * Mutation to request an email verification
+   * @type {RequestEmailVerificationMutation}
+   */
+  const {
+    mutate: requestEmailVerification,
+    isLoading: isRequestingEmailVerification,
+    isError: requestEmailVerificationError,
+  } = useCustomMutation<RequestEmailVerificationMutation>();
 
   /**
    * Get the user's identity
@@ -177,6 +198,49 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
     });
   };
 
+  const handleEmailVerification = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (isRequestingEmailVerification || isIdentityLoading) return;
+
+    try {
+      requestEmailVerification({
+        url: API_URL,
+        method: "post",
+        meta: {
+          gqlMutation: MUTATION_REQUEST_EMAIL_VERIFICATION,
+          variables: {
+            requestEmailVerificationInput: {
+              userId: identity!.user.id,
+              connectionId: identity!.user.connection!.id,
+              email: identity!.user.connection!.email,
+            },
+          },
+        },
+        values: {},
+      });
+    } catch (error) {
+      open?.({
+        type: "error",
+        description: "Error!",
+        message: "An error occurred while requesting an email verification.",
+      });
+      return;
+    }
+
+    if (requestEmailVerificationError) {
+      // Show an error notification
+      open?.({
+        type: "error",
+        description: "Error!",
+        message: "An error occurred while requesting an email verification.",
+      });
+      return;
+    }
+
+    setShowVerifyEmailModal(true);
+  };
+
   return (
     <>
       <form
@@ -256,7 +320,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           <>
             <button
               className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
-              onClick={() => setShowVerifyEmailModal(true)}
+              onClick={handleEmailVerification}
             >
               Verify email address
             </button>

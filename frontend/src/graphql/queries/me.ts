@@ -9,6 +9,7 @@ export const QUERY_ME = gql`
         username
         isAdmin
         connection {
+          id
           email
           isEmailVerified
           is2faEnabled
@@ -21,6 +22,7 @@ export const QUERY_ME = gql`
           updatedAt
         }
         wallet {
+          id
           balance
           updatedAt
         }

@@ -1,5 +1,5 @@
 // Dependencies
-import { UseGuards } from '@nestjs/common';
+import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 // Services
@@ -17,6 +17,7 @@ import { CurrentUserId } from './decorators/current-userid.decorator';
 import { Public } from './decorators/public.decorator';
 // Guards
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { ChangePasswordInput } from './dtos/change-password.input';
 
 /**
  * The authentication resolver that encapsulates all authentication-related GraphQL queries,
@@ -105,6 +106,30 @@ export class AuthResolver {
   })
   public async me(@CurrentUserId() userId: string): Promise<MeResponse> {
     return this.authService.me(userId);
+  }
+
+  /**
+   * Mutation resolver that changes the password of the current user.
+   *
+   * @public
+   * @mutation
+   * @param {string} userId - ID of the current user.
+   * @param {ChangePasswordInput} changePasswordInput - Input data for changing the password.
+   * @returns {Promise<string>} - The result of the password change operation.
+   * @throws {ForbiddenException} - Thrown if the authenticated user is trying to change another user's password.
+   */
+  @Mutation(() => String, {
+    name: 'changePassword',
+    description: 'Changes the password of the current user.',
+  })
+  public async changePassword(
+    @CurrentUserId() userId: string,
+    @Args('changePasswordInput') changePasswordInput: ChangePasswordInput,
+  ): Promise<string> {
+    if (changePasswordInput.userId !== userId)
+      throw new ForbiddenException('You can only change your own password');
+
+    return this.authService.changePassword(changePasswordInput);
   }
 
   /**

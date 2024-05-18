@@ -42,6 +42,44 @@ export class EmailVerificationService {
     connectionId: string,
     email: string,
   ): Promise<EmailVerification> {
+    const checkEmailVerification: EmailVerification =
+      await this.prismaService.emailVerification.findFirst({
+        where: {
+          email,
+        },
+      });
+
+    if (checkEmailVerification) {
+      // Check if the email verification was created more than an hour ago
+      if (
+        checkEmailVerification.lastSentAt.getTime() + 1000 * 60 * 60 * 1 <
+        Date.now()
+      ) {
+        // Update the email verification
+        const updatedEmailVerification: EmailVerification =
+          await this.prismaService.emailVerification.update({
+            where: {
+              id: checkEmailVerification.id,
+            },
+            data: {
+              lastSentAt: new Date(),
+            },
+          });
+
+        // Send a verification email to the user
+        await this.mailService.sendMail(
+          email,
+          'Verify your email address',
+          'Click the link below to verify your email address; the link will expire in 24 hours.',
+          `${process.env.FRONTEND_URL}/verify-email/${checkEmailVerification.token}`,
+        );
+
+        return updatedEmailVerification;
+      }
+
+      return checkEmailVerification;
+    }
+
     const emailVerification: EmailVerification =
       await this.prismaService.emailVerification.create({
         data: {

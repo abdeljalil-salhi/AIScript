@@ -67,6 +67,17 @@ export type RegisterMutation = {
   };
 };
 
+export type RequestEmailVerificationMutationVariables = Types.Exact<{
+  requestEmailVerificationInput: Types.RequestEmailVerificationInput;
+}>;
+
+export type RequestEmailVerificationMutation = {
+  requestEmailVerification: Pick<
+    Types.EmailVerification,
+    "id" | "email" | "expiresAt" | "createdAt" | "updatedAt"
+  >;
+};
+
 export type SubscribeMutationVariables = Types.Exact<{
   subscribeInput: Types.SubscribeInput;
 }>;
@@ -98,6 +109,12 @@ export type UpdateUserMutation = {
   > & { connection?: Types.Maybe<Pick<Types.Connection, "email">> };
 };
 
+export type VerifyEmailMutationVariables = Types.Exact<{
+  token: Types.Scalars["String"]["input"];
+}>;
+
+export type VerifyEmailMutation = Pick<Types.Mutation, "verifyEmail">;
+
 export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];
 }>;
@@ -127,6 +144,7 @@ export type MeQuery = {
       connection?: Types.Maybe<
         Pick<
           Types.Connection,
+          | "id"
           | "email"
           | "isEmailVerified"
           | "is2faEnabled"
@@ -137,7 +155,7 @@ export type MeQuery = {
       avatar?: Types.Maybe<
         Pick<Types.Avatar, "defaultFilename" | "filename" | "updatedAt">
       >;
-      wallet?: Types.Maybe<Pick<Types.Wallet, "balance" | "updatedAt">>;
+      wallet?: Types.Maybe<Pick<Types.Wallet, "id" | "balance" | "updatedAt">>;
       subscription?: Types.Maybe<
         Pick<
           Types.Subscription,

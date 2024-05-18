@@ -81,6 +81,48 @@ export type Connection = {
   userId: Scalars["String"]["output"];
 };
 
+export type EmailVerification = {
+  /** Email verification associated connection entity */
+  connection?: Maybe<Connection>;
+  /** ID of the associated connection */
+  connectionId: Scalars["String"]["output"];
+  /** Verification token creation date */
+  createdAt?: Maybe<Scalars["DateTime"]["output"]>;
+  /** Email address to verify */
+  email: Scalars["String"]["output"];
+  /** Verification token expiration date */
+  expiresAt: Scalars["DateTime"]["output"];
+  /** Unique identifier of the email verification */
+  id: Scalars["String"]["output"];
+  /** Verification token last sent at */
+  lastSentAt: Scalars["DateTime"]["output"];
+  /** Verification token */
+  token: Scalars["String"]["output"];
+  /** Verification token update date */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type ForgotPassword = {
+  /** Forgot password associated connection entity */
+  connection?: Maybe<Connection>;
+  /** ID of the associated connection */
+  connectionId: Scalars["String"]["output"];
+  /** Creation date of the password reset token */
+  createdAt: Scalars["DateTime"]["output"];
+  /** Email address of the account requesting the password reset */
+  email: Scalars["String"]["output"];
+  /** Expiration date of the password reset token */
+  expiresAt: Scalars["DateTime"]["output"];
+  /** Unique identifier of the forgot password */
+  id: Scalars["String"]["output"];
+  /** Date the reset token was last sent */
+  lastSentAt: Scalars["DateTime"]["output"];
+  /** Reset token */
+  token: Scalars["String"]["output"];
+  /** Update date of the password reset token */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
 export type LoginInput = {
   /** Password of the user */
   password: Scalars["String"]["input"];
@@ -113,6 +155,8 @@ export type Mutation = {
   deleteSubscriptionById: Subscription;
   /** Deletes all subscription entities for a specific user. */
   deleteSubscriptionsByUserId: Array<Subscription>;
+  /** Verifies the forgot password token and updates the user password. */
+  forgotPassword: AuthResponse;
   /** Logs in a user with the specified details. */
   login: AuthResponse;
   /** Logs out a user with the specified user ID. */
@@ -123,6 +167,10 @@ export type Mutation = {
   refreshSubscriptionsCredits: Scalars["String"]["output"];
   /** Registers a new user with the specified details. */
   register: AuthResponse;
+  /** Requests an email verification for the specified email. */
+  requestEmailVerification: EmailVerification;
+  /** Requests a forgot password token for the specified email. */
+  requestForgotPassword: ForgotPassword;
   /** Creates a new payment entity while subscribing to a plan. */
   subscribe: Payment;
   /** Updates a plan by its ID. */
@@ -131,6 +179,8 @@ export type Mutation = {
   updateUser: User;
   /** Validates all subscriptions. */
   validateSubscriptions: Scalars["String"]["output"];
+  /** Verifies the email verification with the specified token. */
+  verifyEmail: Scalars["String"]["output"];
 };
 
 export type MutationCancelSubscriptionArgs = {
@@ -153,12 +203,24 @@ export type MutationDeleteSubscriptionsByUserIdArgs = {
   userId: Scalars["String"]["input"];
 };
 
+export type MutationForgotPasswordArgs = {
+  verifyForgotPasswordInput: VerifyForgotPasswordInput;
+};
+
 export type MutationLoginArgs = {
   loginInput: LoginInput;
 };
 
 export type MutationRegisterArgs = {
   registerInput: RegisterInput;
+};
+
+export type MutationRequestEmailVerificationArgs = {
+  requestEmailVerificationInput: RequestEmailVerificationInput;
+};
+
+export type MutationRequestForgotPasswordArgs = {
+  requestForgotPasswordInput: RequestForgotPasswordInput;
 };
 
 export type MutationSubscribeArgs = {
@@ -172,6 +234,10 @@ export type MutationUpdatePlanArgs = {
 
 export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
+};
+
+export type MutationVerifyEmailArgs = {
+  token: Scalars["String"]["input"];
 };
 
 export type NewSubscriptionInput = {
@@ -280,6 +346,20 @@ export type RegisterInput = {
   username: Scalars["String"]["input"];
 };
 
+export type RequestEmailVerificationInput = {
+  /** ID of the connection requesting the email verification */
+  connectionId: Scalars["String"]["input"];
+  /** Email of the user requesting the email verification */
+  email: Scalars["String"]["input"];
+  /** ID of the user requesting the email verification */
+  userId: Scalars["String"]["input"];
+};
+
+export type RequestForgotPasswordInput = {
+  /** Email of the user requesting the password reset */
+  email: Scalars["String"]["input"];
+};
+
 export type SubscribeInput = {
   /** Amount of the payment */
   amount: Scalars["Float"]["input"];
@@ -369,6 +449,17 @@ export type User = {
   username: Scalars["String"]["output"];
   /** User associated wallet entity */
   wallet?: Maybe<Wallet>;
+};
+
+export type VerifyForgotPasswordInput = {
+  /** New password confirmation for the user */
+  confirmPassword: Scalars["String"]["input"];
+  /** Email of the user changing the password */
+  email: Scalars["String"]["input"];
+  /** New password for the user */
+  password: Scalars["String"]["input"];
+  /** Token for the forgot password reset */
+  token: Scalars["String"]["input"];
 };
 
 export type Wallet = {

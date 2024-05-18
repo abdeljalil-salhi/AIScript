@@ -10,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 
 // Services
 import { UserService } from 'src/user/user.service';
-import { MailService } from 'src/mail/mail.service';
 import { EmailVerificationService } from 'src/email-verification/email-verification.service';
 // Entities
 import { User } from 'src/user/entities/user.entity';
@@ -23,6 +22,7 @@ import { MeResponse } from './dtos/me.response';
 import { NewTokensResponse } from './dtos/new-tokens.response';
 import { RegisterInput } from './dtos/register.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
+import { ChangePasswordInput } from './dtos/change-password.input';
 
 /**
  * The authentication service that encapsulates all authentication-related features and functionalities.
@@ -42,7 +42,6 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    private readonly mailService: MailService,
     private readonly emailVerificationService: EmailVerificationService,
   ) {}
 
@@ -224,6 +223,63 @@ export class AuthService {
     return {
       user,
     };
+  }
+
+  /**
+   * Changes the password for the user with the specified ID.
+   *
+   * @param {ChangePasswordInput} changePasswordInput - The input details for the user to change the password.
+   * @returns {Promise<string>} - The result of the password change operation.
+   * @throws {NotFoundException} - Thrown if the user is not found.
+   * @throws {ForbiddenException} - Thrown if the passwords do not match.
+   */
+  public async changePassword(
+    changePasswordInput: ChangePasswordInput,
+  ): Promise<string> {
+    /**
+     * Verify the old password of the user.
+     * If the old password is invalid, throw a ForbiddenException.
+     * If the old password is valid, continue with the password change process.
+     */
+    await this.userService
+      .findByUsernameOrEmail(changePasswordInput.userId)
+      .then((user: User) => {
+        if (!user) throw new NotFoundException('User not found');
+        return argon.verify(
+          user.connection.password,
+          changePasswordInput.oldPassword,
+        );
+      })
+      .then((isPasswordValid: boolean) => {
+        if (!isPasswordValid)
+          throw new ForbiddenException('Invalid old password');
+      });
+
+    /**
+     * Check if the new password and confirm password match.
+     * If they do not match, throw a ForbiddenException.
+     * If they match, continue with the password change process.
+     */
+    if (changePasswordInput.newPassword !== changePasswordInput.confirmPassword)
+      throw new ForbiddenException('Passwords do not match');
+
+    /**
+     * Hash the new password of the user.
+     * This is done to ensure that the password is not stored in plain text.
+     * The hashed password is then used to update the user's password.
+     */
+    const hashedPassword: string = await this.userService.hashPassword(
+      changePasswordInput.newPassword,
+    );
+
+    // Change the user's password with the new hashed password.
+    await this.userService.updatePassword(
+      changePasswordInput.userId,
+      hashedPassword,
+    );
+
+    // Return a success message indicating that the password has been changed successfully
+    return 'Password changed successfully';
   }
 
   /**

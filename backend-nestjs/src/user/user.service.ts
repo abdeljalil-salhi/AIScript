@@ -10,7 +10,6 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PlanService } from 'src/plan/plan.service';
 import { EmailVerificationService } from 'src/email-verification/email-verification.service';
-import { MailService } from 'src/mail/mail.service';
 // Entities
 import { User } from './entities/user.entity';
 import { EmailVerification } from 'src/email-verification/entities/email-verification.entity';
@@ -34,7 +33,6 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly planService: PlanService,
     private readonly emailVerificationService: EmailVerificationService,
-    private readonly mailService: MailService,
   ) {}
 
   /**

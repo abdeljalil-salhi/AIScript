@@ -44,6 +44,7 @@ import { ProfilePage } from "./pages/profile";
 import { RegisterPage } from "./pages/register";
 import { SubscriptionPage } from "./pages/subscription";
 import { SubscriptionCancelPage } from "./pages/subscription/cancel";
+import { VerifyEmailPage } from "./pages/verify-email";
 
 // Interfaces
 interface AppProps {}
@@ -151,6 +152,16 @@ export const App: FC<AppProps> = (): JSX.Element => {
                         <Route
                           path="cancel"
                           element={<SubscriptionCancelPage />}
+                        />
+                      </Route>
+                      <Route path="/verify-email">
+                        <Route
+                          index
+                          element={<CatchAllNavigate to="/profile" />}
+                        />
+                        <Route
+                          path=":token"
+                          element={<VerifyEmailPage />}
                         />
                       </Route>
                     </Route>

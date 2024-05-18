@@ -65,6 +65,17 @@ export class EmailVerification {
   public token: string;
 
   /**
+   * Verification token last sent at
+   * @type {Date}
+   */
+  @IsNotEmpty({ message: 'Email verification last sent at must not be empty' })
+  @IsDate({ message: 'Email verification last sent at must be a date' })
+  @Field(() => Date, {
+    description: 'Verification token last sent at',
+  })
+  public lastSentAt: Date;
+
+  /**
    * Verification token expiration date
    * @type {Date}
    * @example 2021-01-01T00:00:00.000Z

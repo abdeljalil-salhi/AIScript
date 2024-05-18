@@ -147,9 +147,10 @@ model EmailVerification {
     email        String @unique
     token        String
 
-    expiresAt DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    lastSentAt DateTime @default(now())
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
     connection Connection @relation(fields: [connectionId], references: [id])
 
@@ -162,9 +163,10 @@ model ForgotPassword {
     email        String @unique
     token        String
 
-    expiresAt DateTime
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    lastSentAt DateTime @default(now())
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
     connection Connection @relation(fields: [connectionId], references: [id])
 

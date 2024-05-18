@@ -98,6 +98,9 @@ type EmailVerification {
   """Unique identifier of the email verification"""
   id: String!
 
+  """Verification token last sent at"""
+  lastSentAt: DateTime!
+
   """Verification token"""
   token: String!
 
@@ -123,6 +126,9 @@ type ForgotPassword {
 
   """Unique identifier of the forgot password"""
   id: String!
+
+  """Date the reset token was last sent"""
+  lastSentAt: DateTime!
 
   """Reset token"""
   token: String!

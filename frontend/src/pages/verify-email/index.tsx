@@ -4,11 +4,13 @@ import { Spin } from "antd";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { useCustomMutation, useGetIdentity } from "@refinedev/core";
 
+// GraphQL Mutations
+import { MUTATION_VERIFY_EMAIL } from "@/graphql/mutations/verifyEmail";
 // GraphQL Types
 import { VerifyEmailMutation } from "@/graphql/types";
-import { API_URL } from "@/providers";
-import { MUTATION_VERIFY_EMAIL } from "@/graphql/mutations/verifyEmail";
 import { MeResponse } from "@/graphql/schema.types";
+// Providers
+import { API_URL } from "@/providers";
 
 // Interfaces
 interface VerifyEmailPageProps {}

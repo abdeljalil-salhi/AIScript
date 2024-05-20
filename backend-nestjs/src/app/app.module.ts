@@ -1,5 +1,6 @@
 // Dependencies
 import { join } from 'path';
+import { GraphQLError } from 'graphql';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -29,6 +30,8 @@ import { ForgotPasswordModule } from 'src/forgot-password/forgot-password.module
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 // Config
 import { mailerConfig } from 'src/config/mailer.config';
+// Utils
+import { graphQLErrorFormatter } from './utils/graphql-error-formatter';
 
 /**
  * The root module of the application.
@@ -50,6 +53,7 @@ import { mailerConfig } from 'src/config/mailer.config';
       playground: true, // Enable the GraphQL Playground
       sortSchema: true, // Sort the schema alphabetically
       includeStacktraceInErrorResponses: false, // Disable the stack trace in error responses
+      formatError: (error: GraphQLError) => graphQLErrorFormatter(error), // Format the error messages
     }),
 
     // Configure the mailer module

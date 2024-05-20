@@ -67,6 +67,17 @@ export class ForgotPassword {
   public token: string;
 
   /**
+   * Date the reset token was last sent
+   * @type {Date}
+   */
+  @IsNotEmpty({ message: 'Forgot password last sent at must not be empty' })
+  @IsDate({ message: 'Forgot password last sent at must be a date' })
+  @Field(() => Date, {
+    description: 'Date the reset token was last sent',
+  })
+  public lastSentAt: Date;
+
+  /**
    * Expiration date of the password reset token
    * @type {Date}
    */

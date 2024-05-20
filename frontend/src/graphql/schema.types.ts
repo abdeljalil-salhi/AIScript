@@ -54,6 +54,17 @@ export type Avatar = {
   userId: Scalars["String"]["output"];
 };
 
+export type ChangePasswordInput = {
+  /** Confirm password for the user */
+  confirmPassword: Scalars["String"]["input"];
+  /** New password for the user */
+  newPassword: Scalars["String"]["input"];
+  /** Old password of the user */
+  oldPassword: Scalars["String"]["input"];
+  /** ID of the user requesting the password change */
+  userId: Scalars["String"]["input"];
+};
+
 export type Connection = {
   /** Date and time of the connection creation */
   createdAt: Scalars["DateTime"]["output"];
@@ -143,6 +154,8 @@ export type MeResponse = {
 export type Mutation = {
   /** Cancels a subscription entity by ID. */
   cancelSubscription: Subscription;
+  /** Changes the password of the current user. */
+  changePassword: Scalars["String"]["output"];
   /** Creates the predefined plans in the database. */
   createPlans: Array<Plan>;
   /** Creates a new subscription entity. */
@@ -185,6 +198,10 @@ export type Mutation = {
 
 export type MutationCancelSubscriptionArgs = {
   subscriptionId: Scalars["String"]["input"];
+};
+
+export type MutationChangePasswordArgs = {
+  changePasswordInput: ChangePasswordInput;
 };
 
 export type MutationCreateSubscriptionArgs = {

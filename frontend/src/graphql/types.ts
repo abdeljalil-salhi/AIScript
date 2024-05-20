@@ -11,6 +11,12 @@ export type CancelSubscriptionMutation = {
   > & { plan?: Types.Maybe<Pick<Types.Plan, "id" | "name" | "duration">> };
 };
 
+export type ChangePasswordMutationVariables = Types.Exact<{
+  changePasswordInput: Types.ChangePasswordInput;
+}>;
+
+export type ChangePasswordMutation = Pick<Types.Mutation, "changePassword">;
+
 export type LoginMutationVariables = Types.Exact<{
   loginInput: Types.LoginInput;
 }>;

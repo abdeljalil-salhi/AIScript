@@ -242,7 +242,7 @@ export class AuthService {
      * If the old password is valid, continue with the password change process.
      */
     await this.userService
-      .findByUsernameOrEmail(changePasswordInput.userId)
+      .findById(changePasswordInput.userId)
       .then((user: User) => {
         if (!user) throw new NotFoundException('User not found');
         return argon.verify(

@@ -77,7 +77,8 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   const {
     mutate: updateUser,
     isLoading: isUpdatingUser,
-    isError: updateUserError,
+    isError: isUpdateUserError,
+    data: updateUserData,
   } = useCustomMutation<UpdateUserMutation>();
 
   /**
@@ -122,18 +123,18 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
 
     if (isUpdatingUser || isIdentityLoading) return;
 
-    if (!username || username.trim().length < 3 || username.trim().length > 20)
+    if (!username || username.trim().length < 4 || username.trim().length > 20)
       return open?.({
         type: "error",
         description: "Error!",
-        message: "Username must be between 3 and 20 characters long.",
+        message: "Username must be 4 - 20 characters long.",
       });
 
-    if (!email || email.trim().length < 5 || email.trim().length > 50)
+    if (!email || email.trim().length < 6 || email.trim().length > 50)
       return open?.({
         type: "error",
         description: "Error!",
-        message: "Email must be between 5 and 50 characters long.",
+        message: "Email must be 6 - 50 characters long.",
       });
 
     if (
@@ -153,50 +154,42 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         message: "Please enter a valid email address.",
       });
 
-    try {
-      updateUser({
-        url: API_URL,
-        method: "post",
-        meta: {
-          gqlMutation: MUTATION_UPDATE_USER,
-          variables: {
-            updateUserInput: {
-              userId: identity!.user.id,
-              username: username.trim().length > 3 ? username : undefined,
-              email: email.trim().length > 5 ? email : undefined,
-            },
+    let updatedUsername: string | null = username;
+    let updatedEmail: string | null = email;
+
+    if (username === identity?.user.username) updatedUsername = null;
+    if (email === identity?.user.connection?.email) updatedEmail = null;
+
+    updateUser({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_UPDATE_USER,
+        variables: {
+          updateUserInput: {
+            userId: identity!.user.id,
+            username: username.trim().length > 3 ? updatedUsername : undefined,
+            email: email.trim().length > 5 ? updatedEmail : undefined,
           },
         },
-        values: {},
-      });
-    } catch (error) {
-      open?.({
-        type: "error",
-        description: "Error!",
-        message: "An error occurred while updating your profile.",
-      });
-      return;
-    }
-
-    refetchIdentity();
-
-    if (updateUserError) {
-      // Show an error notification
-      open?.({
-        type: "error",
-        description: "Error!",
-        message: "An error occurred while updating your profile.",
-      });
-      return;
-    }
-
-    // Show a success notification
-    open?.({
-      type: "success",
-      description: "Success!",
-      message: "Your profile has been updated successfully.",
+      },
+      values: {},
     });
   };
+
+  useEffect(() => {
+    if (!isUpdateUserError && updateUserData) {
+      // Refetch the identity to get the updated user information
+      refetchIdentity();
+
+      // Show a success notification
+      open?.({
+        type: "success",
+        description: "Success!",
+        message: "Your profile has been updated successfully.",
+      });
+    }
+  }, [isUpdateUserError, open, refetchIdentity, updateUserData]);
 
   const handleEmailVerification = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -339,6 +332,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           Change password
         </button>
         <ChangePasswordModal
+          identity={identity!}
           open={showChangePasswordModal}
           onClose={() => setShowChangePasswordModal(false)}
         />

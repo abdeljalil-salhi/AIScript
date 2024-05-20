@@ -176,20 +176,35 @@ export class UserService {
         id: userId,
       },
       data: {
-        username: username && {
-          set: username,
-        },
-        connection: email && {
-          update: {
-            email,
-            isEmailVerified: false,
-          },
-        },
+        username: username
+          ? {
+              set: username,
+            }
+          : undefined,
+        connection: email
+          ? {
+              update: {
+                email,
+                isEmailVerified: false,
+              },
+            }
+          : undefined,
       },
       include: userIncludes,
     });
 
     if (email) {
+      // Delete old email verifications
+      await this.prismaService.emailVerification.deleteMany({
+        where: {
+          connectionId: user.connection.id,
+          email: {
+            not: email,
+          },
+        },
+      });
+
+      // Create a new email verification for the new email
       const emailVerification: EmailVerification =
         await this.emailVerificationService.createEmailVerification(
           user.connection.id,

@@ -148,4 +148,42 @@ export class TwoFactorAuthenticationResolver {
         ),
     };
   }
+
+  /**
+   * Verifies a two-factor authentication one-time password.
+   *
+   * @mutation
+   * @param {string} id - The ID of the current user.
+   * @param {string} userId - The ID of the user.
+   * @param {string} otp - The one-time password to verify.
+   * @returns {Promise<boolean>} - The result of the two-factor authentication verification operation.
+   * @throws {ForbiddenException} - If the current user is not authorized to verify two-factor authentication for another user.
+   */
+  @Mutation(() => TwoFactorAuthentication, {
+    name: 'verifyTwoFactorAuthentication',
+    description: 'Verifies a two-factor authentication one-time password.',
+  })
+  public async verifyTwoFactorAuthentication(
+    @CurrentUserId() id: string,
+    @Args('userId', { type: () => String }) userId: string,
+    @Args('otp', { type: () => String }) otp: string,
+  ): Promise<TwoFactorAuthentication> {
+    if (id !== userId)
+      throw new ForbiddenException(
+        'You are not authorized to verify two-factor authentication for another user',
+      );
+
+    const isOneTimePasswordValid: boolean =
+      await this.twoFactorAuthenticationService.verifyTwoFactorAuthentication(
+        userId,
+        otp,
+      );
+
+    return {
+      status: isOneTimePasswordValid
+        ? 'Two-factor authentication verified successfully'
+        : 'Two-factor authentication verification failed',
+      is2faValid: isOneTimePasswordValid,
+    };
+  }
 }

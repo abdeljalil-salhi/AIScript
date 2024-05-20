@@ -2,6 +2,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -29,8 +30,10 @@ export class UpdateUserInput {
 
   /**
    * The new username of the user
+   * @nullable
    * @type {string}
    */
+  @IsOptional()
   @IsNotEmpty({ message: 'New username must not be empty' })
   @IsString({ message: 'New username must be a string' })
   @MinLength(3, {
@@ -47,8 +50,10 @@ export class UpdateUserInput {
 
   /**
    * The new email of the user
+   * @nullable
    * @type {string}
    */
+  @IsOptional()
   @IsNotEmpty({ message: 'New email must not be empty' })
   @IsEmail({}, { message: 'New email must be a valid email' })
   @MinLength(5, {

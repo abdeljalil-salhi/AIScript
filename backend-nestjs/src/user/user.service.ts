@@ -176,15 +176,19 @@ export class UserService {
         id: userId,
       },
       data: {
-        username: username && {
-          set: username,
-        },
-        connection: email && {
-          update: {
-            email,
-            isEmailVerified: false,
-          },
-        },
+        username: username
+          ? {
+              set: username,
+            }
+          : undefined,
+        connection: email
+          ? {
+              update: {
+                email,
+                isEmailVerified: false,
+              },
+            }
+          : undefined,
       },
       include: userIncludes,
     });

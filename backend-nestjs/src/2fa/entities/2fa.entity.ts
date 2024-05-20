@@ -4,6 +4,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 
 // Entities
 import { User } from 'src/user/entities/user.entity';
+import { Connection } from 'src/connection/entities/connection.entity';
 
 /**
  * Represents a two-factor authentication (2FA) entity that is used by GraphQL
@@ -30,15 +31,15 @@ export class TwoFactorAuthentication {
   public otpAuthUri?: string;
 
   /**
-   * The associated user entity
-   * @type {User}
+   * The associated connection entity
+   * @type {Connection}
    * @nullable
    */
-  @Field(() => User, {
-    description: 'The associated user entity',
+  @Field(() => Connection, {
+    description: 'The associated connection entity',
     nullable: true,
   })
-  public user?: User;
+  public connection?: Connection;
 
   /**
    * The two-factor authentication (2FA) validation status

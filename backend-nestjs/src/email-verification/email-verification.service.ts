@@ -127,7 +127,9 @@ export class EmailVerificationService {
       throw new NotFoundException('Invalid token or token expired');
 
     if (emailVerification.email !== email)
-      throw new NotFoundException('Invalid email');
+      throw new NotFoundException(
+        'Something went wrong, please try logging out and back in.',
+      );
 
     // Verify the email of the connection
     await this.connectionService.verifyEmail(emailVerification.connectionId);

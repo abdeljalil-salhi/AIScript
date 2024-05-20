@@ -190,6 +190,17 @@ export class UserService {
     });
 
     if (email) {
+      // Delete old email verifications
+      await this.prismaService.emailVerification.deleteMany({
+        where: {
+          connectionId: user.connection.id,
+          email: {
+            not: email,
+          },
+        },
+      });
+
+      // Create a new email verification for the new email
       const emailVerification: EmailVerification =
         await this.emailVerificationService.createEmailVerification(
           user.connection.id,

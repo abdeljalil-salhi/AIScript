@@ -36,6 +36,20 @@ type Avatar {
   userId: String!
 }
 
+input ChangePasswordInput {
+  """Confirm password for the user"""
+  confirmPassword: String!
+
+  """New password for the user"""
+  newPassword: String!
+
+  """Old password of the user"""
+  oldPassword: String!
+
+  """ID of the user requesting the password change"""
+  userId: String!
+}
+
 type Connection {
   """Date and time of the connection creation"""
   createdAt: DateTime!
@@ -158,6 +172,9 @@ type MeResponse {
 type Mutation {
   """Cancels a subscription entity by ID."""
   cancelSubscription(subscriptionId: String!): Subscription!
+
+  """Changes the password of the current user."""
+  changePassword(changePasswordInput: ChangePasswordInput!): String!
 
   """Creates the predefined plans in the database."""
   createPlans: [Plan!]!

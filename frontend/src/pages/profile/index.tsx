@@ -17,7 +17,7 @@ interface ProfilePageProps {}
  */
 export const ProfilePage: FC<ProfilePageProps> = (): JSX.Element => {
   return (
-    <div className="w-full md:h-screen flex flex-col md:flex-row justify-center gap-6 lg:gap-32 overflow-y-auto p-4 md:p-6 lg:p-16 font-['Poppins']">
+    <div className="w-full md:h-full flex flex-col md:flex-row justify-center gap-6 lg:gap-32 overflow-y-auto p-4 md:p-6 lg:p-16 font-['Poppins']">
       <div className="w-full md:w-2/5 flex flex-col items-center lg:items-end justify-start pt-20 md:pt-6">
         <ProfilePicture />
       </div>

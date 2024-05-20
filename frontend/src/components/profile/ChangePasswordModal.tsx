@@ -1,12 +1,21 @@
 // Dependencies
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useLogout } from "@refinedev/core";
+import { useCustomMutation, useLogout, useNotification } from "@refinedev/core";
 
+// Components
 import { Backdrop } from "../Backdrop";
+// GraphQL Mutations
+import { MUTATION_CHANGE_PASSWORD } from "@/graphql/mutations/changePassword";
+// GraphQL Types
+import { ChangePasswordMutation } from "@/graphql/types";
+import { MeResponse } from "@/graphql/schema.types";
+// Providers
+import { API_URL } from "@/providers";
 
 // Interfaces
 interface ChangePasswordModalProps {
+  identity: MeResponse;
   open: boolean;
   onClose: () => void;
 }
@@ -19,46 +28,98 @@ interface ChangePasswordModalProps {
  * @exports ChangePasswordModal
  */
 export const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
+  identity,
   open,
   onClose,
 }): JSX.Element => {
+  /**
+   * Notification hook to show notifications to the user
+   */
+  const { open: openNotification } = useNotification();
+
   /**
    * Logout mutation hook;
    * used to logout the user
    */
   const { mutate: logout } = useLogout();
 
+  /**
+   * Change password mutation hook;
+   * used to change the password of the current user
+   * @type {ChangePasswordMutation}
+   */
+  const {
+    mutate: changePassword,
+    isLoading: isChangingPassword,
+    isError: isChangePasswordError,
+    data: changePasswordData,
+  } = useCustomMutation<ChangePasswordMutation>();
+
+  /**
+   * Handles the form submission
+   * @param {FormEvent<HTMLFormElement>} e - The form event
+   */
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // get the form data
-    const formData = new FormData(e.currentTarget);
-    const currentPassword = formData.get("current-password");
-    const newPassword = formData.get("new-password");
-    const confirmNewPassword = formData.get("confirm-new-password");
+    if (isChangingPassword) return;
+
+    // Get the form data
+    const formData: FormData = new FormData(e.currentTarget);
+    const oldPassword: string =
+      formData.get("current-password")?.toString() || "";
+    const newPassword: string = formData.get("new-password")?.toString() || "";
+    const confirmPassword: string =
+      formData.get("confirm-new-password")?.toString() || "";
 
     // Check if the new password and confirm new password are the same
-    if (newPassword !== confirmNewPassword) {
-      alert("New password and confirm new password do not match.");
-      return;
-    }
+    if (newPassword !== confirmPassword)
+      return openNotification?.({
+        type: "error",
+        description: "Error!",
+        message: "New password and confirm new password do not match.",
+      });
 
     // Check if the new password is the same as the current password
-    if (currentPassword === newPassword) {
-      alert("New password must be different from the current password.");
-      return;
-    }
+    if (oldPassword === newPassword)
+      return openNotification?.({
+        type: "error",
+        description: "Error!",
+        message: "New password must be different from the current password.",
+      });
 
-    // Log the form data
-    console.log({
-      currentPassword,
-      newPassword,
-      confirmNewPassword,
+    // Change the password
+    changePassword({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_CHANGE_PASSWORD,
+        variables: {
+          changePasswordInput: {
+            userId: identity.user.id,
+            oldPassword,
+            newPassword,
+            confirmPassword,
+          },
+        },
+      },
+      values: {},
     });
-
-    alert("Password changed successfully!");
-    logout();
   };
+
+  useEffect(() => {
+    if (!isChangePasswordError && changePasswordData) {
+      // Show a success notification
+      openNotification?.({
+        type: "success",
+        description: "Success!",
+        message: "Your password has been changed successfully.",
+      });
+
+      // Logout the user
+      logout();
+    }
+  }, [changePasswordData, isChangePasswordError, logout, openNotification]);
 
   // If the modal is not open, return an empty fragment
   if (!open) return <></>;

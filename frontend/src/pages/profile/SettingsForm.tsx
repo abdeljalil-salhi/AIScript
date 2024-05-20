@@ -339,6 +339,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           Change password
         </button>
         <ChangePasswordModal
+          identity={identity!}
           open={showChangePasswordModal}
           onClose={() => setShowChangePasswordModal(false)}
         />

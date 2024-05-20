@@ -18,6 +18,7 @@ import { Public } from './decorators/public.decorator';
 // Guards
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { ChangePasswordInput } from './dtos/change-password.input';
+import { GraphQLError } from 'graphql';
 
 /**
  * The authentication resolver that encapsulates all authentication-related GraphQL queries,
@@ -129,7 +130,14 @@ export class AuthResolver {
     if (changePasswordInput.userId !== userId)
       throw new ForbiddenException('You can only change your own password');
 
-    return this.authService.changePassword(changePasswordInput);
+    try {
+      const result: string =
+        await this.authService.changePassword(changePasswordInput);
+
+      return result;
+    } catch (error) {
+      throw new GraphQLError(error.message);
+    }
   }
 
   /**

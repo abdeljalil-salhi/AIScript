@@ -79,4 +79,26 @@ export class ConnectionService {
       },
     });
   }
+
+  /**
+   * Sets the one-time password for the specified connection by their user ID.
+   *
+   * @param {string} userId - The user ID of the connection.
+   * @param {string} oneTimePassword - The one-time password to set.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async setOneTimePasswordByUserId(
+    userId: string,
+    oneTimePassword: string,
+  ): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        userId,
+      },
+      data: {
+        otp: oneTimePassword,
+        otpCreatedAt: new Date(),
+      },
+    });
+  }
 }

@@ -18,13 +18,14 @@ import { TwoFactorAuthenticationSecretWithUri } from './interfaces/2fa-secret-wi
  *
  * @export
  * @class TwoFactorAuthenticationService
+ * @module TwoFactorAuthenticationModule
  */
 @Injectable()
 export class TwoFactorAuthenticationService {
   /**
    * Creates an instance of TwoFactorAuthenticationService.
    *
-   * @param {PrismaService} prismaService The injected Prisma service
+   * @param {ConnectionService} connectionService - The connection service for connection-related operations.
    */
   constructor(private readonly connectionService: ConnectionService) {}
 
@@ -76,5 +77,29 @@ export class TwoFactorAuthenticationService {
    */
   public async generateQrCodeDataUri(otpAuthUri: string): Promise<string> {
     return toDataURL(otpAuthUri);
+  }
+
+  /**
+   * Enables two-factor authentication for a user.
+   *
+   * @param {string} userId - The ID of the user.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async turnOnTwoFactorAuthentication(
+    userId: string,
+  ): Promise<Connection> {
+    return this.connectionService.turnOnTwoFactorAuthentication(userId);
+  }
+
+  /**
+   * Disables two-factor authentication for a user.
+   *
+   * @param {string} userId - The ID of the user.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async turnOffTwoFactorAuthentication(
+    userId: string,
+  ): Promise<Connection> {
+    return this.connectionService.turnOffTwoFactorAuthentication(userId);
   }
 }

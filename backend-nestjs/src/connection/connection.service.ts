@@ -101,4 +101,44 @@ export class ConnectionService {
       },
     });
   }
+
+  /**
+   * Turns on two-factor authentication for the specified user.
+   *
+   * @param {string} userId - The user ID to turn on two-factor authentication.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async turnOnTwoFactorAuthentication(
+    userId: string,
+  ): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        userId,
+      },
+      data: {
+        is2faEnabled: true,
+      },
+    });
+  }
+
+  /**
+   * Turns off two-factor authentication for the specified user.
+   *
+   * @param {string} userId - The user ID to turn off two-factor authentication.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async turnOffTwoFactorAuthentication(
+    userId: string,
+  ): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        userId,
+      },
+      data: {
+        otp: null,
+        otpCreatedAt: null,
+        is2faEnabled: false,
+      },
+    });
+  }
 }

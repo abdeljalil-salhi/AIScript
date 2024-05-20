@@ -1,4 +1,5 @@
 // Dependencies
+import { GraphQLError } from 'graphql';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
@@ -18,7 +19,6 @@ import { Public } from './decorators/public.decorator';
 // Guards
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { ChangePasswordInput } from './dtos/change-password.input';
-import { GraphQLError } from 'graphql';
 
 /**
  * The authentication resolver that encapsulates all authentication-related GraphQL queries,

@@ -1,6 +1,6 @@
 // Dependencies
 import { FC } from "react";
-import { useCustomMutation, useGetIdentity } from "@refinedev/core";
+import { HttpError, useCustomMutation, useGetIdentity } from "@refinedev/core";
 
 // Components
 import { Header } from "@/components/subscription/cancel/Header";
@@ -30,11 +30,8 @@ export const SubscriptionCancelPage: FC<
    * Unsubscribe mutation to cancel the user's subscription
    * @type {useCustomMutation}
    */
-  const {
-    mutate: unsubscribe,
-    isLoading: isUnsubscribing,
-    isError: unsubscribeError,
-  } = useCustomMutation<CancelSubscriptionMutation>();
+  const { mutate: unsubscribe, isLoading: isUnsubscribing } =
+    useCustomMutation<CancelSubscriptionMutation>();
 
   /**
    * Get the user's identity
@@ -53,9 +50,8 @@ export const SubscriptionCancelPage: FC<
       isUnsubscribing ||
       isIdentityLoading ||
       !identity?.user.subscription?.id
-    ) {
+    )
       return;
-    }
 
     unsubscribe({
       url: API_URL,
@@ -67,6 +63,15 @@ export const SubscriptionCancelPage: FC<
         },
       },
       values: {},
+      errorNotification: (data: HttpError | undefined) => {
+        return {
+          description: "Unable to cancel subscription",
+          message:
+            data?.message ||
+            "An error occurred while trying to cancel your subscription. Please try again.",
+          type: "error",
+        };
+      },
     });
 
     window.location.reload();
@@ -95,7 +100,7 @@ export const SubscriptionCancelPage: FC<
                   }
                 >
                   {isUnsubscribing
-                    ? "Cancelling..."
+                    ? "Canceling..."
                     : isIdentityLoading ||
                       !identity?.user.subscription?.isActive
                     ? "Subscription Canceled"
@@ -107,15 +112,6 @@ export const SubscriptionCancelPage: FC<
                   and your subscription will be canceled at the end of the
                   current billing cycle. You can always resubscribe later.
                 </div>
-
-                {unsubscribeError && (
-                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3">
-                    <strong className="font-bold mr-1">Holy smokes!</strong>
-                    <span className="block sm:inline">
-                      Something bad happened, retry.
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
           </div>

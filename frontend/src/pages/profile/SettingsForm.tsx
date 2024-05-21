@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import {
+  HttpError,
   useCustomMutation,
   useGetIdentity,
   useNotification,
@@ -126,15 +127,17 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
     if (!username || username.trim().length < 4 || username.trim().length > 20)
       return open?.({
         type: "error",
-        description: "Error!",
-        message: "Username must be 4 - 20 characters long.",
+        description: "Unable to update your profile",
+        message:
+          "Your username does not meet the requirements. It must be 4 - 20 characters long.",
       });
 
     if (!email || email.trim().length < 6 || email.trim().length > 50)
       return open?.({
         type: "error",
-        description: "Error!",
-        message: "Email must be 6 - 50 characters long.",
+        description: "Unable to update your profile",
+        message:
+          "Your email address does not meet the requirements. It must be 6 - 50 characters long.",
       });
 
     if (
@@ -144,14 +147,15 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
       return open?.({
         type: "error",
         description: "Hmmm?",
-        message: "No changes detected.",
+        message: "You haven't made any changes to your profile.",
       });
 
     if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/))
       return open?.({
         type: "error",
-        description: "Error!",
-        message: "Please enter a valid email address.",
+        description: "Unable to update your profile",
+        message:
+          "Your email address does not meet the requirements. Please enter a valid email address.",
       });
 
     let updatedUsername: string | null = username;
@@ -174,6 +178,15 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         },
       },
       values: {},
+      errorNotification: (data: HttpError | undefined) => {
+        return {
+          description: "Unable to update your profile",
+          message:
+            data?.message ||
+            "Your changes were saved, but we could not update your profile due to a technical issue on our end. Please try again.",
+          type: "error",
+        };
+      },
     });
   };
 

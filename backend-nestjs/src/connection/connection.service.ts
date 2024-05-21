@@ -79,4 +79,66 @@ export class ConnectionService {
       },
     });
   }
+
+  /**
+   * Sets the one-time password for the specified connection by their user ID.
+   *
+   * @param {string} userId - The user ID of the connection.
+   * @param {string} oneTimePassword - The one-time password to set.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async setOneTimePasswordByUserId(
+    userId: string,
+    oneTimePassword: string,
+  ): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        userId,
+      },
+      data: {
+        otp: oneTimePassword,
+        otpCreatedAt: new Date(),
+      },
+    });
+  }
+
+  /**
+   * Turns on two-factor authentication for the specified user.
+   *
+   * @param {string} userId - The user ID to turn on two-factor authentication.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async turnOnTwoFactorAuthentication(
+    userId: string,
+  ): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        userId,
+      },
+      data: {
+        is2faEnabled: true,
+      },
+    });
+  }
+
+  /**
+   * Turns off two-factor authentication for the specified user.
+   *
+   * @param {string} userId - The user ID to turn off two-factor authentication.
+   * @returns {Promise<Connection>} - The updated connection entity.
+   */
+  public async turnOffTwoFactorAuthentication(
+    userId: string,
+  ): Promise<Connection> {
+    return this.prismaService.connection.update({
+      where: {
+        userId,
+      },
+      data: {
+        otp: null,
+        otpCreatedAt: null,
+        is2faEnabled: false,
+      },
+    });
+  }
 }

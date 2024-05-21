@@ -26,6 +26,7 @@ import { SubscriptionModule } from 'src/subscription/subscription.module';
 import { DataModule } from 'src/data/data.module';
 import { EmailVerificationModule } from 'src/email-verification/email-verification.module';
 import { ForgotPasswordModule } from 'src/forgot-password/forgot-password.module';
+import { TwoFactorAuthenticationModule } from 'src/2fa/2fa.module';
 // Guards
 import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 // Config
@@ -74,6 +75,7 @@ import { graphQLErrorFormatter } from './utils/graphql-error-formatter';
     DataModule,
     EmailVerificationModule,
     ForgotPasswordModule,
+    TwoFactorAuthenticationModule,
   ],
 
   providers: [

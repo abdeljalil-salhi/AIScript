@@ -349,7 +349,7 @@ export class AuthService {
    * @param {boolean} [is2faAuthenticated=false] - Whether or not the user is authenticated with 2FA.
    * @returns {Promise<NewTokensResponse>} - The new tokens for the user.
    */
-  private async createTokens(
+  public async createTokens(
     user: User,
     is2faAuthenticated: boolean = false,
   ): Promise<NewTokensResponse> {

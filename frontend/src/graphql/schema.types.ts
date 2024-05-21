@@ -194,6 +194,8 @@ export type Mutation = {
   validateSubscriptions: Scalars["String"]["output"];
   /** Verifies the email verification with the specified token. */
   verifyEmail: Scalars["String"]["output"];
+  /** Verifies the password of the current user. */
+  verifyPassword: Scalars["Boolean"]["output"];
 };
 
 export type MutationCancelSubscriptionArgs = {
@@ -255,6 +257,10 @@ export type MutationUpdateUserArgs = {
 
 export type MutationVerifyEmailArgs = {
   token: Scalars["String"]["input"];
+};
+
+export type MutationVerifyPasswordArgs = {
+  password: Scalars["String"]["input"];
 };
 
 export type NewSubscriptionInput = {

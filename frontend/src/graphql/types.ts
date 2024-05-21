@@ -121,6 +121,12 @@ export type VerifyEmailMutationVariables = Types.Exact<{
 
 export type VerifyEmailMutation = Pick<Types.Mutation, "verifyEmail">;
 
+export type VerifyPasswordMutationVariables = Types.Exact<{
+  password: Types.Scalars["String"]["input"];
+}>;
+
+export type VerifyPasswordMutation = Pick<Types.Mutation, "verifyPassword">;
+
 export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];
 }>;

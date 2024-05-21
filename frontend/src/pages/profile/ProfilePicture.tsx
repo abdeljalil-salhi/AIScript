@@ -61,6 +61,20 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
    */
   const handlePreviewAvatar = (e: ChangeEvent<HTMLInputElement>): void => {
     const file: File = e.target.files![0];
+
+    // Check if the type is supported
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
+      // Empty the input
+      e.target.value = "";
+
+      // Show an error notification
+      return open?.({
+        type: "error",
+        description: "Unable to upload image",
+        message: "Please upload a supported image type.",
+      });
+    }
+
     const reader: FileReader = new FileReader();
 
     reader.onloadend = () => {
@@ -89,10 +103,25 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
     formData.append("userId", identity.user.id);
     formData.append("avatar", file, file.name);
 
-    await fetch(`${BASE_URL}/avatar/upload`, {
+    const result: Response = await fetch(`${BASE_URL}/avatar/upload`, {
       method: "POST",
       body: formData,
     });
+
+    // Check if the request was successful
+    if (!result.ok) {
+      // Reset the values
+      setFile(null);
+      setPreviewAvatar("");
+
+      // Show an error notification
+      return open?.({
+        type: "error",
+        description: "Unable to upload image",
+        message:
+          "Your changes were saved, but we could not update your profile due to a technical issue on our end. Please try again.",
+      });
+    }
 
     // Refetch the identity
     refetchIdentity();

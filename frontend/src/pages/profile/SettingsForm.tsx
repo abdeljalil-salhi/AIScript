@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import {
+  HttpError,
   useCustomMutation,
   useGetIdentity,
   useNotification,
@@ -88,7 +89,6 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   const {
     mutate: requestEmailVerification,
     isLoading: isRequestingEmailVerification,
-    isError: requestEmailVerificationError,
   } = useCustomMutation<RequestEmailVerificationMutation>();
 
   /**
@@ -126,15 +126,17 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
     if (!username || username.trim().length < 4 || username.trim().length > 20)
       return open?.({
         type: "error",
-        description: "Error!",
-        message: "Username must be 4 - 20 characters long.",
+        description: "Unable to update your profile",
+        message:
+          "Your username does not meet the requirements. It must be 4 - 20 characters long.",
       });
 
     if (!email || email.trim().length < 6 || email.trim().length > 50)
       return open?.({
         type: "error",
-        description: "Error!",
-        message: "Email must be 6 - 50 characters long.",
+        description: "Unable to update your profile",
+        message:
+          "Your email address does not meet the requirements. It must be 6 - 50 characters long.",
       });
 
     if (
@@ -144,14 +146,15 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
       return open?.({
         type: "error",
         description: "Hmmm?",
-        message: "No changes detected.",
+        message: "You haven't made any changes to your profile.",
       });
 
     if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/))
       return open?.({
         type: "error",
-        description: "Error!",
-        message: "Please enter a valid email address.",
+        description: "Unable to update your profile",
+        message:
+          "Your email address does not meet the requirements. Please enter a valid email address.",
       });
 
     let updatedUsername: string | null = username;
@@ -174,6 +177,15 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
         },
       },
       values: {},
+      errorNotification: (data: HttpError | undefined) => {
+        return {
+          description: "Unable to update your profile",
+          message:
+            data?.message ||
+            "Your changes were saved, but we could not update your profile due to a technical issue on our end. Please try again.",
+          type: "error",
+        };
+      },
     });
   };
 
@@ -196,40 +208,29 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
 
     if (isRequestingEmailVerification || isIdentityLoading) return;
 
-    try {
-      requestEmailVerification({
-        url: API_URL,
-        method: "post",
-        meta: {
-          gqlMutation: MUTATION_REQUEST_EMAIL_VERIFICATION,
-          variables: {
-            requestEmailVerificationInput: {
-              userId: identity!.user.id,
-              connectionId: identity!.user.connection!.id,
-              email: identity!.user.connection!.email,
-            },
+    requestEmailVerification({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_REQUEST_EMAIL_VERIFICATION,
+        variables: {
+          requestEmailVerificationInput: {
+            userId: identity!.user.id,
+            connectionId: identity!.user.connection!.id,
+            email: identity!.user.connection!.email,
           },
         },
-        values: {},
-      });
-    } catch (error) {
-      open?.({
-        type: "error",
-        description: "Error!",
-        message: "An error occurred while requesting an email verification.",
-      });
-      return;
-    }
-
-    if (requestEmailVerificationError) {
-      // Show an error notification
-      open?.({
-        type: "error",
-        description: "Error!",
-        message: "An error occurred while requesting an email verification.",
-      });
-      return;
-    }
+      },
+      values: {},
+      errorNotification: () => {
+        return {
+          description: "Unable to send you a verification email",
+          message:
+            "We could not send you a verification email due to a technical issue on our end. Please try again.",
+          type: "error",
+        };
+      },
+    });
 
     setShowVerifyEmailModal(true);
   };
@@ -251,6 +252,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setUsername(e.target.value)
             }
+            maxLength={20}
           />
         </div>
 
@@ -265,6 +267,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setEmail(e.target.value)
             }
+            maxLength={50}
           />
           {!isIdentityLoading ? (
             identity?.user.connection?.isEmailVerified ? (

@@ -1,9 +1,11 @@
 // Dependencies
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { Spin } from "antd";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
-import { useCustomMutation, useGetIdentity } from "@refinedev/core";
+import { HttpError, useCustomMutation, useGetIdentity } from "@refinedev/core";
 
+// Assets
+import MailError from "@/assets/verify-email/mail-error.svg";
 // GraphQL Mutations
 import { MUTATION_VERIFY_EMAIL } from "@/graphql/mutations/verifyEmail";
 // GraphQL Types
@@ -31,6 +33,19 @@ interface VerifyEmailPageParams {
  */
 export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
   /**
+   * State to check if the verification request has been sent
+   * @type {boolean}
+   * @default false
+   */
+  const [isSent, setIsSent] = useState<boolean>(false);
+  /**
+   * State for the timer
+   * @type {number}
+   * @default 5
+   */
+  const [timer, setTimer] = useState<number>(5);
+
+  /**
    * Navigate function for redirecting to other pages
    */
   const navigate: NavigateFunction = useNavigate();
@@ -48,7 +63,9 @@ export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
   const {
     mutate: verifyEmail,
     isLoading: isVerifyingEmail,
+    isError: isVerifyEmailError,
     error: verifyEmailError,
+    data: verifyEmailData,
   } = useCustomMutation<VerifyEmailMutation>();
 
   /**
@@ -66,7 +83,7 @@ export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
     if (identity?.user.connection?.isEmailVerified)
       window.location.href = "/profile";
 
-    try {
+    if (!isSent) {
       verifyEmail({
         url: API_URL,
         method: "post",
@@ -77,16 +94,22 @@ export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
           },
         },
         values: {},
+        errorNotification: (data: HttpError | undefined) => {
+          return {
+            description: "Unable to verify your email",
+            message:
+              data?.message ||
+              "An error occurred while verifying your email. Please try again.",
+            type: "error",
+          };
+        },
       });
-
-      if (!isVerifyingEmail && !verifyEmailError)
-        window.location.href = "/profile";
-    } catch (error) {
-      navigate("/404");
+      setIsSent(true);
     }
   }, [
     identity,
     isIdentityLoading,
+    isSent,
     isVerifyingEmail,
     navigate,
     token,
@@ -94,9 +117,63 @@ export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
     verifyEmailError,
   ]);
 
-  return (
+  useEffect(() => {
+    if (isVerifyingEmail) return;
+
+    if (!isVerifyEmailError && !verifyEmailError && verifyEmailData)
+      window.location.href = "/profile";
+
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+
+    if (timer === 0) {
+      clearInterval(interval);
+      window.location.href = "/profile";
+    }
+
+    return () => clearInterval(interval);
+  }, [
+    isVerifyEmailError,
+    isVerifyingEmail,
+    navigate,
+    timer,
+    verifyEmailData,
+    verifyEmailError,
+  ]);
+
+  return !isVerifyEmailError ? (
     <div className="w-screen h-screen flex items-center justify-center">
       <Spin />
+    </div>
+  ) : (
+    <div className="w-screen h-screen flex items-center justify-center flex-col gap-4">
+      <img
+        src={MailError}
+        className="w-[80%] md:w-1/2 h-1/2"
+        alt="An error occurred while verifying your email."
+        draggable={false}
+      />
+      <div className="flex flex-col items-center justify-center font-['Poppins']">
+        <h1 className="text-lg md:text-2xl font-bold text-n-2 text-center">
+          An error occurred while verifying your email.
+        </h1>
+        <p className="text-sm md:text-base text-n-2">
+          {verifyEmailError?.message ||
+            "An error occurred while verifying your email. Please try again."}
+        </p>
+        <p className="text-xs text-gray-500 mt-3">
+          Redirecting you to the profile page in {timer} second
+          {timer > 1 ? "s" : ""}...
+        </p>
+
+        <button
+          className="text-xs text-gray-500 underline mt-3"
+          onClick={() => navigate("/profile")}
+        >
+          Click here if you are not redirected
+        </button>
+      </div>
     </div>
   );
 };

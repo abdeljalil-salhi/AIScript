@@ -85,11 +85,12 @@ export class User {
    * @example 'john_doe'
    */
   @IsNotEmpty({ message: 'User username must not be empty' })
-  @MinLength(3, {
-    message: 'User username must be at least 3 characters long',
+  @IsString({ message: 'User username must be a string' })
+  @MinLength(4, {
+    message: 'User username must be at least 4 characters long',
   })
-  @MaxLength(30, {
-    message: 'User username must be at most 30 characters long',
+  @MaxLength(20, {
+    message: 'User username must be at most 20 characters long',
   })
   @Field(() => String, { description: 'Username of the user' })
   public username: string;

@@ -1,11 +1,11 @@
 // Dependencies
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   PayPalButtons,
   PayPalButtonsComponentProps,
 } from "@paypal/react-paypal-js";
-import { useCustomMutation, useGetIdentity } from "@refinedev/core";
+import { HttpError, useCustomMutation, useGetIdentity } from "@refinedev/core";
 
 // Constants
 import { MONTHLY_BILLING } from "@/constants/pricing";
@@ -17,6 +17,7 @@ import { MUTATION_SUBSCRIBE } from "@/graphql/mutations/subscribe";
 // GraphQL Types
 import { SubscribeMutation } from "@/graphql/types";
 import { MeResponse } from "@/graphql/schema.types";
+import { OnApproveData } from "@paypal/paypal-js";
 
 // Interfaces
 interface PaypalPaymentProps {
@@ -41,6 +42,11 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
    * @default false
    */
   const [showError, setShowError] = useState<boolean>(false);
+  /**
+   * State to store the approved data from PayPal
+   * @type {OnApproveData}
+   */
+  const [approvedData, setApprovedData] = useState<OnApproveData>();
 
   /**
    * Navigate function for redirecting to other pages
@@ -56,7 +62,8 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
   const {
     mutate: subscribe,
     isLoading: isSubscribing,
-    isError: subscribeError,
+    isError: isSubscribeError,
+    data: subscribeData,
   } = useCustomMutation<SubscribeMutation>();
 
   /**
@@ -103,6 +110,8 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
    * @type {PayPalButtonsComponentProps["onApprove"]}
    */
   const onApprove: PayPalButtonsComponentProps["onApprove"] = async (data) => {
+    setApprovedData(data);
+
     subscribe({
       url: API_URL,
       method: "post",
@@ -124,20 +133,28 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
         },
       },
       values: {},
-    });
-
-    if (subscribeError) {
-      setShowError(true);
-      return;
-    }
-
-    navigate(`/checkout/success/${data.orderID}`, {
-      state: {
-        ...data,
-        plan,
+      errorNotification: (dataError: HttpError | undefined) => {
+        return {
+          description: "Failed to subscribe to the plan",
+          message:
+            dataError?.message ||
+            "Your payment was successful, but we couldn't subscribe you to the plan due to a technical issue on our end. Please contact support.",
+          type: "error",
+        };
       },
     });
   };
+
+  useEffect(() => {
+    if (!isSubscribeError && subscribeData && approvedData) {
+      navigate(`/checkout/success/${approvedData.orderID}`, {
+        state: {
+          ...approvedData,
+          plan,
+        },
+      });
+    }
+  }, [approvedData, isSubscribeError, navigate, plan, subscribeData]);
 
   /**
    * On Cancel function for the Paypal Buttons;
@@ -175,9 +192,10 @@ export const PaypalPayment: FC<PaypalPaymentProps> = ({
       )}
       {showError && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3">
-          <strong className="font-bold mr-1">Holy smokes!</strong>
+          <strong className="font-bold mr-1">Payment failed</strong>
           <span className="block sm:inline">
-            Something bad happened, retry.
+            PayPal could not process your payment. Please try again or use a
+            different payment method.
           </span>
           <span
             className="absolute top-0 bottom-0 right-0 px-4 py-3"

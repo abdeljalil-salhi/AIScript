@@ -226,6 +226,28 @@ export class AuthService {
   }
 
   /**
+   * Verifies the password of the user with the specified ID.
+   *
+   * @param {string} userId - The ID of the user to verify the password for.
+   * @param {string} password - The password to verify.
+   * @returns {Promise<boolean>} - The result of the password verification operation.
+   * @throws {NotFoundException} - Thrown if the user is not found.
+   */
+  public async verifyPassword(
+    userId: string,
+    password: string,
+  ): Promise<boolean> {
+    /**
+     * Verify the password of the user.
+     * Checks whether the password is valid or not.
+     */
+    return this.userService.findById(userId).then((user: User) => {
+      if (!user) throw new NotFoundException('User not found');
+      return argon.verify(user.connection.password, password);
+    });
+  }
+
+  /**
    * Changes the password for the user with the specified ID.
    *
    * @param {ChangePasswordInput} changePasswordInput - The input details for the user to change the password.

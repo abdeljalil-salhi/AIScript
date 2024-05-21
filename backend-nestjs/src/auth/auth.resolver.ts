@@ -110,6 +110,26 @@ export class AuthResolver {
   }
 
   /**
+   * Mutation resolver that verifies the password of the current user.
+   *
+   * @public
+   * @mutation
+   * @param {string} userId - ID of the current user.
+   * @param {string} password - Password to verify.
+   * @returns {Promise<boolean>} - The result of the password verification operation.
+   */
+  @Mutation(() => Boolean, {
+    name: 'verifyPassword',
+    description: 'Verifies the password of the current user.',
+  })
+  public async verifyPassword(
+    @CurrentUserId() userId: string,
+    @Args('password', { type: () => String }) password: string,
+  ): Promise<boolean> {
+    return this.authService.verifyPassword(userId, password);
+  }
+
+  /**
    * Mutation resolver that changes the password of the current user.
    *
    * @public

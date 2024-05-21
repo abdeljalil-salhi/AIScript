@@ -232,6 +232,9 @@ type Mutation {
 
   """Verifies the email verification with the specified token."""
   verifyEmail(token: String!): String!
+
+  """Verifies the password of the current user."""
+  verifyPassword(password: String!): Boolean!
 }
 
 input NewSubscriptionInput {

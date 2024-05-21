@@ -1,5 +1,12 @@
 // Dependencies
-import { IsBoolean, IsDate, IsEmail, IsNotEmpty } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 // Entities
@@ -48,6 +55,12 @@ export class Connection {
    */
   @IsNotEmpty({ message: 'Connection email must not be empty' })
   @IsEmail({}, { message: 'Connection email must be a valid email address' })
+  @MinLength(6, {
+    message: 'Connection email must be at least 6 characters long',
+  })
+  @MaxLength(50, {
+    message: 'Connection email must be at most 50 characters long',
+  })
   @Field(() => String, { description: 'Email of the connection' })
   public email: string;
 

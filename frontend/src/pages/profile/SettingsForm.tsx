@@ -264,6 +264,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setUsername(e.target.value)
             }
+            maxLength={20}
           />
         </div>
 
@@ -278,6 +279,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setEmail(e.target.value)
             }
+            maxLength={50}
           />
           {!isIdentityLoading ? (
             identity?.user.connection?.isEmailVerified ? (

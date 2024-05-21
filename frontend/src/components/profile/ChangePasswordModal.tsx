@@ -1,7 +1,12 @@
 // Dependencies
 import { FC, FormEvent, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useCustomMutation, useLogout, useNotification } from "@refinedev/core";
+import {
+  HttpError,
+  useCustomMutation,
+  useLogout,
+  useNotification,
+} from "@refinedev/core";
 
 // Components
 import { Backdrop } from "../Backdrop";
@@ -104,6 +109,15 @@ export const ChangePasswordModal: FC<ChangePasswordModalProps> = ({
         },
       },
       values: {},
+      errorNotification: (data: HttpError | undefined) => {
+        return {
+          description: "Unable to change your password",
+          message:
+            data?.message ||
+            "Your changes were saved, but we could not change your password due to a technical issue on our end. Please try again.",
+          type: "error",
+        };
+      },
     });
   };
 

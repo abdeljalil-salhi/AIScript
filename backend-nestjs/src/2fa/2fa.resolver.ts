@@ -7,6 +7,8 @@ import { TwoFactorAuthenticationService } from './2fa.service';
 import { TwoFactorAuthentication } from './entities/2fa.entity';
 import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
 import { ForbiddenException } from '@nestjs/common';
+import { AuthResponse } from 'src/auth/dtos/auth.response';
+import { LoginTwoFactorAuthenticationInput } from './dtos/login-2fa.input';
 
 /**
  * The two-factor authentication resolver that encapsulates all two-factor authentication-related GraphQL queries,
@@ -26,6 +28,26 @@ export class TwoFactorAuthenticationResolver {
   constructor(
     private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
   ) {}
+
+  /**
+   * Logs in a user with two-factor authentication.
+   *
+   * @mutation
+   * @param {LoginTwoFactorAuthenticationInput} loginTwoFactorAuthenticationInput - The login two-factor authentication input.
+   * @returns {Promise<AuthResponse>} - The authentication response.
+   */
+  @Mutation(() => AuthResponse, {
+    name: 'loginTwoFactorAuthentication',
+    description: 'Logs in a user with two-factor authentication.',
+  })
+  public async loginTwoFactorAuthentication(
+    @Args('loginTwoFactorAuthenticationInput')
+    loginTwoFactorAuthenticationInput: LoginTwoFactorAuthenticationInput,
+  ): Promise<AuthResponse> {
+    return this.twoFactorAuthenticationService.loginTwoFactorAuthentication(
+      loginTwoFactorAuthenticationInput,
+    );
+  }
 
   /**
    * Generates a two-factor authentication secret and OTP authentication URI for the current user.

@@ -89,7 +89,6 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   const {
     mutate: requestEmailVerification,
     isLoading: isRequestingEmailVerification,
-    isError: requestEmailVerificationError,
   } = useCustomMutation<RequestEmailVerificationMutation>();
 
   /**
@@ -209,40 +208,29 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
 
     if (isRequestingEmailVerification || isIdentityLoading) return;
 
-    try {
-      requestEmailVerification({
-        url: API_URL,
-        method: "post",
-        meta: {
-          gqlMutation: MUTATION_REQUEST_EMAIL_VERIFICATION,
-          variables: {
-            requestEmailVerificationInput: {
-              userId: identity!.user.id,
-              connectionId: identity!.user.connection!.id,
-              email: identity!.user.connection!.email,
-            },
+    requestEmailVerification({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_REQUEST_EMAIL_VERIFICATION,
+        variables: {
+          requestEmailVerificationInput: {
+            userId: identity!.user.id,
+            connectionId: identity!.user.connection!.id,
+            email: identity!.user.connection!.email,
           },
         },
-        values: {},
-      });
-    } catch (error) {
-      open?.({
-        type: "error",
-        description: "Error!",
-        message: "An error occurred while requesting an email verification.",
-      });
-      return;
-    }
-
-    if (requestEmailVerificationError) {
-      // Show an error notification
-      open?.({
-        type: "error",
-        description: "Error!",
-        message: "An error occurred while requesting an email verification.",
-      });
-      return;
-    }
+      },
+      values: {},
+      errorNotification: () => {
+        return {
+          description: "Unable to send you a verification email",
+          message:
+            "We could not send you a verification email due to a technical issue on our end. Please try again.",
+          type: "error",
+        };
+      },
+    });
 
     setShowVerifyEmailModal(true);
   };

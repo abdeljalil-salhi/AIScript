@@ -13,6 +13,14 @@ import { QUERY_ME } from "@/graphql/queries/me";
 // GraphQL Mutations
 import { MUTATION_REGISTER } from "@/graphql/mutations/register";
 import { MUTATION_LOGIN } from "@/graphql/mutations/login";
+import { MUTATION_LOGOUT } from "@/graphql/mutations/logout";
+// GraphQL Types
+import {
+  LoginMutation,
+  LogoutMutation,
+  MeQuery,
+  RegisterMutation,
+} from "@/graphql/types";
 
 // Types
 type AuthCredentials = {
@@ -63,7 +71,7 @@ export const authProvider: AuthBindings = {
        *
        * @see dataProvider.custom
        */
-      const { data } = await dataProvider.custom({
+      const { data } = await dataProvider.custom<RegisterMutation>({
         url: API_URL,
         method: "post",
         headers: {},
@@ -122,7 +130,7 @@ export const authProvider: AuthBindings = {
        *
        * @see dataProvider.custom
        */
-      const { data } = await dataProvider.custom({
+      const { data } = await dataProvider.custom<LoginMutation>({
         url: API_URL,
         method: "post",
         headers: {},
@@ -164,18 +172,12 @@ export const authProvider: AuthBindings = {
   logout: async (): Promise<AuthActionResponse> => {
     // Call the logout mutation;
     // This is to log out the user from the server
-    await dataProvider.custom({
+    await dataProvider.custom<LogoutMutation>({
       url: API_URL,
       method: "post",
       headers: {},
       meta: {
-        rawQuery: `
-          mutation Logout {
-            logout {
-              isLoggedOut
-            }
-          }
-        `,
+        rawQuery: MUTATION_LOGOUT,
       },
     });
 
@@ -214,7 +216,7 @@ export const authProvider: AuthBindings = {
     try {
       // Get the identity of the user
       // This is to know if the user is authenticated or not
-      await dataProvider.custom({
+      await dataProvider.custom<MeQuery>({
         url: API_URL,
         method: "post",
         headers: {},
@@ -263,7 +265,7 @@ export const authProvider: AuthBindings = {
        * I'm using me:any because the GraphQL API doesn't have a type for the me query yet.
        */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data } = await dataProvider.custom<{ me: any }>({
+      const { data } = await dataProvider.custom<MeQuery>({
         url: API_URL,
         method: "post",
         headers: accessToken

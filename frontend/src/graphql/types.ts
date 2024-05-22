@@ -106,6 +106,12 @@ export type LoginMutation = {
   };
 };
 
+export type LogoutMutationVariables = Types.Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = {
+  logout: Pick<Types.LogoutResponse, "isLoggedOut">;
+};
+
 export type RegisterMutationVariables = Types.Exact<{
   registerInput: Types.RegisterInput;
 }>;

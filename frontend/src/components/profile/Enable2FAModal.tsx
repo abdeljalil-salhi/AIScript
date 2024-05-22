@@ -10,16 +10,28 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { HttpError, useCustomMutation, useNotification } from "@refinedev/core";
+import {
+  HttpError,
+  useCustomMutation,
+  useGetIdentity,
+  useNotification,
+} from "@refinedev/core";
 
 // Components
 import { Backdrop } from "../Backdrop";
 // GraphQL Mutations
 import { MUTATION_VERIFY_PASSWORD } from "@/graphql/mutations/verifyPassword";
 // GraphQL Types
-import { VerifyPasswordMutation } from "@/graphql/types";
+import {
+  EnableTwoFactorAuthenticationMutation,
+  GenerateTwoFactorAuthenticationSecretMutation,
+  VerifyPasswordMutation,
+} from "@/graphql/types";
 // Providers
 import { API_URL } from "@/providers";
+import { MUTATION_ENABLE_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/enableTwoFactorAuthentication";
+import { MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET } from "@/graphql/mutations/generateTwoFactorAuthenticationSecret";
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface Enable2FAModalProps {
@@ -52,6 +64,18 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
    * @default 0
    */
   const [activePINIndex, setActivePINIndex] = useState<number>(0);
+  /**
+   * State to store if the mutation is sent to the server or not
+   * @type {boolean}
+   * @default false
+   */
+  const [isMutationSent, setIsMutationSent] = useState<boolean>(false);
+  /**
+   * State to store if the 2FA is enabled or not
+   * @type {boolean}
+   * @default false
+   */
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
   /**
    * State to determine if the user is ready to move to the next step
@@ -74,6 +98,13 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   const { open: openNotification } = useNotification();
 
   /**
+   * Get the user's identity
+   * @type {MeResponse}
+   */
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
+
+  /**
    * Mutation to verify the user's password
    * @type {VerifyPasswordMutation}
    */
@@ -84,8 +115,28 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   } = useCustomMutation<VerifyPasswordMutation>();
 
   /**
+   * Mutation to generate a two-factor authentication secret
+   * @type {GenerateTwoFactorAuthenticationSecretMutation}
+   */
+  const {
+    mutate: generate2FASecret,
+    isLoading: isGenerating2FASecret,
+    data: generate2FASecretData,
+  } = useCustomMutation<GenerateTwoFactorAuthenticationSecretMutation>();
+
+  /**
+   * Mutation to enable two-factor authentication (2FA) for the user
+   * @type {EnableTwoFactorAuthenticationMutation}
+   */
+  const {
+    mutate: enable2FA,
+    isLoading: isEnabling2FA,
+    error: enable2FAError,
+    data: enable2FAData,
+  } = useCustomMutation<EnableTwoFactorAuthenticationMutation>();
+
+  /**
    * Handle the change event of the input field to update the PIN
-   *
    * @param {ChangeEvent<HTMLInputElement>} e - Change Event
    * @returns {void}
    */
@@ -109,7 +160,6 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   /**
    * Handle the key down event of the input field to move to the previous input field
    * when the backspace key is pressed
-   *
    * @param {KeyboardEvent<HTMLInputElement>} e - Keyboard Event
    * @param {number} index - Index of the input field
    * @returns {void}
@@ -132,12 +182,13 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
 
   /**
    * Handle the password protection form submission
-   *
    * @param {FormEvent<HTMLFormElement>} e - Form Event
    * @returns {void}
    */
   const handlePasswordProtection = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+
+    if (isVerifyingPassword) return;
 
     // Get the form data
     const formData: FormData = new FormData(e.currentTarget);
@@ -166,9 +217,47 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
     });
   };
 
+  /**
+   * Hook to handle the verification of the user's password
+   * and the generation of the two-factor authentication secret
+   */
   useEffect(() => {
-    if (!isVerifyingPassword && verifyPasswordData) {
-      if (verifyPasswordData.data.verifyPassword) setNext(true);
+    if (isIdentityLoading) return;
+
+    if (
+      !isVerifyingPassword &&
+      verifyPasswordData &&
+      !isMutationSent &&
+      identity
+    ) {
+      // If the password is correct, generate the 2FA secret
+      if (verifyPasswordData.data.verifyPassword) {
+        generate2FASecret({
+          url: API_URL,
+          method: "post",
+          meta: {
+            gqlMutation: MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET,
+            variables: {
+              userId: identity.user.id,
+              username: identity.user.username,
+            },
+          },
+          values: {},
+          errorNotification: (data: HttpError | undefined) => {
+            return {
+              description: "Unable to enable two-factor authentication",
+              message:
+                data?.message ||
+                "An error occurred while enabling two-factor authentication. Please try again.",
+              type: "error",
+            };
+          },
+        });
+
+        // Set the mutation sent state to true to prevent multiple requests
+        setIsMutationSent(true);
+      }
+      // If the password is incorrect, show an error notification to the user
       else
         return openNotification?.({
           type: "error",
@@ -176,20 +265,80 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
           message: "The password you entered is incorrect. Please try again.",
         });
     }
-  }, [isVerifyingPassword, openNotification, verifyPasswordData]);
 
-  const handle2FA = (e: FormEvent<HTMLFormElement>) => {
+    // If the 2FA secret is generated and the mutation is sent, move to the next step
+    if (!isGenerating2FASecret && generate2FASecretData && isMutationSent)
+      setNext(true);
+  }, [
+    generate2FASecret,
+    generate2FASecretData,
+    identity,
+    isGenerating2FASecret,
+    isIdentityLoading,
+    isMutationSent,
+    isVerifyingPassword,
+    openNotification,
+    verifyPasswordData,
+  ]);
+
+  /**
+   * Handle the two-factor authentication form submission
+   * @param {FormEvent<HTMLFormElement>} e - Form Event
+   * @returns {void}
+   */
+  const handle2FA = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    const pin = Array.from(document.querySelectorAll("input[type='text']")).map(
-      (input) => (input as HTMLInputElement).value
-    );
-    const code = pin.join("").trim();
+    if (isEnabling2FA || isIdentityLoading || isEnabled) return;
 
-    console.log(code);
+    const pin: string[] = Array.from(
+      document.querySelectorAll("input[type='number']")
+    ).map((input) => (input as HTMLInputElement).value);
+    const code: string = pin.join("").trim();
 
-    onClose();
+    // Enable two-factor authentication for the user
+    enable2FA({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_ENABLE_TWO_FACTOR_AUTHENTICATION,
+        variables: {
+          userId: identity!.user.id,
+          otp: code,
+        },
+      },
+      values: {},
+      errorNotification: (data: HttpError | undefined) => {
+        return {
+          description: "Unable to enable two-factor authentication",
+          message:
+            data?.message ||
+            "An error occurred while enabling two-factor authentication. Please try again.",
+          type: "error",
+        };
+      },
+    });
   };
+
+  /**
+   * Hook to show a success notification to the user when 2FA is successfully enabled
+   */
+  useEffect(() => {
+    if (!enable2FAError && enable2FAData && !isEnabled) {
+      // Show a success notification to the user
+      openNotification?.({
+        type: "success",
+        description: "Success!",
+        message: "Two-factor authentication has been successfully enabled.",
+      });
+
+      // Set the 2FA enabled state to true
+      setIsEnabled(true);
+
+      // Close the modal
+      onClose();
+    }
+  }, [enable2FAData, enable2FAError, isEnabled, onClose, openNotification]);
 
   // If the modal is not open, return an empty fragment
   if (!open) return <></>;
@@ -211,16 +360,24 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                 Two-factor authentication adds an extra layer of security to
                 your account.
               </p>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your account password"
-                className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
-                required
-              />
+              {!identity?.user.connection?.isEmailVerified ? (
+                <p className="w-full text-sm text-red-700 text-justify">
+                  Please verify your email address to enable two-factor
+                  authentication.
+                </p>
+              ) : (
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Enter your account password"
+                  className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+                  required
+                />
+              )}
               <button
                 type="submit"
-                className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4"
+                className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4 disabled:opacity-80 disabled:pointer-events-none"
+                disabled={!identity?.user.connection?.isEmailVerified}
               >
                 Enable 2FA
               </button>
@@ -270,7 +427,10 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                 </div>
                 <div className="w-2/6 flex items-center justify-center">
                   <img
-                    src="https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg"
+                    src={
+                      generate2FASecretData?.data
+                        .generateTwoFactorAuthenticationSecret.otpAuthUri || ""
+                    }
                     className="w-3/5 aspect-square object-cover brightness-75 hover:brightness-100 transition-all ease-in-out duration-300"
                     alt="QR Code"
                     draggable={false}

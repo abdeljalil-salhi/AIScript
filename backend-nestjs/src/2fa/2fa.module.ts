@@ -2,6 +2,8 @@
 import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+// Resolvers
+import { TwoFactorAuthenticationResolver } from './2fa.resolver';
 // Services
 import { TwoFactorAuthenticationService } from './2fa.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -21,8 +23,13 @@ import { MailService } from 'src/mail/mail.service';
  */
 @Module({
   providers: [
+    // Resolvers
+    TwoFactorAuthenticationResolver,
+
+    // Dependency Services
     JwtService,
 
+    // Services
     TwoFactorAuthenticationService,
     PrismaService,
     AuthService,

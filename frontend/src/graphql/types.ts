@@ -17,6 +17,67 @@ export type ChangePasswordMutationVariables = Types.Exact<{
 
 export type ChangePasswordMutation = Pick<Types.Mutation, "changePassword">;
 
+export type DisableTwoFactorAuthenticationMutationVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+  otp: Types.Scalars["String"]["input"];
+}>;
+
+export type DisableTwoFactorAuthenticationMutation = {
+  disableTwoFactorAuthentication: Pick<
+    Types.TwoFactorAuthentication,
+    "status"
+  > & {
+    connection?: Types.Maybe<
+      Pick<
+        Types.Connection,
+        | "id"
+        | "email"
+        | "isEmailVerified"
+        | "is2faEnabled"
+        | "provider"
+        | "otpCreatedAt"
+      >
+    >;
+  };
+};
+
+export type EnableTwoFactorAuthenticationMutationVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+  otp: Types.Scalars["String"]["input"];
+}>;
+
+export type EnableTwoFactorAuthenticationMutation = {
+  enableTwoFactorAuthentication: Pick<
+    Types.TwoFactorAuthentication,
+    "status"
+  > & {
+    connection?: Types.Maybe<
+      Pick<
+        Types.Connection,
+        | "id"
+        | "email"
+        | "isEmailVerified"
+        | "is2faEnabled"
+        | "provider"
+        | "otpCreatedAt"
+      >
+    >;
+  };
+};
+
+export type GenerateTwoFactorAuthenticationSecretMutationVariables =
+  Types.Exact<{
+    userId: Types.Scalars["String"]["input"];
+    username: Types.Scalars["String"]["input"];
+  }>;
+
+export type GenerateTwoFactorAuthenticationSecretMutation = {
+  generateTwoFactorAuthenticationSecret: Pick<
+    Types.TwoFactorAuthentication,
+    "status" | "otpAuthUri"
+  >;
+};
+
 export type LoginMutationVariables = Types.Exact<{
   loginInput: Types.LoginInput;
 }>;

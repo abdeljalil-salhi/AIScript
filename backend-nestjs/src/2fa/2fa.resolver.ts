@@ -143,6 +143,10 @@ export class TwoFactorAuthenticationResolver {
    * @throws {ForbiddenException} - If the current user is not authorized to disable two-factor authentication for another user.
    * @throws {ForbiddenException} - If the one-time password is invalid.
    */
+  @Mutation(() => TwoFactorAuthentication, {
+    name: 'disableTwoFactorAuthentication',
+    description: 'Disables two-factor authentication for the current user.',
+  })
   public async disableTwoFactorAuthentication(
     @CurrentUserId() id: string,
     @Args('userId', { type: () => String }) userId: string,

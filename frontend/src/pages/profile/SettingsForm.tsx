@@ -318,7 +318,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
               className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
               onClick={handleEmailVerification}
             >
-              Verify email address
+              Verify your email address
             </button>
             <VerifyEmailModal
               email={identity!.user.connection!.email}
@@ -332,7 +332,7 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
           onClick={() => setShowChangePasswordModal(true)}
         >
-          Change password
+          Change your password
         </button>
         <ChangePasswordModal
           identity={identity!}
@@ -340,16 +340,27 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           onClose={() => setShowChangePasswordModal(false)}
         />
 
-        <button
-          className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
-          onClick={() => setShowEnable2FAModal(true)}
-        >
-          Enable 2FA
-        </button>
-        <Enable2FAModal
-          open={showEnable2FAModal}
-          onClose={() => setShowEnable2FAModal(false)}
-        />
+        {!isIdentityLoading && !identity?.user.connection?.is2faEnabled ? (
+          <>
+            <button
+              className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+              onClick={() => setShowEnable2FAModal(true)}
+            >
+              Enable two-factor authentication
+            </button>
+            <Enable2FAModal
+              open={showEnable2FAModal}
+              onClose={() => setShowEnable2FAModal(false)}
+            />
+          </>
+        ) : (
+          <button
+            className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+            onClick={() => null}
+          >
+            Disable two-factor authentication
+          </button>
+        )}
 
         <div className="w-full max-w-full text-start text-n-4 text-xs font-light italic">
           <p>

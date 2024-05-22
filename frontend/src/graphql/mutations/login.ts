@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 export const MUTATION_LOGIN = gql`
   mutation Login($loginInput: LoginInput!) {
     login(loginInput: $loginInput) {
+      shortLivedToken
       accessToken
       refreshToken
       user {
@@ -29,6 +30,7 @@ export const MUTATION_LOGIN = gql`
         createdAt
         updatedAt
       }
+      is2faEnabled
     }
   }
 `;

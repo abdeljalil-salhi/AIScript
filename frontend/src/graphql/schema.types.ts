@@ -31,8 +31,12 @@ export type Scalars = {
 export type AuthResponse = {
   /** Access token of the user */
   accessToken: Scalars["String"]["output"];
+  /** Whether 2FA is enabled */
+  is2faEnabled: Scalars["Boolean"]["output"];
   /** Refresh token of the user */
   refreshToken: Scalars["String"]["output"];
+  /** Short lived token of the user */
+  shortLivedToken?: Maybe<Scalars["String"]["output"]>;
   /** User details */
   user: User;
 };
@@ -314,9 +318,9 @@ export type NewSubscriptionInput = {
 };
 
 export type NewTokensResponse = {
-  /** JSON Web Token (JWT) used for authorization and access */
+  /** JSON Web Token (JWT) access token used for authorization and access */
   accessToken: Scalars["String"]["output"];
-  /** Token for refreshing the JSON Web Token (JWT) when it expires */
+  /** Token for refreshing the JSON Web Token (JWT) access token when it expires */
   refreshToken: Scalars["String"]["output"];
 };
 

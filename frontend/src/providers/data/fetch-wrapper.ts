@@ -10,6 +10,8 @@ type Error = {
 /**
  * Custom fetch function that adds the access token to the request headers and
  * sets the content type to application/json.
+ * If the operation is LoginTwoFactorAuthentication, the short-lived token is used instead.
+ * This function is used to make requests to the GraphQL API.
  *
  * @param {string} url - The url to fetch.
  * @param {RequestInit} options - The options to pass to the fetch function.
@@ -19,7 +21,17 @@ const customFetch = async (
   url: string,
   options: RequestInit = {}
 ): Promise<Response> => {
+  let usedToken: string | null = null;
+
+  const shortLivedToken: string | null =
+    localStorage.getItem("short_lived_token");
+
   const accessToken: string | null = localStorage.getItem("access_token");
+
+  const opts = JSON.parse(options.body?.toString() || "{}");
+
+  if (opts.operationName === "LoginTwoFactorAuthentication")
+    usedToken = shortLivedToken;
 
   const headers = options.headers as Record<string, string>;
 
@@ -27,7 +39,7 @@ const customFetch = async (
     ...options,
     headers: {
       ...headers,
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${usedToken || accessToken}`,
       "Content-Type": "application/json",
       "Apollo-Require-Preflight": "true",
     },

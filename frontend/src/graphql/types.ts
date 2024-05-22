@@ -83,7 +83,10 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 export type LoginMutation = {
-  login: Pick<Types.AuthResponse, "accessToken" | "refreshToken"> & {
+  login: Pick<
+    Types.AuthResponse,
+    "shortLivedToken" | "accessToken" | "refreshToken" | "is2faEnabled"
+  > & {
     user: Pick<
       Types.User,
       "id" | "username" | "isAdmin" | "createdAt" | "updatedAt"
@@ -104,6 +107,17 @@ export type LoginMutation = {
       wallet?: Types.Maybe<Pick<Types.Wallet, "balance" | "updatedAt">>;
     };
   };
+};
+
+export type LoginTwoFactorAuthenticationMutationVariables = Types.Exact<{
+  loginTwoFactorAuthenticationInput: Types.LoginTwoFactorAuthenticationInput;
+}>;
+
+export type LoginTwoFactorAuthenticationMutation = {
+  loginTwoFactorAuthentication: Pick<
+    Types.AuthResponse,
+    "shortLivedToken" | "accessToken" | "refreshToken" | "is2faEnabled"
+  > & { user: Pick<Types.User, "id" | "username"> };
 };
 
 export type LogoutMutationVariables = Types.Exact<{ [key: string]: never }>;

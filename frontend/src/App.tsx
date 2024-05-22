@@ -45,6 +45,7 @@ import { RegisterPage } from "./pages/register";
 import { SubscriptionPage } from "./pages/subscription";
 import { SubscriptionCancelPage } from "./pages/subscription/cancel";
 import { VerifyEmailPage } from "./pages/verify-email";
+import { Verify2FAPage } from "./pages/verify-2fa";
 
 // Interfaces
 interface AppProps {}
@@ -83,6 +84,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
                     <Route index element={<LandingPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/2fa" element={<Verify2FAPage />} />
                     <Route
                       element={
                         <Authenticated
@@ -159,10 +161,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
                           index
                           element={<CatchAllNavigate to="/profile" />}
                         />
-                        <Route
-                          path=":token"
-                          element={<VerifyEmailPage />}
-                        />
+                        <Route path=":token" element={<VerifyEmailPage />} />
                       </Route>
                     </Route>
                   </Routes>

@@ -145,6 +145,20 @@ export const authProvider: AuthBindings = {
         },
       });
 
+      /**
+       * Check if two-factor authentication is enabled
+       * If it is enabled, get the shortLivedToken and redirect to the 2FA page
+       */
+      if (data.login.is2faEnabled) {
+        // Save the shortLivedToken in localStorage
+        localStorage.setItem("short_lived_token", data.login.shortLivedToken!);
+
+        return {
+          success: true,
+          redirectTo: "/2fa",
+        };
+      }
+
       // Save the accessToken in localStorage
       localStorage.setItem("access_token", data.login.accessToken);
 
@@ -214,6 +228,13 @@ export const authProvider: AuthBindings = {
    */
   check: async (): Promise<CheckResponse> => {
     try {
+      if (localStorage.getItem("access_token") === null)
+        return {
+          authenticated: false,
+          redirectTo: "/login",
+          logout: true,
+        };
+
       // Get the identity of the user
       // This is to know if the user is authenticated or not
       await dataProvider.custom<MeQuery>({

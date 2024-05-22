@@ -93,6 +93,7 @@ export class TwoFactorAuthenticationService {
       accessToken,
       refreshToken,
       user,
+      is2faEnabled: user.connection.is2faEnabled,
     };
   }
 

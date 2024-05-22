@@ -6,8 +6,14 @@ type AuthResponse {
   """Access token of the user"""
   accessToken: String!
 
+  """Whether 2FA is enabled"""
+  is2faEnabled: Boolean!
+
   """Refresh token of the user"""
   refreshToken: String!
+
+  """Short lived token of the user"""
+  shortLivedToken: String
 
   """User details"""
   user: User!
@@ -276,10 +282,12 @@ input NewSubscriptionInput {
 }
 
 type NewTokensResponse {
-  """JSON Web Token (JWT) used for authorization and access"""
+  """JSON Web Token (JWT) access token used for authorization and access"""
   accessToken: String!
 
-  """Token for refreshing the JSON Web Token (JWT) when it expires"""
+  """
+  Token for refreshing the JSON Web Token (JWT) access token when it expires
+  """
   refreshToken: String!
 }
 

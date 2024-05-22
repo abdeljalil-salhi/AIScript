@@ -1,14 +1,18 @@
 // Dependencies
+import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 // Services
 import { TwoFactorAuthenticationService } from './2fa.service';
 // Entities
 import { TwoFactorAuthentication } from './entities/2fa.entity';
-import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
-import { ForbiddenException } from '@nestjs/common';
+// DTOs
 import { AuthResponse } from 'src/auth/dtos/auth.response';
 import { LoginTwoFactorAuthenticationInput } from './dtos/login-2fa.input';
+// Decorators
+import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
+// Guards
+import { ShortLivedTokenGuard } from 'src/auth/guards/short-lived-token.guard';
 
 /**
  * The two-factor authentication resolver that encapsulates all two-factor authentication-related GraphQL queries,
@@ -36,6 +40,7 @@ export class TwoFactorAuthenticationResolver {
    * @param {LoginTwoFactorAuthenticationInput} loginTwoFactorAuthenticationInput - The login two-factor authentication input.
    * @returns {Promise<AuthResponse>} - The authentication response.
    */
+  @UseGuards(ShortLivedTokenGuard)
   @Mutation(() => AuthResponse, {
     name: 'loginTwoFactorAuthentication',
     description: 'Logs in a user with two-factor authentication.',

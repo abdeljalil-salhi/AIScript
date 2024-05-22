@@ -38,8 +38,10 @@ export class TwoFactorAuthenticationResolver {
    *
    * @mutation
    * @useGuards ShortLivedTokenGuard
+   * @param {string} id - The ID of the current user.
    * @param {LoginTwoFactorAuthenticationInput} loginTwoFactorAuthenticationInput - The login two-factor authentication input.
    * @returns {Promise<AuthResponse>} - The authentication response.
+   * @throws {ForbiddenException} - If the current user is not authorized to perform this action.
    */
   @UseGuards(ShortLivedTokenGuard)
   @Mutation(() => AuthResponse, {
@@ -47,9 +49,17 @@ export class TwoFactorAuthenticationResolver {
     description: 'Logs in a user with two-factor authentication.',
   })
   public async loginTwoFactorAuthentication(
+    @CurrentUserId() id: string,
     @Args('loginTwoFactorAuthenticationInput')
     loginTwoFactorAuthenticationInput: LoginTwoFactorAuthenticationInput,
   ): Promise<AuthResponse> {
+    if (!id)
+      throw new ForbiddenException(
+        'You are not authorized to perform this action',
+      );
+
+    loginTwoFactorAuthenticationInput.userId = id;
+
     return this.twoFactorAuthenticationService.loginTwoFactorAuthentication(
       loginTwoFactorAuthenticationInput,
     );

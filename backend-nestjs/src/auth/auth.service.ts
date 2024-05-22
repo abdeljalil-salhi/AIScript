@@ -23,6 +23,7 @@ import { NewTokensResponse } from './dtos/new-tokens.response';
 import { RegisterInput } from './dtos/register.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { ChangePasswordInput } from './dtos/change-password.input';
+import { ShortLivedTokenResponse } from './dtos/short-lived-token.response';
 
 /**
  * The authentication service that encapsulates all authentication-related features and functionalities.
@@ -117,6 +118,7 @@ export class AuthService {
       accessToken,
       refreshToken,
       user,
+      is2faEnabled: user.connection.is2faEnabled,
     };
   }
 
@@ -154,6 +156,25 @@ export class AuthService {
       });
 
     /**
+     * If the user has two-factor authentication enabled, create a short-lived token for the user.
+     * This is done to ensure that the user is authenticated and authorized to access the two-factor
+     * authentication (2FA) verification page.
+     */
+    if (user.connection.is2faEnabled) {
+      // Create a short-lived token for the user
+      const { shortLivedToken } = await this.createShortLivedToken(user);
+
+      // Return the short-lived token for the user to perform 2FA verification
+      return {
+        shortLivedToken,
+        accessToken: '',
+        refreshToken: '',
+        user,
+        is2faEnabled: user.connection.is2faEnabled,
+      };
+    }
+
+    /**
      * Create tokens and update refresh token in the database.
      * This is done to ensure that the user is authenticated and authorized.
      */
@@ -165,6 +186,7 @@ export class AuthService {
       accessToken,
       refreshToken,
       user,
+      is2faEnabled: user.connection.is2faEnabled,
     };
   }
 
@@ -223,6 +245,28 @@ export class AuthService {
     return {
       user,
     };
+  }
+
+  /**
+   * Verifies the password of the user with the specified ID.
+   *
+   * @param {string} userId - The ID of the user to verify the password for.
+   * @param {string} password - The password to verify.
+   * @returns {Promise<boolean>} - The result of the password verification operation.
+   * @throws {NotFoundException} - Thrown if the user is not found.
+   */
+  public async verifyPassword(
+    userId: string,
+    password: string,
+  ): Promise<boolean> {
+    /**
+     * Verify the password of the user.
+     * Checks whether the password is valid or not.
+     */
+    return this.userService.findById(userId).then((user: User) => {
+      if (!user) throw new NotFoundException('User not found');
+      return argon.verify(user.connection.password, password);
+    });
   }
 
   /**
@@ -339,6 +383,39 @@ export class AuthService {
       accessToken,
       refreshToken,
       user,
+      is2faEnabled: user.connection.is2faEnabled,
+    };
+  }
+
+  /**
+   * Creates a new short-lived token for the user to perform two-factor authentication
+   * or other sensitive operations.
+   *
+   * @param {User} user - The user for whom to create a short-lived token.
+   * @returns {Promise<ShortLivedTokenResponse>} - The short-lived token for the user.
+   */
+  public async createShortLivedToken(
+    user: User,
+  ): Promise<ShortLivedTokenResponse> {
+    /**
+     * Generate a new short-lived token for the user.
+     */
+    const shortLivedToken: string = this.jwtService.sign(
+      {
+        id: user.id,
+        is2faEnabled: user.connection.is2faEnabled,
+        isAdmin: user.isAdmin,
+      },
+      {
+        algorithm: 'HS256',
+        expiresIn: process.env.JWT_SHORT_LIVED_TOKEN_EXPIRATION_TIME,
+        secret: process.env.JWT_SHORT_LIVED_TOKEN_SECRET,
+      },
+    );
+
+    // Return the short-lived token
+    return {
+      shortLivedToken,
     };
   }
 

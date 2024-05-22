@@ -1,14 +1,18 @@
 // Dependencies
+import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 // Services
 import { TwoFactorAuthenticationService } from './2fa.service';
 // Entities
 import { TwoFactorAuthentication } from './entities/2fa.entity';
-import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
-import { ForbiddenException } from '@nestjs/common';
+// DTOs
 import { AuthResponse } from 'src/auth/dtos/auth.response';
 import { LoginTwoFactorAuthenticationInput } from './dtos/login-2fa.input';
+// Decorators
+import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
+// Guards
+import { ShortLivedTokenGuard } from 'src/auth/guards/short-lived-token.guard';
 
 /**
  * The two-factor authentication resolver that encapsulates all two-factor authentication-related GraphQL queries,
@@ -33,17 +37,29 @@ export class TwoFactorAuthenticationResolver {
    * Logs in a user with two-factor authentication.
    *
    * @mutation
+   * @useGuards ShortLivedTokenGuard
+   * @param {string} id - The ID of the current user.
    * @param {LoginTwoFactorAuthenticationInput} loginTwoFactorAuthenticationInput - The login two-factor authentication input.
    * @returns {Promise<AuthResponse>} - The authentication response.
+   * @throws {ForbiddenException} - If the current user is not authorized to perform this action.
    */
+  @UseGuards(ShortLivedTokenGuard)
   @Mutation(() => AuthResponse, {
     name: 'loginTwoFactorAuthentication',
     description: 'Logs in a user with two-factor authentication.',
   })
   public async loginTwoFactorAuthentication(
+    @CurrentUserId() id: string,
     @Args('loginTwoFactorAuthenticationInput')
     loginTwoFactorAuthenticationInput: LoginTwoFactorAuthenticationInput,
   ): Promise<AuthResponse> {
+    if (!id)
+      throw new ForbiddenException(
+        'You are not authorized to perform this action',
+      );
+
+    loginTwoFactorAuthenticationInput.userId = id;
+
     return this.twoFactorAuthenticationService.loginTwoFactorAuthentication(
       loginTwoFactorAuthenticationInput,
     );
@@ -143,6 +159,10 @@ export class TwoFactorAuthenticationResolver {
    * @throws {ForbiddenException} - If the current user is not authorized to disable two-factor authentication for another user.
    * @throws {ForbiddenException} - If the one-time password is invalid.
    */
+  @Mutation(() => TwoFactorAuthentication, {
+    name: 'disableTwoFactorAuthentication',
+    description: 'Disables two-factor authentication for the current user.',
+  })
   public async disableTwoFactorAuthentication(
     @CurrentUserId() id: string,
     @Args('userId', { type: () => String }) userId: string,

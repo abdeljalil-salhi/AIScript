@@ -31,8 +31,12 @@ export type Scalars = {
 export type AuthResponse = {
   /** Access token of the user */
   accessToken: Scalars["String"]["output"];
+  /** Whether 2FA is enabled */
+  is2faEnabled: Scalars["Boolean"]["output"];
   /** Refresh token of the user */
   refreshToken: Scalars["String"]["output"];
+  /** Short lived token of the user */
+  shortLivedToken?: Maybe<Scalars["String"]["output"]>;
   /** User details */
   user: User;
 };
@@ -141,6 +145,13 @@ export type LoginInput = {
   usernameOrEmail: Scalars["String"]["input"];
 };
 
+export type LoginTwoFactorAuthenticationInput = {
+  /** The two-factor authentication one-time password (OTP) entered by the user */
+  otp: Scalars["String"]["input"];
+  /** The ID of the user to log in with two-factor authentication */
+  userId: Scalars["String"]["input"];
+};
+
 export type LogoutResponse = {
   /** Indicates whether the user has been successfully logged out. */
   isLoggedOut: Scalars["Boolean"]["output"];
@@ -168,10 +179,18 @@ export type Mutation = {
   deleteSubscriptionById: Subscription;
   /** Deletes all subscription entities for a specific user. */
   deleteSubscriptionsByUserId: Array<Subscription>;
+  /** Disables two-factor authentication for the current user. */
+  disableTwoFactorAuthentication: TwoFactorAuthentication;
+  /** Enables two-factor authentication for the current user. */
+  enableTwoFactorAuthentication: TwoFactorAuthentication;
   /** Verifies the forgot password token and updates the user password. */
   forgotPassword: AuthResponse;
+  /** Generates a two-factor authentication secret and OTP authentication URI for a user. */
+  generateTwoFactorAuthenticationSecret: TwoFactorAuthentication;
   /** Logs in a user with the specified details. */
   login: AuthResponse;
+  /** Logs in a user with two-factor authentication. */
+  loginTwoFactorAuthentication: AuthResponse;
   /** Logs out a user with the specified user ID. */
   logout: LogoutResponse;
   /** Generates new access and refresh tokens for a user. */
@@ -194,6 +213,10 @@ export type Mutation = {
   validateSubscriptions: Scalars["String"]["output"];
   /** Verifies the email verification with the specified token. */
   verifyEmail: Scalars["String"]["output"];
+  /** Verifies the password of the current user. */
+  verifyPassword: Scalars["Boolean"]["output"];
+  /** Verifies a two-factor authentication one-time password. */
+  verifyTwoFactorAuthentication: TwoFactorAuthentication;
 };
 
 export type MutationCancelSubscriptionArgs = {
@@ -220,12 +243,31 @@ export type MutationDeleteSubscriptionsByUserIdArgs = {
   userId: Scalars["String"]["input"];
 };
 
+export type MutationDisableTwoFactorAuthenticationArgs = {
+  otp: Scalars["String"]["input"];
+  userId: Scalars["String"]["input"];
+};
+
+export type MutationEnableTwoFactorAuthenticationArgs = {
+  otp: Scalars["String"]["input"];
+  userId: Scalars["String"]["input"];
+};
+
 export type MutationForgotPasswordArgs = {
   verifyForgotPasswordInput: VerifyForgotPasswordInput;
 };
 
+export type MutationGenerateTwoFactorAuthenticationSecretArgs = {
+  userId: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
+};
+
 export type MutationLoginArgs = {
   loginInput: LoginInput;
+};
+
+export type MutationLoginTwoFactorAuthenticationArgs = {
+  loginTwoFactorAuthenticationInput: LoginTwoFactorAuthenticationInput;
 };
 
 export type MutationRegisterArgs = {
@@ -257,6 +299,15 @@ export type MutationVerifyEmailArgs = {
   token: Scalars["String"]["input"];
 };
 
+export type MutationVerifyPasswordArgs = {
+  password: Scalars["String"]["input"];
+};
+
+export type MutationVerifyTwoFactorAuthenticationArgs = {
+  otp: Scalars["String"]["input"];
+  userId: Scalars["String"]["input"];
+};
+
 export type NewSubscriptionInput = {
   /** ID of the payment that created the subscription */
   paymentId: Scalars["String"]["input"];
@@ -267,9 +318,9 @@ export type NewSubscriptionInput = {
 };
 
 export type NewTokensResponse = {
-  /** JSON Web Token (JWT) used for authorization and access */
+  /** JSON Web Token (JWT) access token used for authorization and access */
   accessToken: Scalars["String"]["output"];
-  /** Token for refreshing the JSON Web Token (JWT) when it expires */
+  /** Token for refreshing the JSON Web Token (JWT) access token when it expires */
   refreshToken: Scalars["String"]["output"];
 };
 
@@ -423,6 +474,17 @@ export type Subscription = {
   user?: Maybe<User>;
   /** ID of the associated user that owns the subscription */
   userId?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type TwoFactorAuthentication = {
+  /** The associated connection entity */
+  connection?: Maybe<Connection>;
+  /** The two-factor authentication (2FA) validation status */
+  is2faValid?: Maybe<Scalars["Boolean"]["output"]>;
+  /** The one-time password authentication URI */
+  otpAuthUri?: Maybe<Scalars["String"]["output"]>;
+  /** The two-factor authentication (2FA) status */
+  status?: Maybe<Scalars["String"]["output"]>;
 };
 
 export type UpdatePlanInput = {

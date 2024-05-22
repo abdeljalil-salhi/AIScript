@@ -21,12 +21,10 @@ import {
 import { Backdrop } from "../Backdrop";
 // GraphQL Mutations
 import { MUTATION_VERIFY_PASSWORD } from "@/graphql/mutations/verifyPassword";
-import { MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET } from "@/graphql/mutations/generateTwoFactorAuthenticationSecret";
-import { MUTATION_ENABLE_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/enableTwoFactorAuthentication";
+import { MUTATION_DISABLE_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/disableTwoFactorAuthentication";
 // GraphQL Types
 import {
-  EnableTwoFactorAuthenticationMutation,
-  GenerateTwoFactorAuthenticationSecretMutation,
+  DisableTwoFactorAuthenticationMutation,
   VerifyPasswordMutation,
 } from "@/graphql/types";
 import { MeResponse } from "@/graphql/schema.types";
@@ -34,7 +32,7 @@ import { MeResponse } from "@/graphql/schema.types";
 import { API_URL } from "@/providers";
 
 // Interfaces
-interface Enable2FAModalProps {
+interface Disable2FAModalProps {
   open: boolean;
   onClose: () => void;
 }
@@ -42,13 +40,13 @@ interface Enable2FAModalProps {
 let currentPINIndex: number = 0;
 
 /**
- * Enable 2FA Modal Component
+ * Disable two-factor authentication (2FA) modal Component
  *
- * @interface Enable2FAModalProps
- * @returns {JSX.Element} - Enable 2FA Modal Component
- * @exports Enable2FAModal
+ * @interface Disable2FAModalProps
+ * @returns {JSX.Element} - Disable2FAModal Component
+ * @exports Disable2FAModal
  */
-export const Enable2FAModal: FC<Enable2FAModalProps> = ({
+export const Disable2FAModal: FC<Disable2FAModalProps> = ({
   open,
   onClose,
 }): JSX.Element => {
@@ -65,17 +63,11 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
    */
   const [activePINIndex, setActivePINIndex] = useState<number>(0);
   /**
-   * State to store if the mutation is sent to the server or not
+   * State to store if the 2FA is disabled or not
    * @type {boolean}
    * @default false
    */
-  const [isMutationSent, setIsMutationSent] = useState<boolean>(false);
-  /**
-   * State to store if the 2FA is enabled or not
-   * @type {boolean}
-   * @default false
-   */
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   /**
    * State to determine if the user is ready to move to the next step
@@ -118,25 +110,15 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   } = useCustomMutation<VerifyPasswordMutation>();
 
   /**
-   * Mutation to generate a two-factor authentication secret
-   * @type {GenerateTwoFactorAuthenticationSecretMutation}
+   * Mutation to disable two-factor authentication (2FA) for the user
+   * @type {DisableTwoFactorAuthenticationMutation}
    */
   const {
-    mutate: generate2FASecret,
-    isLoading: isGenerating2FASecret,
-    data: generate2FASecretData,
-  } = useCustomMutation<GenerateTwoFactorAuthenticationSecretMutation>();
-
-  /**
-   * Mutation to enable two-factor authentication (2FA) for the user
-   * @type {EnableTwoFactorAuthenticationMutation}
-   */
-  const {
-    mutate: enable2FA,
-    isLoading: isEnabling2FA,
-    error: enable2FAError,
-    data: enable2FAData,
-  } = useCustomMutation<EnableTwoFactorAuthenticationMutation>();
+    mutate: disable2FA,
+    isLoading: isDisabling2FA,
+    error: disable2FAError,
+    data: disable2FAData,
+  } = useCustomMutation<DisableTwoFactorAuthenticationMutation>();
 
   /**
    * Handle the change event of the input field to update the PIN
@@ -184,8 +166,8 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   }, [activePINIndex]);
 
   /**
-   * Handle the password protection form submission
-   * @param {FormEvent<HTMLFormElement>} e - Form Event
+   * Handles the password protection form submission
+   * @param {FormEvent<HTMLFormElement>} e - The form event
    * @returns {void}
    */
   const handlePasswordProtection = (e: FormEvent<HTMLFormElement>): void => {
@@ -222,89 +204,50 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
 
   /**
    * Hook to handle the verification of the user's password
-   * and the generation of the two-factor authentication secret
    */
   useEffect(() => {
     if (isIdentityLoading) return;
 
-    if (
-      !isVerifyingPassword &&
-      verifyPasswordData &&
-      !isMutationSent &&
-      identity
-    ) {
-      // If the password is correct, generate the 2FA secret
-      if (verifyPasswordData.data.verifyPassword) {
-        generate2FASecret({
-          url: API_URL,
-          method: "post",
-          meta: {
-            gqlMutation: MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET,
-            variables: {
-              userId: identity.user.id,
-              username: identity.user.username,
-            },
-          },
-          values: {},
-          errorNotification: (data: HttpError | undefined) => {
-            return {
-              description: "Unable to enable two-factor authentication",
-              message:
-                data?.message ||
-                "An error occurred while enabling two-factor authentication. Please try again.",
-              type: "error",
-            };
-          },
-        });
-
-        // Set the mutation sent state to true to prevent multiple requests
-        setIsMutationSent(true);
-      }
+    if (!isVerifyingPassword && verifyPasswordData && identity) {
+      // If the password is correct, move to the next step
+      if (verifyPasswordData.data.verifyPassword) setNext(true);
       // If the password is incorrect, show an error notification to the user
       else
         return openNotification?.({
           type: "error",
-          description: "Unable to verify password",
+          description: "Password verification failed",
           message: "The password you entered is incorrect. Please try again.",
         });
     }
-
-    // If the 2FA secret is generated and the mutation is sent, move to the next step
-    if (!isGenerating2FASecret && generate2FASecretData && isMutationSent)
-      setNext(true);
   }, [
-    generate2FASecret,
-    generate2FASecretData,
     identity,
-    isGenerating2FASecret,
     isIdentityLoading,
-    isMutationSent,
     isVerifyingPassword,
     openNotification,
     verifyPasswordData,
   ]);
 
   /**
-   * Handle the two-factor authentication form submission
-   * @param {FormEvent<HTMLFormElement>} e - Form Event
+   * Handle the submission of the form to disable two-factor authentication
+   * @param {FormEvent<HTMLFormElement>} e - The form event
    * @returns {void}
    */
-  const handle2FA = (e: FormEvent<HTMLFormElement>): void => {
+  const handleDisable2FA = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (isEnabling2FA || isIdentityLoading || isEnabled) return;
+    if (isDisabling2FA || isIdentityLoading || isDisabled) return;
 
     const pin: string[] = Array.from(
       document.querySelectorAll("input[type='number']")
     ).map((input) => (input as HTMLInputElement).value);
     const code: string = pin.join("").trim();
 
-    // Enable two-factor authentication for the user
-    enable2FA({
+    // Disable two-factor authentication for the user
+    disable2FA({
       url: API_URL,
       method: "post",
       meta: {
-        gqlMutation: MUTATION_ENABLE_TWO_FACTOR_AUTHENTICATION,
+        gqlMutation: MUTATION_DISABLE_TWO_FACTOR_AUTHENTICATION,
         variables: {
           userId: identity!.user.id,
           otp: code,
@@ -313,10 +256,10 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
       values: {},
       errorNotification: (data: HttpError | undefined) => {
         return {
-          description: "Unable to enable two-factor authentication",
+          description: "Unable to disable two-factor authentication",
           message:
             data?.message ||
-            "An error occurred while enabling two-factor authentication. Please try again.",
+            "An error occurred while disabling two-factor authentication. Please try again.",
           type: "error",
         };
       },
@@ -324,19 +267,19 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   };
 
   /**
-   * Hook to show a success notification to the user when 2FA is successfully enabled
+   * Hook to show a success notification to the user when 2FA is successfully disabled
    */
   useEffect(() => {
-    if (!enable2FAError && enable2FAData && !isEnabled) {
+    if (!disable2FAError && disable2FAData && !isDisabled) {
       // Show a success notification to the user
       openNotification?.({
         type: "success",
         description: "Success!",
-        message: "Two-factor authentication has been successfully enabled.",
+        message: "Two-factor authentication has been successfully disabled.",
       });
 
-      // Set the 2FA enabled state to true
-      setIsEnabled(true);
+      // Set the 2FA disabled state to true
+      setIsDisabled(true);
 
       // Refetch the user's identity
       refetchIdentity();
@@ -344,7 +287,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
       // Close the modal
       onClose();
     }
-  }, [enable2FAData, enable2FAError, isEnabled, onClose, openNotification, refetchIdentity]);
+  }, [disable2FAData, disable2FAError, isDisabled, onClose, openNotification, refetchIdentity]);
 
   // If the modal is not open, return an empty fragment
   if (!open) return <></>;
@@ -363,87 +306,29 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
               className="mt-2 p-4 pb-0 w-full flex flex-col gap-2 items-center justify-center"
             >
               <p className="w-full text-n-1/75 text-justify">
-                Two-factor authentication adds an extra layer of security to
-                your account.
+                Two-factor authentication (2FA) adds an extra layer of security
+                to your account. If you are sure you want to disable it, please
+                enter your password below.
               </p>
-              {!identity?.user.connection?.isEmailVerified ? (
-                <p className="w-full text-sm text-red-700 text-justify">
-                  Please verify your email address to enable two-factor
-                  authentication.
-                </p>
-              ) : (
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter your account password"
-                  className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
-                  required
-                />
-              )}
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your account password"
+                className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+                required
+              />
               <button
                 type="submit"
-                className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4 disabled:opacity-80 disabled:pointer-events-none"
-                disabled={!identity?.user.connection?.isEmailVerified}
+                className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4"
               >
-                Enable 2FA
+                Disable 2FA
               </button>
             </form>
           ) : (
             <form
-              onSubmit={handle2FA}
+              onSubmit={handleDisable2FA}
               className="p-4 pb-0 w-full flex flex-col gap-3 items-center justify-center"
             >
-              <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-row gap-3">
-                <div className="w-4/6 flex flex-col">
-                  <h2 className="text-lg font-bold text-n-1/85">
-                    Download Google Authenticator
-                  </h2>
-                  <p className="text-n-1/75 text-justify font-['Poppins']">
-                    Download and install{" "}
-                    <a
-                      href="https://support.google.com/accounts/answer/1066447?hl=en"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      Google Authenticator
-                    </a>{" "}
-                    on your phone or tablet.
-                  </p>
-                </div>
-                <div className="w-2/6 flex items-center justify-center">
-                  <img
-                    src="/assets/google-authenticator.png"
-                    className="w-2/6 aspect-square m-auto object-cover rounded-lg brightness-[.7] hover:brightness-100 transition-all ease-in-out duration-300"
-                    alt="Google Authenticator logo"
-                    draggable={false}
-                  />
-                </div>
-              </div>
-
-              <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-row gap-3">
-                <div className="w-4/6 flex flex-col">
-                  <h2 className="text-lg font-bold text-n-1/85">
-                    Scan the QR Code
-                  </h2>
-                  <p className="text-n-1/75 text-justify font-['Poppins']">
-                    Open the authentication app and scan the image to the left
-                    using your device&apos;s camera.
-                  </p>
-                </div>
-                <div className="w-2/6 flex items-center justify-center">
-                  <img
-                    src={
-                      generate2FASecretData?.data
-                        .generateTwoFactorAuthenticationSecret.otpAuthUri || ""
-                    }
-                    className="w-3/5 aspect-square object-cover brightness-75 hover:brightness-100 transition-all ease-in-out duration-300"
-                    alt="QR Code"
-                    draggable={false}
-                  />
-                </div>
-              </div>
-
               <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-col gap-1">
                 <h2 className="text-lg font-bold text-n-1/85">
                   Provide verification code

@@ -17,12 +17,76 @@ export type ChangePasswordMutationVariables = Types.Exact<{
 
 export type ChangePasswordMutation = Pick<Types.Mutation, "changePassword">;
 
+export type DisableTwoFactorAuthenticationMutationVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+  otp: Types.Scalars["String"]["input"];
+}>;
+
+export type DisableTwoFactorAuthenticationMutation = {
+  disableTwoFactorAuthentication: Pick<
+    Types.TwoFactorAuthentication,
+    "status"
+  > & {
+    connection?: Types.Maybe<
+      Pick<
+        Types.Connection,
+        | "id"
+        | "email"
+        | "isEmailVerified"
+        | "is2faEnabled"
+        | "provider"
+        | "otpCreatedAt"
+      >
+    >;
+  };
+};
+
+export type EnableTwoFactorAuthenticationMutationVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+  otp: Types.Scalars["String"]["input"];
+}>;
+
+export type EnableTwoFactorAuthenticationMutation = {
+  enableTwoFactorAuthentication: Pick<
+    Types.TwoFactorAuthentication,
+    "status"
+  > & {
+    connection?: Types.Maybe<
+      Pick<
+        Types.Connection,
+        | "id"
+        | "email"
+        | "isEmailVerified"
+        | "is2faEnabled"
+        | "provider"
+        | "otpCreatedAt"
+      >
+    >;
+  };
+};
+
+export type GenerateTwoFactorAuthenticationSecretMutationVariables =
+  Types.Exact<{
+    userId: Types.Scalars["String"]["input"];
+    username: Types.Scalars["String"]["input"];
+  }>;
+
+export type GenerateTwoFactorAuthenticationSecretMutation = {
+  generateTwoFactorAuthenticationSecret: Pick<
+    Types.TwoFactorAuthentication,
+    "status" | "otpAuthUri"
+  >;
+};
+
 export type LoginMutationVariables = Types.Exact<{
   loginInput: Types.LoginInput;
 }>;
 
 export type LoginMutation = {
-  login: Pick<Types.AuthResponse, "accessToken" | "refreshToken"> & {
+  login: Pick<
+    Types.AuthResponse,
+    "shortLivedToken" | "accessToken" | "refreshToken" | "is2faEnabled"
+  > & {
     user: Pick<
       Types.User,
       "id" | "username" | "isAdmin" | "createdAt" | "updatedAt"
@@ -43,6 +107,23 @@ export type LoginMutation = {
       wallet?: Types.Maybe<Pick<Types.Wallet, "balance" | "updatedAt">>;
     };
   };
+};
+
+export type LoginTwoFactorAuthenticationMutationVariables = Types.Exact<{
+  loginTwoFactorAuthenticationInput: Types.LoginTwoFactorAuthenticationInput;
+}>;
+
+export type LoginTwoFactorAuthenticationMutation = {
+  loginTwoFactorAuthentication: Pick<
+    Types.AuthResponse,
+    "shortLivedToken" | "accessToken" | "refreshToken" | "is2faEnabled"
+  > & { user: Pick<Types.User, "id" | "username"> };
+};
+
+export type LogoutMutationVariables = Types.Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = {
+  logout: Pick<Types.LogoutResponse, "isLoggedOut">;
 };
 
 export type RegisterMutationVariables = Types.Exact<{
@@ -120,6 +201,12 @@ export type VerifyEmailMutationVariables = Types.Exact<{
 }>;
 
 export type VerifyEmailMutation = Pick<Types.Mutation, "verifyEmail">;
+
+export type VerifyPasswordMutationVariables = Types.Exact<{
+  password: Types.Scalars["String"]["input"];
+}>;
+
+export type VerifyPasswordMutation = Pick<Types.Mutation, "verifyPassword">;
 
 export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];

@@ -6,8 +6,14 @@ type AuthResponse {
   """Access token of the user"""
   accessToken: String!
 
+  """Whether 2FA is enabled"""
+  is2faEnabled: Boolean!
+
   """Refresh token of the user"""
   refreshToken: String!
+
+  """Short lived token of the user"""
+  shortLivedToken: String
 
   """User details"""
   user: User!
@@ -159,6 +165,16 @@ input LoginInput {
   usernameOrEmail: String!
 }
 
+input LoginTwoFactorAuthenticationInput {
+  """
+  The two-factor authentication one-time password (OTP) entered by the user
+  """
+  otp: String!
+
+  """The ID of the user to log in with two-factor authentication"""
+  userId: String!
+}
+
 type LogoutResponse {
   """Indicates whether the user has been successfully logged out."""
   isLoggedOut: Boolean!
@@ -194,11 +210,25 @@ type Mutation {
   """Deletes all subscription entities for a specific user."""
   deleteSubscriptionsByUserId(userId: String!): [Subscription!]!
 
+  """Disables two-factor authentication for the current user."""
+  disableTwoFactorAuthentication(otp: String!, userId: String!): TwoFactorAuthentication!
+
+  """Enables two-factor authentication for the current user."""
+  enableTwoFactorAuthentication(otp: String!, userId: String!): TwoFactorAuthentication!
+
   """Verifies the forgot password token and updates the user password."""
   forgotPassword(verifyForgotPasswordInput: VerifyForgotPasswordInput!): AuthResponse!
 
+  """
+  Generates a two-factor authentication secret and OTP authentication URI for a user.
+  """
+  generateTwoFactorAuthenticationSecret(userId: String!, username: String!): TwoFactorAuthentication!
+
   """Logs in a user with the specified details."""
   login(loginInput: LoginInput!): AuthResponse!
+
+  """Logs in a user with two-factor authentication."""
+  loginTwoFactorAuthentication(loginTwoFactorAuthenticationInput: LoginTwoFactorAuthenticationInput!): AuthResponse!
 
   """Logs out a user with the specified user ID."""
   logout: LogoutResponse!
@@ -232,6 +262,12 @@ type Mutation {
 
   """Verifies the email verification with the specified token."""
   verifyEmail(token: String!): String!
+
+  """Verifies the password of the current user."""
+  verifyPassword(password: String!): Boolean!
+
+  """Verifies a two-factor authentication one-time password."""
+  verifyTwoFactorAuthentication(otp: String!, userId: String!): TwoFactorAuthentication!
 }
 
 input NewSubscriptionInput {
@@ -246,10 +282,12 @@ input NewSubscriptionInput {
 }
 
 type NewTokensResponse {
-  """JSON Web Token (JWT) used for authorization and access"""
+  """JSON Web Token (JWT) access token used for authorization and access"""
   accessToken: String!
 
-  """Token for refreshing the JSON Web Token (JWT) when it expires"""
+  """
+  Token for refreshing the JSON Web Token (JWT) access token when it expires
+  """
   refreshToken: String!
 }
 
@@ -435,6 +473,20 @@ type Subscription {
 
   """ID of the associated user that owns the subscription"""
   userId: String
+}
+
+type TwoFactorAuthentication {
+  """The associated connection entity"""
+  connection: Connection
+
+  """The two-factor authentication (2FA) validation status"""
+  is2faValid: Boolean
+
+  """The one-time password authentication URI"""
+  otpAuthUri: String
+
+  """The two-factor authentication (2FA) status"""
+  status: String
 }
 
 input UpdatePlanInput {

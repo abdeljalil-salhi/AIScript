@@ -15,6 +15,7 @@ import { AuthResolver } from './auth.resolver';
 // Strategies
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { ShortLivedTokenStrategy } from './strategies/short-lived-token.strategy';
 
 /**
  * The authentication module that encapsulates all authentication-related features
@@ -26,15 +27,21 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 @Module({
   imports: [UserModule],
   providers: [
+    // Resolvers
     AuthResolver,
+
+    // Services
+    JwtService,
     AuthService,
     MailService,
     EmailVerificationService,
     ConnectionService,
     PrismaService,
-    JwtService,
+
+    // Strategies
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    ShortLivedTokenStrategy,
   ],
 })
 export class AuthModule {}

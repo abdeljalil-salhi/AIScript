@@ -37,6 +37,7 @@ export class TwoFactorAuthenticationResolver {
    * Logs in a user with two-factor authentication.
    *
    * @mutation
+   * @useGuards ShortLivedTokenGuard
    * @param {LoginTwoFactorAuthenticationInput} loginTwoFactorAuthenticationInput - The login two-factor authentication input.
    * @returns {Promise<AuthResponse>} - The authentication response.
    */

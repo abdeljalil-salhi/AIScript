@@ -21,17 +21,17 @@ import {
 import { Backdrop } from "../Backdrop";
 // GraphQL Mutations
 import { MUTATION_VERIFY_PASSWORD } from "@/graphql/mutations/verifyPassword";
+import { MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET } from "@/graphql/mutations/generateTwoFactorAuthenticationSecret";
+import { MUTATION_ENABLE_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/enableTwoFactorAuthentication";
 // GraphQL Types
 import {
   EnableTwoFactorAuthenticationMutation,
   GenerateTwoFactorAuthenticationSecretMutation,
   VerifyPasswordMutation,
 } from "@/graphql/types";
+import { MeResponse } from "@/graphql/schema.types";
 // Providers
 import { API_URL } from "@/providers";
-import { MUTATION_ENABLE_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/enableTwoFactorAuthentication";
-import { MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET } from "@/graphql/mutations/generateTwoFactorAuthenticationSecret";
-import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface Enable2FAModalProps {

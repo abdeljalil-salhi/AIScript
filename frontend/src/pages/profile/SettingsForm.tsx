@@ -36,6 +36,7 @@ import {
 } from "@/graphql/types";
 // Providers
 import { API_URL } from "@/providers";
+import { Disable2FAModal } from "@/components/profile/Disable2FAModal";
 
 // Interfaces
 interface SettingsFormProps {}
@@ -58,6 +59,8 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
   const [showVerifyEmailModal, setShowVerifyEmailModal] =
     useState<boolean>(false);
   const [showEnable2FAModal, setShowEnable2FAModal] = useState<boolean>(false);
+  const [showDisable2FAModal, setShowDisable2FAModal] =
+    useState<boolean>(false);
 
   /**
    * States to store input values
@@ -340,27 +343,35 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           onClose={() => setShowChangePasswordModal(false)}
         />
 
-        {!isIdentityLoading && !identity?.user.connection?.is2faEnabled ? (
-          <>
-            <button
-              className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
-              onClick={() => setShowEnable2FAModal(true)}
-            >
-              Enable two-factor authentication
-            </button>
-            <Enable2FAModal
-              open={showEnable2FAModal}
-              onClose={() => setShowEnable2FAModal(false)}
-            />
-          </>
-        ) : (
-          <button
-            className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
-            onClick={() => null}
-          >
-            Disable two-factor authentication
-          </button>
-        )}
+        {!isIdentityLoading ? (
+          !identity?.user.connection?.is2faEnabled ? (
+            <>
+              <button
+                className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+                onClick={() => setShowEnable2FAModal(true)}
+              >
+                Enable two-factor authentication
+              </button>
+              <Enable2FAModal
+                open={showEnable2FAModal}
+                onClose={() => setShowEnable2FAModal(false)}
+              />
+            </>
+          ) : (
+            <>
+              <button
+                className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+                onClick={() => setShowDisable2FAModal(true)}
+              >
+                Disable two-factor authentication
+              </button>
+              <Disable2FAModal
+                open={showDisable2FAModal}
+                onClose={() => setShowDisable2FAModal(false)}
+              />
+            </>
+          )
+        ) : null}
 
         <div className="w-full max-w-full text-start text-n-4 text-xs font-light italic">
           <p>

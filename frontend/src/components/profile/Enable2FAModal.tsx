@@ -101,8 +101,11 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity, isLoading: isIdentityLoading } =
-    useGetIdentity<MeResponse>();
+  const {
+    data: identity,
+    isLoading: isIdentityLoading,
+    refetch: refetchIdentity,
+  } = useGetIdentity<MeResponse>();
 
   /**
    * Mutation to verify the user's password
@@ -335,10 +338,13 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
       // Set the 2FA enabled state to true
       setIsEnabled(true);
 
+      // Refetch the user's identity
+      refetchIdentity();
+
       // Close the modal
       onClose();
     }
-  }, [enable2FAData, enable2FAError, isEnabled, onClose, openNotification]);
+  }, [enable2FAData, enable2FAError, isEnabled, onClose, openNotification, refetchIdentity]);
 
   // If the modal is not open, return an empty fragment
   if (!open) return <></>;
@@ -440,7 +446,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
 
               <div className="w-full text-n-1/75 px-2 py-2 bg-n-7 rounded-md border border-n-6/70 flex flex-col gap-1">
                 <h2 className="text-lg font-bold text-n-1/85">
-                  Log in with your code
+                  Provide verification code
                 </h2>
                 <p className="text-n-1/75 text-justify font-['Poppins']">
                   Enter the 6-digit verification code generated.
@@ -464,7 +470,11 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                   ))}
                 </div>
               </div>
-              <button className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4">
+
+              <button
+                type="submit"
+                className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4"
+              >
                 Done
               </button>
             </form>

@@ -17,6 +17,7 @@ model User {
     isAdmin      Boolean       @default(false)
     refreshToken String?
     payments     Payment[]
+    books        Book[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -171,4 +172,25 @@ model ForgotPassword {
     connection Connection @relation(fields: [connectionId], references: [id])
 
     @@map("forgot_passwords")
+}
+
+model Book {
+    id             String  @id @default(uuid())
+    ownerId        String
+    author         String
+    title          String
+    topic          String
+    targetAudience String?
+    numChapters    Int
+    numSubsections Int
+    cover          String
+    document       String
+    pdf            String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    owner User @relation(fields: [ownerId], references: [id])
+
+    @@map("books")
 }

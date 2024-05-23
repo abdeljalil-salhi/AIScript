@@ -4,10 +4,6 @@ import graphqlDataProvider, {
   GraphQLClient,
   liveProvider as graphqlLiveProvider,
 } from "@refinedev/nestjs-query";
-import {
-  IDataContextProvider,
-  ILiveContext,
-} from "@refinedev/core/dist/interfaces";
 
 // Utils
 import fetchWrapper from "./fetch-wrapper";
@@ -63,8 +59,7 @@ export const wsClient: Client | null =
  * @see https://refine.dev/docs/data/data-provider/
  * @exports dataProvider
  */
-export const dataProvider: Required<IDataContextProvider> =
-  graphqlDataProvider(client);
+export const dataProvider = graphqlDataProvider(client);
 
 /**
  * Live provider for Refine.
@@ -74,6 +69,6 @@ export const dataProvider: Required<IDataContextProvider> =
  * @see https://refine.dev/docs/realtime/live-provider/
  * @exports liveProvider
  */
-export const liveProvider: ILiveContext = wsClient
+export const liveProvider = wsClient
   ? graphqlLiveProvider(wsClient)
   : undefined;

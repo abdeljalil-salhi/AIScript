@@ -1,10 +1,5 @@
 // Dependencies
 import { AuthBindings } from "@refinedev/core";
-import {
-  AuthActionResponse,
-  CheckResponse,
-  OnErrorResponse,
-} from "@refinedev/core/dist/interfaces";
 
 // Utils
 import { API_URL, dataProvider } from "../data";
@@ -21,6 +16,8 @@ import {
   MeQuery,
   RegisterMutation,
 } from "@/graphql/types";
+// Types
+import { AuthActionResponse, CheckResponse, OnErrorResponse } from "./types";
 
 // Types
 type AuthCredentials = {

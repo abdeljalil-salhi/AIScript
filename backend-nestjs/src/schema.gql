@@ -42,6 +42,50 @@ type Avatar {
   userId: String!
 }
 
+type Book {
+  """Author of the book"""
+  author: String!
+
+  """Cover image URL of the book"""
+  cover: String!
+
+  """Book creation date"""
+  createdAt: DateTime!
+
+  """Book document URL"""
+  document: String!
+
+  """Unique identifier of the book"""
+  id: String!
+
+  """Number of chapters in the book"""
+  numChapters: Float!
+
+  """Number of subsections in the book"""
+  numSubsections: Float!
+
+  """Owner user associated with the book"""
+  owner: User
+
+  """ID of the book owner"""
+  ownerId: String!
+
+  """Book PDF document URL"""
+  pdf: String!
+
+  """Target audience of the book"""
+  targetAudience: String
+
+  """Title of the book"""
+  title: String!
+
+  """Topic of the book"""
+  topic: String!
+
+  """Book last update date"""
+  updatedAt: DateTime!
+}
+
 input ChangePasswordInput {
   """Confirm password for the user"""
   confirmPassword: String!
@@ -192,6 +236,9 @@ type Mutation {
   """Changes the password of the current user."""
   changePassword(changePasswordInput: ChangePasswordInput!): String!
 
+  """Creates a new book entity."""
+  createBook(newBookInput: NewBookInput!): Book!
+
   """Creates the predefined plans in the database."""
   createPlans: [Plan!]!
 
@@ -200,6 +247,9 @@ type Mutation {
 
   """Deletes all plans from the database."""
   deleteAllPlans: [Plan!]!
+
+  """Deletes a book entity by ID."""
+  deleteBookById(bookId: String!): Book!
 
   """Deletes a plan by its ID."""
   deletePlan(planId: String!): Plan!
@@ -268,6 +318,32 @@ type Mutation {
 
   """Verifies a two-factor authentication one-time password."""
   verifyTwoFactorAuthentication(otp: String!, userId: String!): TwoFactorAuthentication!
+}
+
+input NewBookInput {
+  """Author of the book"""
+  author: String!
+
+  """Cover image URL of the book"""
+  cover: String!
+
+  """Number of chapters in the book"""
+  numChapters: Float!
+
+  """Number of subsections in the book"""
+  numSubsections: Float!
+
+  """ID of the book owner"""
+  ownerId: String!
+
+  """Target audience of the book"""
+  targetAudience: String
+
+  """Title of the book"""
+  title: String!
+
+  """Topic of the book"""
+  topic: String!
 }
 
 input NewSubscriptionInput {
@@ -356,11 +432,20 @@ type Plan {
 }
 
 type Query {
+  """Retrieves all book entities."""
+  getAllBooks: [Book!]!
+
   """Gets all the available plans."""
   getAllPlans: [Plan!]!
 
   """Retrieves all subscription entities."""
   getAllSubscriptions: [Subscription!]!
+
+  """Retrieves a book entity by ID."""
+  getBookById(bookId: String!): Book!
+
+  """Retrieves all book entities of a user."""
+  getBooksByUserId(userId: String!): [Book!]!
 
   """Gets a plan by its ID."""
   getPlanById(planId: String!): Plan!

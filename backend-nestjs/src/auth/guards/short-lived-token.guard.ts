@@ -8,15 +8,15 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 /**
  * Guard class representing a short-lived token authentication guard.
  *
- * This guard utilizes the 'jwt' strategy to validate short-lived tokens.
+ * This guard utilizes the 'jwt-short-lived' strategy to validate short-lived tokens.
  *
  * @export
  * @class ShortLivedTokenGuard
- * @extends {AuthGuard('jwt')}
+ * @extends {AuthGuard('jwt-short-lived')}
  * @module AuthModule
  */
 @Injectable()
-export class ShortLivedTokenGuard extends AuthGuard('jwt') {
+export class ShortLivedTokenGuard extends AuthGuard('jwt-short-lived') {
   /**
    * Creates an instance of the ShortLivedTokenGuard class.
    *

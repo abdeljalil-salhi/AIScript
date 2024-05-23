@@ -228,13 +228,6 @@ export const authProvider: AuthBindings = {
    */
   check: async (): Promise<CheckResponse> => {
     try {
-      if (localStorage.getItem("access_token") === null)
-        return {
-          authenticated: false,
-          redirectTo: "/login",
-          logout: true,
-        };
-
       // Get the identity of the user
       // This is to know if the user is authenticated or not
       await dataProvider.custom<MeQuery>({

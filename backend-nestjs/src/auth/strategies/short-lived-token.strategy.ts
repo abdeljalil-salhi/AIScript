@@ -11,11 +11,14 @@ import { JwtShortLivedTokenPayload } from '../interfaces/jwt-short-lived-token-p
  *
  * @export
  * @class ShortLivedTokenStrategy
- * @extends {PassportStrategy(Strategy, 'jwt')}
+ * @extends {PassportStrategy(Strategy, 'jwt-short-lived')}
  * @module AuthModule
  */
 @Injectable()
-export class ShortLivedTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class ShortLivedTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-short-lived',
+) {
   /**
    * Creates an instance of the ShortLivedToken strategy.
    */

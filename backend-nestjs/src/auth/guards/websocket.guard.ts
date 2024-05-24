@@ -83,7 +83,7 @@ export class WebsocketGuard implements CanActivate {
      * @type {Client SocketIO} - the token is retrieved from the authorization header in the client handshake.
      * @type {Postman SocketIO} - the token is retrieved from the authorization header in the client auth object.
      */
-    const authorization: string = getClientHandshake(client, 'authorization');
+    const authorization: string = getClientHandshake(client, 'Authorization');
 
     if (!authorization) throw new Error('Missing authorization header');
 

@@ -1,5 +1,5 @@
 // Dependencies
-import { AuthBindings } from "@refinedev/core";
+import { AuthProvider } from "@refinedev/core";
 
 // Utils
 import { API_URL, dataProvider } from "../data";
@@ -18,6 +18,15 @@ import {
 } from "@/graphql/types";
 // Types
 import { AuthActionResponse, CheckResponse, OnErrorResponse } from "./types";
+
+/**
+ * @description
+ * The websocket connection.
+ * It is initialized with the URL of the websocket server.
+ * The connection is not established automatically, but it is configured to upgrade from HTTP to WebSocket.
+ * If the websocket transport is not supported, the connection reverts to classic polling.
+ */
+import { ws } from "@/sockets";
 
 // Types
 type AuthCredentials = {
@@ -48,7 +57,7 @@ export const loginCredentials: LoginParams = {
  * @see https://refine.dev/docs/authentication/auth-provider/
  * @exports authProvider
  */
-export const authProvider: AuthBindings = {
+export const authProvider: AuthProvider = {
   /**
    * This function is called when the user submits the register form
    *
@@ -94,8 +103,6 @@ export const authProvider: AuthBindings = {
       };
     } catch (e) {
       const error = e as Error;
-
-      console.error(error);
 
       return {
         success: false,
@@ -194,6 +201,9 @@ export const authProvider: AuthBindings = {
 
     // Then remove the accessToken from localStorage
     localStorage.removeItem("access_token");
+
+    // Disconnect the websocket connection
+    ws.disconnect();
 
     return {
       success: true,

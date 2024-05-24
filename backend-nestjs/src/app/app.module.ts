@@ -34,6 +34,8 @@ import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { mailerConfig } from 'src/config/mailer.config';
 // Utils
 import { graphQLErrorFormatter } from './utils/graphql-error-formatter';
+import { SocketGateway } from 'src/socket/socket.gateway';
+import { SocketService } from 'src/socket/socket.service';
 
 /**
  * The root module of the application.
@@ -82,8 +84,13 @@ import { graphQLErrorFormatter } from './utils/graphql-error-formatter';
 
   providers: [
     AppService,
+
     // Use access token guard for all routes
     { provide: APP_GUARD, useClass: AccessTokenGuard },
+
+    // Provide the socket gateway and service to the application
+    SocketGateway,
+    SocketService,
   ],
   controllers: [AppController],
 })

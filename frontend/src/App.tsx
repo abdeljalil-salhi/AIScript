@@ -46,6 +46,7 @@ import { SubscriptionPage } from "./pages/subscription";
 import { SubscriptionCancelPage } from "./pages/subscription/cancel";
 import { VerifyEmailPage } from "./pages/verify-email";
 import { Verify2FAPage } from "./pages/verify-2fa";
+import { SocketContextProvider } from "./contexts/socket";
 
 // Interfaces
 interface AppProps {}
@@ -80,91 +81,93 @@ export const App: FC<AppProps> = (): JSX.Element => {
                     liveMode: "auto",
                   }}
                 >
-                  <Routes>
-                    <Route index element={<LandingPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/2fa" element={<Verify2FAPage />} />
-                    <Route
-                      element={
-                        <Authenticated
-                          key={"authenticated-layout"}
-                          loading={<LoadingPage />}
-                          fallback={<CatchAllNavigate to="/login" />}
-                        >
-                          <Layout>
-                            <Outlet />
-                          </Layout>
-                        </Authenticated>
-                      }
-                    >
-                      <Route path="/home" element={<HomePage />} />
-                      <Route path="/create" element={<CreatePage />} />
-                      <Route path="/library" element={<LibraryPage />} />
-                      <Route path="/pricing" element={<PricingPage />} />
-                      <Route path="/profile" element={<ProfilePage />} />
-                      <Route path="/subscription">
-                        <Route index element={<SubscriptionPage />} />
-                      </Route>
-                      <Route path="/404" element={<Error404Page />} />
+                  <SocketContextProvider>
+                    <Routes>
+                      <Route index element={<LandingPage />} />
+                      <Route path="/register" element={<RegisterPage />} />
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route path="/2fa" element={<Verify2FAPage />} />
                       <Route
-                        path="*"
-                        element={<CatchAllNavigate to="/404" />}
-                      />
-                    </Route>
-                    <Route
-                      element={
-                        <Authenticated
-                          key={"authenticated-layout"}
-                          loading={<LoadingPage />}
-                          fallback={<CatchAllNavigate to="/login" />}
-                        >
-                          <Outlet />
-                        </Authenticated>
-                      }
-                    >
-                      <Route path="/checkout">
+                        element={
+                          <Authenticated
+                            key={"authenticated-layout"}
+                            loading={<LoadingPage />}
+                            fallback={<CatchAllNavigate to="/login" />}
+                          >
+                            <Layout>
+                              <Outlet />
+                            </Layout>
+                          </Authenticated>
+                        }
+                      >
+                        <Route path="/home" element={<HomePage />} />
+                        <Route path="/create" element={<CreatePage />} />
+                        <Route path="/library" element={<LibraryPage />} />
+                        <Route path="/pricing" element={<PricingPage />} />
+                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/subscription">
+                          <Route index element={<SubscriptionPage />} />
+                        </Route>
+                        <Route path="/404" element={<Error404Page />} />
                         <Route
-                          index
-                          element={<CatchAllNavigate to="/pricing" />}
+                          path="*"
+                          element={<CatchAllNavigate to="/404" />}
                         />
-                        <Route path=":planId" element={<CheckoutPage />} />
-                        <Route path="success">
+                      </Route>
+                      <Route
+                        element={
+                          <Authenticated
+                            key={"authenticated-layout"}
+                            loading={<LoadingPage />}
+                            fallback={<CatchAllNavigate to="/login" />}
+                          >
+                            <Outlet />
+                          </Authenticated>
+                        }
+                      >
+                        <Route path="/checkout">
                           <Route
                             index
                             element={<CatchAllNavigate to="/pricing" />}
                           />
+                          <Route path=":planId" element={<CheckoutPage />} />
+                          <Route path="success">
+                            <Route
+                              index
+                              element={<CatchAllNavigate to="/pricing" />}
+                            />
+                            <Route
+                              path=":orderId"
+                              element={<CheckoutSuccessPage />}
+                            />
+                          </Route>
+                          <Route path="cancel">
+                            <Route
+                              index
+                              element={<CatchAllNavigate to="/pricing" />}
+                            />
+                            <Route
+                              path=":orderId"
+                              element={<CheckoutCancelPage />}
+                            />
+                          </Route>
+                        </Route>
+                        <Route path="/subscription">
                           <Route
-                            path=":orderId"
-                            element={<CheckoutSuccessPage />}
+                            path="cancel"
+                            element={<SubscriptionCancelPage />}
                           />
                         </Route>
-                        <Route path="cancel">
+                        <Route path="/verify-email">
                           <Route
                             index
-                            element={<CatchAllNavigate to="/pricing" />}
+                            element={<CatchAllNavigate to="/profile" />}
                           />
-                          <Route
-                            path=":orderId"
-                            element={<CheckoutCancelPage />}
-                          />
+                          <Route path=":token" element={<VerifyEmailPage />} />
                         </Route>
                       </Route>
-                      <Route path="/subscription">
-                        <Route
-                          path="cancel"
-                          element={<SubscriptionCancelPage />}
-                        />
-                      </Route>
-                      <Route path="/verify-email">
-                        <Route
-                          index
-                          element={<CatchAllNavigate to="/profile" />}
-                        />
-                        <Route path=":token" element={<VerifyEmailPage />} />
-                      </Route>
-                    </Route>
-                  </Routes>
+                    </Routes>
+                  </SocketContextProvider>
                   <RefineKbar />
                   <UnsavedChangesNotifier />
                   <DocumentTitleHandler />

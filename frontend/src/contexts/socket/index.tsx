@@ -7,13 +7,18 @@ import { SocketState } from "./reducers/types/socket-state";
 import { SocketAction } from "./reducers/types/socket-action";
 // Interfaces
 import { SocketContext as ISocketContext } from "./interfaces/socket-context.interface";
-import { SocketUser } from "./interfaces/socket-user.interface";
+import { SocketUser } from "./interfaces/entities/socket-user.interface";
+// Events Interfaces
+import { QueueEvent } from "./interfaces/events/queue.event.interface";
+import { QueueStatusEvent } from "./interfaces/events/queue-status.event.interface";
 // Actions
-import { setUsers } from "./actions";
+import { setQueue, setQueueStatus, setUserId, setUsers } from "./actions";
 // Reducers
 import { SocketReducer } from "./reducers";
 // GraphQL Types
 import { MeResponse } from "@/graphql/schema.types";
+// Utils
+import { isFreePlan } from "@/utils/isFreePlan";
 
 // Interfaces
 interface SocketContextProps {
@@ -71,10 +76,35 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
    * The list of users is then updated in the socket context.
    */
   useEffect(() => {
+    // Listen for the users event from the server
     ws.on("users", (users: SocketUser[]) => {
       dispatch(setUsers(users));
     });
-  }, []);
+
+    if (isIdentityLoading || !identity) return;
+
+    // Set the user's id in the state
+    dispatch(setUserId(identity.user.id));
+
+    // If the user is on the free plan, listen for the shared queue events
+    if (isFreePlan(identity.user.subscription?.plan)) {
+      ws.on("sharedQueue", ({ size }: QueueEvent) => {
+        dispatch(setQueue({ size }));
+      });
+      ws.on("sharedQueueStatus", (payload: QueueStatusEvent) => {
+        dispatch(setQueueStatus(payload));
+      });
+    }
+    // Otherwise, listen for the priority queue events
+    else {
+      ws.on("priorityQueue", ({ size }: QueueEvent) => {
+        dispatch(setQueue({ size }));
+      });
+      ws.on("priorityQueueStatus", (payload: QueueStatusEvent) => {
+        dispatch(setQueueStatus(payload));
+      });
+    }
+  }, [identity, isIdentityLoading]);
 
   /**
    * Hook to connect the websocket when the identity is loaded;
@@ -97,13 +127,18 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
 
     // Connect the websocket
     if (user) ws.connect();
+
+    if (isFreePlan(user.subscription?.plan)) ws.emit("checkSharedQueue");
+    else ws.emit("checkPriorityQueue");
   }, [identity, identity?.user, isIdentityLoading]);
 
   return (
     <SocketContext.Provider
       value={{
         ws,
+        userId: state.userId,
         users: state.users,
+        queue: state.queue,
         dispatch,
       }}
     >

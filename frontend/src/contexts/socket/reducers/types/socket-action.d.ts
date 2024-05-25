@@ -1,5 +1,5 @@
 // Interfaces
-import { SocketUser } from "../../interfaces/socket-user.interface";
+import { SocketActionPayload } from "./socket-action-payload";
 
 /**
  * Type of the socket action.
@@ -7,7 +7,7 @@ import { SocketUser } from "../../interfaces/socket-user.interface";
  * @export
  * @type {SocketAction}
  * @property {string} type - The type of the action.
- * @property {SocketUser[]} [payload] - The payload of the action.
+ * @property {SocketActionPayload} payload - The payload of the action.
  *
  * @example
  * {
@@ -22,5 +22,5 @@ import { SocketUser } from "../../interfaces/socket-user.interface";
  */
 export type SocketAction = {
   type: string;
-  payload?: SocketUser[];
+  payload: SocketActionPayload;
 };

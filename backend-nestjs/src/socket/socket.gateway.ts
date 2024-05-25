@@ -440,36 +440,90 @@ export class SocketGateway
   }
 
   /**
-   * Removes a client from the queues if they are in any.
+   * Event called when a client leaves the priority queue
    *
+   * @SubscribeMessage 'leavePriorityQueue'
    * @param {Socket} client - The client socket
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  private removeFromQueue(client: Socket): void {
-    // Remove the client from the shared queue with the specified client ID
-    this.sharedQueue = new Queue<QueueMember>(
-      this.sharedQueue
-        .getItems()
-        .filter((queueItem: QueueMember) => queueItem.client.id !== client.id),
-    );
+  @SubscribeMessage('leavePriorityQueue')
+  public async leavePriorityQueue(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    // Get the user ID from the client
+    const userId: string = this.socketService.getUserId(client.id);
+    if (!userId) return;
 
-    this.server.emit('sharedQueue', {
-      size: this.sharedQueue.size(),
-    });
-
-    // Remove the client from the priority queue with the specified client ID
+    // Remove the client from the priority queue
     this.priorityQueue = new Queue<QueueMember>(
       this.priorityQueue
         .getItems()
-        .filter((queueItem: QueueMember) => queueItem.client.id !== client.id),
+        .filter((queueItem: QueueMember) => queueItem.userId !== userId),
     );
 
+    // Notify the clients with the updated queue size
     this.server.emit('priorityQueue', {
       size: this.priorityQueue.size(),
     });
 
+    // Get the user's socket IDs
+    const userSocketIds: string[] = this.socketService.getUserSocketIds(userId);
+    if (!userSocketIds.length) return;
+
+    // Notify the client that they have left the queue
+    userSocketIds.forEach((socketId: string) => {
+      this.server.to(socketId).emit('priorityQueueStatus', {
+        status: 'left',
+        userId,
+      });
+    });
+
     console.log(
-      `Client removed from queue. Shared queue size: ${this.sharedQueue.size()}, Priority queue size: ${this.priorityQueue.size()}.`,
+      `Client removed from priority queue. Shared queue size: ${this.sharedQueue.size()}, Priority queue size: ${this.priorityQueue.size()}.`,
+    );
+  }
+
+  /**
+   * Event called when a client leaves the shared queue
+   *
+   * @SubscribeMessage 'leaveSharedQueue'
+   * @param {Socket} client - The client socket
+   * @returns {Promise<void>}
+   */
+  @SubscribeMessage('leaveSharedQueue')
+  public async leaveSharedQueue(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    // Get the user ID from the client
+    const userId: string = this.socketService.getUserId(client.id);
+    if (!userId) return;
+
+    // Remove the client from the shared queue
+    this.sharedQueue = new Queue<QueueMember>(
+      this.sharedQueue
+        .getItems()
+        .filter((queueItem: QueueMember) => queueItem.userId !== userId),
+    );
+
+    // Notify the clients with the updated queue size
+    this.server.emit('sharedQueue', {
+      size: this.sharedQueue.size(),
+    });
+
+    // Get the user's socket IDs
+    const userSocketIds: string[] = this.socketService.getUserSocketIds(userId);
+    if (!userSocketIds.length) return;
+
+    // Notify the client that they have left the queue
+    userSocketIds.forEach((socketId: string) => {
+      this.server.to(socketId).emit('sharedQueueStatus', {
+        status: 'left',
+        userId,
+      });
+    });
+
+    console.log(
+      `Client removed from shared queue. Shared queue size: ${this.sharedQueue.size()}, Priority queue size: ${this.priorityQueue.size()}.`,
     );
   }
 

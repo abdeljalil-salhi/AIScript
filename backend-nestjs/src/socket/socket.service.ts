@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 // Interfaces
 import { SocketUser } from './interfaces/socket-user.interface';
+import { SocketUserClient } from './interfaces/socket-user-client.interface';
 
 /**
  * Service responsible for handling socket connections
@@ -25,7 +26,7 @@ export class SocketService {
    * @private
    * @type {SocketUser[]}
    */
-  private users: SocketUser[] = [];
+  public users: SocketUser[] = [];
 
   /**
    * Adds a user to the list of connected users.
@@ -91,6 +92,18 @@ export class SocketService {
 
     // Return the user ID
     return user.userId;
+  }
+
+  /**
+   * Gets the list of connected users.
+   *
+   * @returns {SocketUserClient[]} - The list of connected users
+   */
+  public getUsers(): SocketUserClient[] {
+    return this.users.map((user: SocketUser) => ({
+      userId: user.userId,
+      socketIds: user.sockets.map((socket: Socket) => socket.id),
+    }));
   }
 
   /**

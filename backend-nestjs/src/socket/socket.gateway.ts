@@ -130,6 +130,14 @@ export class SocketGateway
 
     // Send the updated list of users to all clients
     this.server.emit('users', this.socketService.getUsers());
+
+    // Notify the client with the queue sizes
+    client.emit('sharedQueue', {
+      size: this.sharedQueue.size(),
+    });
+    client.emit('priorityQueue', {
+      size: this.priorityQueue.size(),
+    });
   }
 
   /**
@@ -143,11 +151,66 @@ export class SocketGateway
     const userId: string = this.socketService.removeUser(client.id);
     if (!userId) return;
 
-    // Remove the client from the queue
-    this.removeFromQueue(client);
-
     // Send the updated list of users to all clients
     this.server.emit('users', this.socketService.getUsers());
+  }
+
+  /**
+   * Event called when a client checks the priority queue
+   *
+   * @SubscribeMessage 'checkPriorityQueue'
+   * @param {Socket} client - The client socket
+   * @returns {Promise<void>}
+   */
+  @SubscribeMessage('checkPriorityQueue')
+  public async checkPriorityQueue(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    // Get the user ID from the client
+    const userId: string = this.socketService.getUserId(client.id);
+    if (!userId) return;
+
+    const inQueuePosition: number = this.priorityQueue
+      .getItems()
+      .findIndex((item: QueueMember) => item.userId === userId);
+
+    const isUserInQueue: boolean = inQueuePosition !== -1;
+
+    // Notify the client with their position in the queue if they are in the queue
+    client.emit('priorityQueueStatus', {
+      status: 'checked',
+      userId,
+      position: isUserInQueue ? inQueuePosition + 1 : null,
+    });
+  }
+
+  /**
+   * Event called when a client checks the shared queue
+   *
+   * @SubscribeMessage 'checkSharedQueue'
+   * @param {Socket} client - The client socket
+   * @returns {Promise<void>}
+   */
+  @SubscribeMessage('checkSharedQueue')
+  public async checkSharedQueue(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    // Get the user ID from the client
+    const userId: string = this.socketService.getUserId(client.id);
+    if (!userId) return;
+
+    const inQueuePosition: number = this.sharedQueue
+      .getItems()
+      .findIndex((item: QueueMember) => item.userId === userId);
+
+    const isUserInQueue: boolean = inQueuePosition !== -1;
+
+    // Notify the client with their position in the queue if they are in the queue
+    client.emit('sharedQueueStatus', {
+      status: 'checked',
+      userId,
+      position: isUserInQueue ? inQueuePosition + 1 : -1,
+    });
   }
 
   /**

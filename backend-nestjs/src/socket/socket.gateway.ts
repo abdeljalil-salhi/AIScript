@@ -58,6 +58,13 @@ export class SocketGateway
   private sharedQueue: Queue<QueueMember> = new Queue<QueueMember>();
 
   /**
+   * The priority queue that will be used to store the clients waiting for a book with priority
+   * (e.g. Premium users)
+   * @type {Queue<QueueMember>}
+   */
+  private priorityQueue: Queue<QueueMember> = new Queue<QueueMember>();
+
+  /**
    * Creates an instance of SocketGateway.
    *
    * @param {SocketService} socketService - The socket service
@@ -82,8 +89,8 @@ export class SocketGateway
    * @returns {void}
    */
   public onModuleInit(): void {
-    // Start processing the queue
-    this.processQueue();
+    // Start processing the queues.
+    this.processQueues();
   }
 
   /**
@@ -139,18 +146,28 @@ export class SocketGateway
     // Remove the client from the queue
     this.removeFromQueue(client);
 
+    // Send the updated list of users to all clients
     this.server.emit('users', this.socketService.getUsers());
   }
 
+  /**
+   * Event called when a client joins the shared queue
+   *
+   * @SubscribeMessage 'joinSharedQueue'
+   * @param {Socket} client - The client socket
+   * @returns {Promise<void>}
+   */
   @SubscribeMessage('joinSharedQueue')
-  public async joinQueue(@ConnectedSocket() client: Socket): Promise<void> {
+  public async joinSharedQueue(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
     // Get the user ID from the client
     const userId: string = this.socketService.getUserId(client.id);
     if (!userId) return;
 
     if (this.sharedQueue.getItems().some((item) => item.userId === userId)) {
       // Notify the client that the user is already in the queue
-      client.emit('queueStatus', {
+      client.emit('sharedQueueStatus', {
         status: 'alreadyInQueue',
         userId,
       });
@@ -167,54 +184,189 @@ export class SocketGateway
     this.sharedQueue.enqueue({ instanceId, client, userId });
 
     console.log(
-      `Client added to queue. ID #${instanceId}. Queue size: ${this.sharedQueue.size()}`,
+      `Client added to shared queue. ID #${instanceId}. Queue size: ${this.sharedQueue.size()}`,
     );
 
     // Notify the clients with the updated queue size
-    this.server.emit('queue', {
+    this.server.emit('sharedQueue', {
       size: this.sharedQueue.size(),
+    });
+
+    // Get the user's socket IDs
+    const userSocketIds: string[] = this.socketService.getUserSocketIds(userId);
+    if (!userSocketIds.length) return;
+
+    // Notify the client with their position in the queue
+    userSocketIds.forEach((socketId: string) => {
+      this.server.to(socketId).emit('sharedQueueStatus', {
+        status: 'queued',
+        userId,
+        position: this.sharedQueue.size(),
+      });
     });
   }
 
-  public async processQueue(): Promise<void> {
+  /**
+   * Event called when a client joins the priority queue
+   *
+   * @SubscribeMessage 'joinPriorityQueue'
+   * @param {Socket} client - The client socket
+   * @returns {Promise<void>}
+   */
+  @SubscribeMessage('joinPriorityQueue')
+  public async joinPriorityQueue(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    // Get the user ID from the client
+    const userId: string = this.socketService.getUserId(client.id);
+    if (!userId) return;
+
+    if (this.priorityQueue.getItems().some((item) => item.userId === userId)) {
+      // Notify the client that the user is already in the queue
+      client.emit('priorityQueueStatus', {
+        status: 'alreadyInQueue',
+        userId,
+      });
+
+      console.log(`User ${userId} is already in the priority queue.`);
+
+      return;
+    }
+
+    // Generate a unique instance ID for the client
+    const instanceId: string = uuidv4();
+
+    // Add the client to the priority queue
+    this.priorityQueue.enqueue({ instanceId, client, userId });
+
+    console.log(
+      `Client added to priority queue. ID #${instanceId}. Queue size: ${this.priorityQueue.size()}`,
+    );
+
+    // Notify the clients with the updated queue size
+    this.server.emit('priorityQueue', {
+      size: this.priorityQueue.size(),
+    });
+
+    const userSocketIds: string[] = this.socketService.getUserSocketIds(userId);
+    if (!userSocketIds.length) return;
+
+    // Notify the client with their position in the queue
+    userSocketIds.forEach((socketId: string) => {
+      this.server.to(socketId).emit('priorityQueueStatus', {
+        status: 'queued',
+        userId,
+        position: this.priorityQueue.size(),
+      });
+    });
+  }
+
+  /**
+   * Checks if any clients are in the queues and processes them.
+   * This method is called when the module is initialized.
+   * It will keep checking the queues for clients and process them when they are available.
+   * Priority clients will be processed first before shared clients.
+   *
+   * @uses processPriorityQueue
+   * @uses processSharedQueue
+   * @returns {Promise<void>}
+   */
+  public async processQueues(): Promise<void> {
     while (true) {
-      if (!this.sharedQueue.isEmpty()) {
-        // Get the first client in the queue
-        const instance: QueueMember = this.sharedQueue.peek();
-
-        if (instance.client) {
-          console.log(
-            `Processing user ${instance.userId} from queue. ID #${instance.instanceId}. Queue size: ${this.sharedQueue.size()}`,
-          );
-
-          // Call the generate method to simulate processing
-          await this.generate(instance);
-
-          // Remove the client from the queue
-          this.sharedQueue.dequeue();
-
-          // Notify all clients of the updated queue size
-          this.server.emit('queue', {
-            size: this.sharedQueue.size(),
-          });
-        }
-      } else await this.sleep(1000);
+      // Process the priority queue
+      if (!this.priorityQueue.isEmpty()) await this.processPriorityQueue();
+      // Process the shared queue if the priority queue is empty
+      else if (!this.sharedQueue.isEmpty()) await this.processSharedQueue();
+      // If both queues are empty, wait for a second before checking again
+      else await this.sleep(1000);
 
       // Wait for the next iteration of the loop, this is useful for preventing the event loop from blocking
       await new Promise(setImmediate);
     }
   }
 
+  /**
+   * Processes the clients in the priority queue.
+   *
+   * @uses generate
+   * @returns {Promise<void>}
+   */
+  public async processPriorityQueue(): Promise<void> {
+    if (!this.priorityQueue.isEmpty()) {
+      // Get the first client in the priority queue
+      const instance: QueueMember = this.priorityQueue.peek();
+
+      if (instance.client) {
+        console.log(
+          `Processing user ${instance.userId} from priority queue. ID #${instance.instanceId}. Queue size: ${this.priorityQueue.size()}`,
+        );
+
+        // Call the generate method to simulate processing
+        await this.generate(instance);
+
+        // Remove the client from the queue
+        this.priorityQueue.dequeue();
+
+        // Notify all clients of the updated priority queue size
+        this.server.emit('priorityQueue', {
+          size: this.priorityQueue.size(),
+        });
+
+        // Notify the priority clients that a user has been processed
+        this.server.emit('priorityQueueStatus', {
+          status: 'processed',
+          userId: instance.userId,
+        });
+      }
+    }
+  }
+
+  /**
+   * Processes the clients in the shared queue.
+   *
+   * @uses generate
+   * @returns {Promise<void>}
+   */
+  public async processSharedQueue(): Promise<void> {
+    if (!this.sharedQueue.isEmpty()) {
+      // Get the first client in the shared queue
+      const instance: QueueMember = this.sharedQueue.peek();
+
+      if (instance.client) {
+        console.log(
+          `Processing user ${instance.userId} from shared queue. ID #${instance.instanceId}. Queue size: ${this.sharedQueue.size()}`,
+        );
+
+        // Call the generate method to simulate processing
+        await this.generate(instance);
+
+        // Remove the client from the queue
+        this.sharedQueue.dequeue();
+
+        // Notify all clients of the updated shared queue size
+        this.server.emit('sharedQueue', {
+          size: this.sharedQueue.size(),
+        });
+
+        // Notify the shared clients that a user has been processed
+        this.server.emit('sharedQueueStatus', {
+          status: 'processed',
+          userId: instance.userId,
+        });
+      }
+    }
+  }
+
+  /**
+   * Simulates processing a client.
+   *
+   * @param {QueueMember} instance - The client instance
+   * @returns {Promise<void>}
+   */
   public async generate(instance: QueueMember): Promise<void> {
     // Simulate processing with a delay, replace this with actual processing logic
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Notify the client that the user has been processed
-        instance.client.emit('queueStatus', {
-          status: 'processed',
-          userId: instance.userId,
-        });
-
         console.log(
           `User ${instance.userId} processed. ID #${instance.instanceId}.`,
         );
@@ -225,21 +377,36 @@ export class SocketGateway
   }
 
   /**
-   * Removes a client from the queue with the specified client ID.
+   * Removes a client from the queues if they are in any.
    *
    * @param {Socket} client - The client socket
    * @returns {void}
    */
   private removeFromQueue(client: Socket): void {
-    // Remove the client from the queue with the specified client ID
+    // Remove the client from the shared queue with the specified client ID
     this.sharedQueue = new Queue<QueueMember>(
       this.sharedQueue
         .getItems()
         .filter((queueItem: QueueMember) => queueItem.client.id !== client.id),
     );
 
+    this.server.emit('sharedQueue', {
+      size: this.sharedQueue.size(),
+    });
+
+    // Remove the client from the priority queue with the specified client ID
+    this.priorityQueue = new Queue<QueueMember>(
+      this.priorityQueue
+        .getItems()
+        .filter((queueItem: QueueMember) => queueItem.client.id !== client.id),
+    );
+
+    this.server.emit('priorityQueue', {
+      size: this.priorityQueue.size(),
+    });
+
     console.log(
-      `Client removed from queue. Queue size: ${this.sharedQueue.size()}`,
+      `Client removed from queue. Shared queue size: ${this.sharedQueue.size()}, Priority queue size: ${this.priorityQueue.size()}.`,
     );
   }
 

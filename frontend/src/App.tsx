@@ -47,6 +47,7 @@ import { SubscriptionCancelPage } from "./pages/subscription/cancel";
 import { VerifyEmailPage } from "./pages/verify-email";
 import { Verify2FAPage } from "./pages/verify-2fa";
 import { SocketContextProvider } from "./contexts/socket";
+import { QueueModal } from "./pages/QueueModal";
 
 // Interfaces
 interface AppProps {}
@@ -167,6 +168,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
                         </Route>
                       </Route>
                     </Routes>
+                    <QueueModal />
                   </SocketContextProvider>
                   <RefineKbar />
                   <UnsavedChangesNotifier />

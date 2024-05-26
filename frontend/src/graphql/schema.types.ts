@@ -58,6 +58,37 @@ export type Avatar = {
   userId: Scalars["String"]["output"];
 };
 
+export type Book = {
+  /** Author of the book */
+  author: Scalars["String"]["output"];
+  /** Cover image URL of the book */
+  cover: Scalars["String"]["output"];
+  /** Book creation date */
+  createdAt: Scalars["DateTime"]["output"];
+  /** Book document URL */
+  document: Scalars["String"]["output"];
+  /** Unique identifier of the book */
+  id: Scalars["String"]["output"];
+  /** Number of chapters in the book */
+  numChapters: Scalars["Float"]["output"];
+  /** Number of subsections in the book */
+  numSubsections: Scalars["Float"]["output"];
+  /** Owner user associated with the book */
+  owner?: Maybe<User>;
+  /** ID of the book owner */
+  ownerId: Scalars["String"]["output"];
+  /** Book PDF document URL */
+  pdf: Scalars["String"]["output"];
+  /** Target audience of the book */
+  targetAudience?: Maybe<Scalars["String"]["output"]>;
+  /** Title of the book */
+  title: Scalars["String"]["output"];
+  /** Topic of the book */
+  topic: Scalars["String"]["output"];
+  /** Book last update date */
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
 export type ChangePasswordInput = {
   /** Confirm password for the user */
   confirmPassword: Scalars["String"]["input"];
@@ -167,12 +198,16 @@ export type Mutation = {
   cancelSubscription: Subscription;
   /** Changes the password of the current user. */
   changePassword: Scalars["String"]["output"];
+  /** Creates a new book entity. */
+  createBook: Book;
   /** Creates the predefined plans in the database. */
   createPlans: Array<Plan>;
   /** Creates a new subscription entity. */
   createSubscription: Subscription;
   /** Deletes all plans from the database. */
   deleteAllPlans: Array<Plan>;
+  /** Deletes a book entity by ID. */
+  deleteBookById: Book;
   /** Deletes a plan by its ID. */
   deletePlan: Plan;
   /** Deletes a subscription entity by ID. */
@@ -227,8 +262,16 @@ export type MutationChangePasswordArgs = {
   changePasswordInput: ChangePasswordInput;
 };
 
+export type MutationCreateBookArgs = {
+  newBookInput: NewBookInput;
+};
+
 export type MutationCreateSubscriptionArgs = {
   newSubscriptionInput: NewSubscriptionInput;
+};
+
+export type MutationDeleteBookByIdArgs = {
+  bookId: Scalars["String"]["input"];
 };
 
 export type MutationDeletePlanArgs = {
@@ -308,6 +351,27 @@ export type MutationVerifyTwoFactorAuthenticationArgs = {
   userId: Scalars["String"]["input"];
 };
 
+export type NewBookInput = {
+  /** Author of the book */
+  author: Scalars["String"]["input"];
+  /** Cover image URL of the book */
+  cover: Scalars["String"]["input"];
+  /** Document URL of the book */
+  document: Scalars["String"]["input"];
+  /** Number of chapters in the book */
+  numChapters: Scalars["Float"]["input"];
+  /** Number of subsections in the book */
+  numSubsections: Scalars["Float"]["input"];
+  /** ID of the book owner */
+  ownerId: Scalars["String"]["input"];
+  /** Target audience of the book */
+  targetAudience?: InputMaybe<Scalars["String"]["input"]>;
+  /** Title of the book */
+  title: Scalars["String"]["input"];
+  /** Topic of the book */
+  topic: Scalars["String"]["input"];
+};
+
 export type NewSubscriptionInput = {
   /** ID of the payment that created the subscription */
   paymentId: Scalars["String"]["input"];
@@ -371,10 +435,16 @@ export type Plan = {
 };
 
 export type Query = {
+  /** Retrieves all book entities. */
+  getAllBooks: Array<Book>;
   /** Gets all the available plans. */
   getAllPlans: Array<Plan>;
   /** Retrieves all subscription entities. */
   getAllSubscriptions: Array<Subscription>;
+  /** Retrieves a book entity by ID. */
+  getBookById: Book;
+  /** Retrieves all book entities of a user. */
+  getBooksByUserId: Array<Book>;
   /** Gets a plan by its ID. */
   getPlanById: Plan;
   /** Retrieves a single subscription entity by ID. */
@@ -385,6 +455,14 @@ export type Query = {
   getSubscriptionsByUserId: Array<Subscription>;
   /** Returns the currently authenticated user. */
   me: MeResponse;
+};
+
+export type QueryGetBookByIdArgs = {
+  bookId: Scalars["String"]["input"];
+};
+
+export type QueryGetBooksByUserIdArgs = {
+  userId: Scalars["String"]["input"];
 };
 
 export type QueryGetPlanByIdArgs = {

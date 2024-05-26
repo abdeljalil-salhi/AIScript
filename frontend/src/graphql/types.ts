@@ -17,6 +17,29 @@ export type ChangePasswordMutationVariables = Types.Exact<{
 
 export type ChangePasswordMutation = Pick<Types.Mutation, "changePassword">;
 
+export type DeleteBookByIdMutationVariables = Types.Exact<{
+  bookId: Types.Scalars["String"]["input"];
+}>;
+
+export type DeleteBookByIdMutation = {
+  deleteBookById: Pick<
+    Types.Book,
+    | "id"
+    | "ownerId"
+    | "author"
+    | "title"
+    | "topic"
+    | "targetAudience"
+    | "numChapters"
+    | "numSubsections"
+    | "cover"
+    | "document"
+    | "pdf"
+    | "createdAt"
+    | "updatedAt"
+  >;
+};
+
 export type DisableTwoFactorAuthenticationMutationVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];
   otp: Types.Scalars["String"]["input"];
@@ -207,6 +230,55 @@ export type VerifyPasswordMutationVariables = Types.Exact<{
 }>;
 
 export type VerifyPasswordMutation = Pick<Types.Mutation, "verifyPassword">;
+
+export type GetBookByIdQueryVariables = Types.Exact<{
+  bookId: Types.Scalars["String"]["input"];
+}>;
+
+export type GetBookByIdQuery = {
+  getBookById: Pick<
+    Types.Book,
+    | "id"
+    | "author"
+    | "title"
+    | "topic"
+    | "targetAudience"
+    | "numChapters"
+    | "numSubsections"
+    | "cover"
+    | "document"
+    | "pdf"
+    | "createdAt"
+    | "updatedAt"
+  > & {
+    owner?: Types.Maybe<Pick<Types.User, "id" | "username" | "createdAt">>;
+  };
+};
+
+export type GetBooksByUserIdQueryVariables = Types.Exact<{
+  userId: Types.Scalars["String"]["input"];
+}>;
+
+export type GetBooksByUserIdQuery = {
+  getBooksByUserId: Array<
+    Pick<
+      Types.Book,
+      | "id"
+      | "ownerId"
+      | "author"
+      | "title"
+      | "topic"
+      | "targetAudience"
+      | "numChapters"
+      | "numSubsections"
+      | "cover"
+      | "document"
+      | "pdf"
+      | "createdAt"
+      | "updatedAt"
+    >
+  >;
+};
 
 export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];

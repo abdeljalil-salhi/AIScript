@@ -4,6 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { OnModuleInit } from '@nestjs/common';
 import {
   ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -22,7 +23,8 @@ import { WebsocketMiddleware } from 'src/auth/middlewares/websocket.middleware';
 // Guards
 import { getClientHandshake } from 'src/auth/guards/websocket.guard';
 // Interfaces
-import { QueueMember } from './interfaces/client-user.interface';
+import { BookData } from './interfaces/book-data.interface';
+import { QueueMember } from './interfaces/queue-member.interface';
 
 /**
  * @description
@@ -223,6 +225,7 @@ export class SocketGateway
   @SubscribeMessage('joinSharedQueue')
   public async joinSharedQueue(
     @ConnectedSocket() client: Socket,
+    @MessageBody() data: BookData,
   ): Promise<void> {
     // Get the user ID from the client
     const userId: string = this.socketService.getUserId(client.id);
@@ -244,7 +247,7 @@ export class SocketGateway
     const instanceId: string = uuidv4();
 
     // Add the client to the shared queue
-    this.sharedQueue.enqueue({ instanceId, client, userId });
+    this.sharedQueue.enqueue({ instanceId, client, userId, data });
 
     console.log(
       `Client added to shared queue. ID #${instanceId}. Queue size: ${this.sharedQueue.size()}`,
@@ -279,6 +282,7 @@ export class SocketGateway
   @SubscribeMessage('joinPriorityQueue')
   public async joinPriorityQueue(
     @ConnectedSocket() client: Socket,
+    @MessageBody() data: BookData,
   ): Promise<void> {
     // Get the user ID from the client
     const userId: string = this.socketService.getUserId(client.id);
@@ -300,7 +304,7 @@ export class SocketGateway
     const instanceId: string = uuidv4();
 
     // Add the client to the priority queue
-    this.priorityQueue.enqueue({ instanceId, client, userId });
+    this.priorityQueue.enqueue({ instanceId, client, userId, data });
 
     console.log(
       `Client added to priority queue. ID #${instanceId}. Queue size: ${this.priorityQueue.size()}`,
@@ -427,16 +431,26 @@ export class SocketGateway
    * @returns {Promise<void>}
    */
   public async generate(instance: QueueMember): Promise<void> {
-    // Simulate processing with a delay, replace this with actual processing logic
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(
-          `User ${instance.userId} processed. ID #${instance.instanceId}.`,
-        );
+    // Generate a new book
+    const book = await this.bookService.generateBook(
+      instance.userId,
+      instance.data,
+    );
 
-        resolve();
-      }, 30000); // Simulate a delay for processing
-    });
+    if (!book) instance.client.emit('bookError', instance.data.title);
+
+    // Notify the client that their book has been created
+    instance.client.emit('bookCreated', {
+      name: book.id,
+      author: book.author,
+      title: book.title,
+      topic: book.topic,
+      targetAudience: book.targetAudience,
+      numChapters: book.numChapters,
+      numSections: book.numSubsections,
+    } as BookData);
+
+    console.log(`Book created for user ${instance.userId}.`);
   }
 
   /**

@@ -1,5 +1,6 @@
 // Dependencies
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 
 // Resolvers
 import { BookResolver } from './book.resolver';
@@ -14,6 +15,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
  * @class BookModule
  */
 @Module({
+  imports: [HttpModule], // Import the HttpModule to make HTTP requests
   providers: [
     // Resolvers
     BookResolver,

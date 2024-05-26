@@ -327,6 +327,9 @@ input NewBookInput {
   """Cover image URL of the book"""
   cover: String!
 
+  """Document URL of the book"""
+  document: String!
+
   """Number of chapters in the book"""
   numChapters: Float!
 

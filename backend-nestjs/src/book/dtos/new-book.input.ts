@@ -87,4 +87,13 @@ export class NewBookInput {
   @IsString({ message: 'Book cover image URL must be a string' })
   @Field(() => String, { description: 'Cover image URL of the book' })
   public cover: string;
+
+  /**
+   * Document URL of the book
+   * @type {string}
+   */
+  @IsNotEmpty({ message: 'Book document URL must not be empty' })
+  @IsString({ message: 'Book document URL must be a string' })
+  @Field(() => String, { description: 'Document URL of the book' })
+  public document: string;
 }

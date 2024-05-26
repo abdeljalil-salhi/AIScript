@@ -1,6 +1,9 @@
 // Dependencies
 import { Socket } from 'socket.io';
 
+// Interfaces
+import { BookData } from './book-data.interface';
+
 /**
  * Interface of the queue member.
  *
@@ -14,4 +17,5 @@ export interface QueueMember {
   instanceId: string;
   client: Socket;
   userId: string;
+  data: BookData;
 }

@@ -60,27 +60,35 @@ export const Cover: FC<CoverProps> = (): JSX.Element => {
           </Row>
         </div>
       ) : cover ? (
-        <div className="w-full aspect-square bg-n-7 rounded-lg relative overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition duration-300 ease-in-out">
-          <img src={cover} className="w-full h-full object-cover rounded-lg" />
-          <div className="absolute top-0 left-0 w-full h-full flex flex-col items-end justify-start gap-3 p-4">
-            <svg
-              className="w-8 h-8 text-n-2 bg-n-10/50 rounded-full p-1 hover:bg-n-10/70 transition duration-300 ease-in-out"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              onClick={() => setCover("")}
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+        <>
+          <div className="w-full aspect-square bg-n-7 rounded-lg relative overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition duration-300 ease-in-out">
+            <img
+              src={cover}
+              className="w-full h-full object-cover rounded-lg"
+            />
+            <div className="absolute top-0 left-0 w-full h-full flex flex-col items-end justify-start gap-3 p-4">
+              <svg
+                className="w-8 h-8 text-n-2 bg-n-10/50 rounded-full p-1 hover:bg-n-10/70 transition duration-300 ease-in-out"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                onClick={() => setCover("")}
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
           </div>
-        </div>
+          <span className="w-full text-center text-xs text-n-4">
+            The cover image will be cropped to fit a 1000x1250px aspect ratio
+          </span>
+        </>
       ) : (
         <div className="flex flex-col gap-3 items-center justify-center w-full">
           <label
@@ -117,6 +125,9 @@ export const Cover: FC<CoverProps> = (): JSX.Element => {
               required
             />
           </label>
+          <span className="w-full text-center text-xs text-n-4">
+            The cover image will be cropped to fit a 1000x1250px aspect ratio
+          </span>
         </div>
       )}
     </div>

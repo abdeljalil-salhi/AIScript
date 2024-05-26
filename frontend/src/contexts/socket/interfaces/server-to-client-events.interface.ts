@@ -1,4 +1,5 @@
 // Entities Interfaces
+import { BookData } from "./entities/book-data.interface";
 import { SocketUser } from "./entities/socket-user.interface";
 // Events Interfaces
 import { QueueEvent } from "./events/queue.event.interface";
@@ -14,6 +15,8 @@ import { QueueStatusEvent } from "./events/queue-status.event.interface";
  * @property {({ size }: QueueEvent): void} priorityQueue - The event to get the priority queue size.
  * @property {({ status, userId, position }: QueueStatusEvent): void} sharedQueueStatus - The event to get the shared queue status.
  * @property {({ status, userId, position }: QueueStatusEvent): void} priorityQueueStatus - The event to get the priority queue status.
+ * @property {(title: string): void} bookError - The event indicating an error occurred while generating a book.
+ * @property {(book: BookData): void} bookCreated - The event indicating a book has been generated.
  */
 export interface ServerToClientEvents {
   users: (users: SocketUser[]) => void;
@@ -21,4 +24,6 @@ export interface ServerToClientEvents {
   priorityQueue: ({ size }: QueueEvent) => void;
   sharedQueueStatus: ({ status, userId, position }: QueueStatusEvent) => void;
   priorityQueueStatus: ({ status, userId, position }: QueueStatusEvent) => void;
+  bookError: (title: string) => void;
+  bookCreated: (book: BookData) => void;
 }

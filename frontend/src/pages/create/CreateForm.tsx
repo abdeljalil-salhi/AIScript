@@ -1,8 +1,11 @@
 // Dependencies
-import { FC, useContext } from "react";
+import { FC, FormEvent, useContext, useState } from "react";
 import { Spin } from "antd";
-import { useGetIdentity } from "@refinedev/core";
+import { v4 as uuidv4 } from "uuid";
+import { useGetIdentity, useNotification } from "@refinedev/core";
 
+// Assets
+import LoadingBook from "@/assets/create/loading-book.png";
 // Components
 import { ChaptersAndSections } from "@/components/create/ChaptersAndSections";
 import { Cover } from "@/components/create/Cover";
@@ -11,6 +14,7 @@ import { suggestions } from "@/constants/home";
 // Utils
 import { secureRandomIndexes } from "@/utils/secureRandomIndexes";
 // Contexts
+import { BookData } from "@/contexts/socket/interfaces/entities/book-data.interface";
 import { SocketContext } from "@/contexts/socket";
 import { SocketContext as ISocketContext } from "@/contexts/socket/interfaces/socket-context.interface";
 // GraphQL Types
@@ -38,9 +42,22 @@ interface CreateFormProps {}
  */
 export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
   /**
+   * The number of chapters and sections in the book.
+   * @type {number}
+   * @default 3
+   */
+  const [chapters, setChapters] = useState<number>(3);
+  const [sections, setSections] = useState<number>(3);
+
+  /**
    * Use the socket context to get the queue informations.
    */
   const { queue } = useContext<ISocketContext>(SocketContext);
+
+  /**
+   * Notification hook to show notifications to the user
+   */
+  const { open } = useNotification();
 
   /**
    * Get the user's identity
@@ -52,48 +69,89 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
   /**
    * Handle the form submission.
    *
-   * @param {React.FormEvent<HTMLFormElement>} e - The form event.
+   * @param {FormEvent<HTMLFormElement>} e - The form event.
    * @returns {void}
    */
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     // If the identity is loading or not available, stop the form submission.
     if (isIdentityLoading || !identity) return;
 
-    console.log("CreateForm handleSubmit");
+    // If the user's balance is less than 10, show an error notification.
+    if (identity.user.wallet!.balance < 10)
+      return open?.({
+        type: "error",
+        description: "Insufficient Balance",
+        message: "You need at least 10 credits to create a book.",
+      });
 
+    // Get the form data
+    const formData: FormData = new FormData(e.currentTarget);
+
+    // Get the values from the form data
+    const author: string = formData.get("author") as string;
+    const title: string = formData.get("title") as string;
+    const topic: string = formData.get("topic") as string;
+    const target_audience: string =
+      (formData.get("target-audience") as string) || "General Audience";
+
+    // Prepare the book data
+    const data: BookData = {
+      name: uuidv4(),
+      author,
+      title,
+      topic,
+      target_audience,
+      num_chapters: chapters,
+      num_subsections: sections,
+    };
+
+    // Emit the event to join the queue based on the user's plan
     if (isFreePlan(identity.user.subscription?.plan))
-      ws.emit("joinSharedQueue");
-    else ws.emit("joinPriorityQueue");
+      ws.emit("joinSharedQueue", data);
+    else ws.emit("joinPriorityQueue", data);
   };
 
-  console.log(queue);
+  /**
+   * Leaves the queue based on the user's subscription plan.
+   * If the user is on the free plan, leave the shared queue.
+   * If the user is on the premium plan, leave the priority queue.
+   *
+   * @returns {void}
+   */
+  const handleLeaveQueue = (): void => {
+    // If the identity is loading or not available, stop the leave queue action.
+    if (isIdentityLoading || !identity) return;
+
+    if (isFreePlan(identity.user.subscription?.plan))
+      ws.emit("leaveSharedQueue");
+    else ws.emit("leavePriorityQueue");
+  };
 
   return queue.isChecking ? (
     <div className="w-full h-full flex items-center justify-center font-['Poppins']">
       <Spin />
     </div>
   ) : queue.inQueue ? (
-    <div className="w-full flex flex-col gap-3 font-['Poppins']">
-      <div className="w-full flex flex-col gap-1">
-        <label>Queue</label>
-        <p>
-          {queue.positionInQueue === 1
-            ? "Please wait while we create your book."
-            : `You are in position ${queue.positionInQueue} in the queue.`}
+    <div className="w-full h-full flex flex-col gap-3 font-['Poppins']">
+      <div className="w-full h-full flex items-center justify-center flex-col gap-5">
+        <img
+          src={LoadingBook}
+          className="w-full max-w-28 aspect-square animate-pulse"
+          alt="Please wait while we create your book."
+          draggable={false}
+        />
+
+        <p className="text-sm text-center">
+          {queue.positionInQueue <= 1
+            ? "Please wait while we create your book"
+            : `${queue.positionInQueue} Jobs are in the queue`}
         </p>
         {queue.positionInQueue !== 1 && (
           <button
-            onClick={() => {
-              if (isIdentityLoading || !identity) return;
-
-              if (isFreePlan(identity.user.subscription?.plan))
-                ws.emit("leaveSharedQueue");
-              else ws.emit("leavePriorityQueue");
-
-              console.log("Leave queue");
-            }}
+            className="w-full text-transparent bg-gradient-to-br from-purple-600 hover:from-purple-600/80 to-blue-500 hover:to-blue-500/80 webkit-bg-clip-text inline-block text-sm tracking-wide cursor-pointer transition-all duration-300 ease-in-out text-center"
+            onClick={handleLeaveQueue}
           >
             Leave queue
           </button>
@@ -106,10 +164,23 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
       onSubmit={handleSubmit}
     >
       <div className="w-full flex flex-col gap-1">
+        <label htmlFor="author">Author</label>
+        <input
+          type="text"
+          id="author"
+          name="author"
+          className="w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+          placeholder="The name displayed on the cover"
+          required
+        />
+      </div>
+
+      <div className="w-full flex flex-col gap-1">
         <label htmlFor="title">Title</label>
         <input
           type="text"
           id="title"
+          name="title"
           className="w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder="e.g. How to be healthy"
           required
@@ -120,6 +191,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
         <label htmlFor="topic">Topic</label>
         <textarea
           id="topic"
+          name="topic"
           className="w-full min-h-16 p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder={
             suggestions[secureRandomIndexes(suggestions, 1)[0]].content
@@ -133,12 +205,16 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
         <input
           type="text"
           id="target-audience"
+          name="target-audience"
           className="w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder="e.g. Adults, Teenagers"
         />
       </div>
 
-      <ChaptersAndSections />
+      <ChaptersAndSections
+        chapters={[chapters, setChapters]}
+        sections={[sections, setSections]}
+      />
 
       <Cover />
 

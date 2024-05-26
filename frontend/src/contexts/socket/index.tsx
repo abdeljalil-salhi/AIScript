@@ -1,12 +1,14 @@
 // Dependencies
 import { FC, ReactNode, createContext, useEffect, useReducer } from "react";
-import { useGetIdentity } from "@refinedev/core";
+import { useGetIdentity, useNotification } from "@refinedev/core";
 
 // Types
 import { SocketState } from "./reducers/types/socket-state";
 import { SocketAction } from "./reducers/types/socket-action";
 // Interfaces
 import { SocketContext as ISocketContext } from "./interfaces/socket-context.interface";
+// Entities Interfaces
+import { BookData } from "./interfaces/entities/book-data.interface";
 import { SocketUser } from "./interfaces/entities/socket-user.interface";
 // Events Interfaces
 import { QueueEvent } from "./interfaces/events/queue.event.interface";
@@ -36,12 +38,16 @@ import { ws } from "@/sockets";
 /**
  * @description
  * The initial state of the socket context.
- * It contains the socket connection, the list of users, and the dispatch function.
+ * It contains the socket connection, the user ID, the list of users, the queue, and the dispatch function.
  */
 import { socketInitialState } from "./initialState";
 
 const INITIAL_STATE: ISocketContext = socketInitialState;
 
+/**
+ * The socket context.
+ * It contains the socket connection, the user ID, the list of users, the queue, and the dispatch function.
+ */
 export const SocketContext = createContext<ISocketContext>(INITIAL_STATE);
 
 /**
@@ -64,6 +70,11 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
   >(SocketReducer, INITIAL_STATE);
 
   /**
+   * Notification hook to show notifications to the user
+   */
+  const { open } = useNotification();
+
+  /**
    * Get the user's identity
    * @type {MeResponse}
    */
@@ -81,6 +92,7 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
       dispatch(setUsers(users));
     });
 
+    // If the identity is not available, prevent the users event listener
     if (isIdentityLoading || !identity) return;
 
     // Set the user's id in the state
@@ -104,7 +116,25 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
         dispatch(setQueueStatus(payload));
       });
     }
-  }, [identity, isIdentityLoading]);
+
+    // Listen for the book created event and show a success notification
+    ws.on("bookCreated", (data: BookData) => {
+      open?.({
+        type: "success",
+        description: "Book created successfully",
+        message: `Your book '${data.title}' has been created successfully!`,
+      });
+    });
+
+    // Listen for the book error event and show an error notification
+    ws.on("bookError", (title: string) => {
+      open?.({
+        type: "error",
+        description: "Book creation failed",
+        message: `An error occurred while creating the book '${title}'. No credits were deducted. Please try again.`,
+      });
+    });
+  }, [identity, isIdentityLoading, open]);
 
   /**
    * Hook to connect the websocket when the identity is loaded;
@@ -128,6 +158,7 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
     // Connect the websocket
     if (user) ws.connect();
 
+    // Check if the user is in queue
     if (isFreePlan(user.subscription?.plan)) ws.emit("checkSharedQueue");
     else ws.emit("checkPriorityQueue");
   }, [identity, identity?.user, isIdentityLoading]);

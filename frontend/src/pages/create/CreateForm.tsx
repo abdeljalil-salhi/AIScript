@@ -29,6 +29,7 @@ import { isFreePlan } from "@/utils/isFreePlan";
  * @type {Socket<ServerToClientEvents, ClientToServerEvents>}
  */
 import { ws } from "@/sockets";
+import { BASE_URL } from "@/providers";
 
 // Interfaces
 interface CreateFormProps {}
@@ -48,6 +49,26 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
    */
   const [chapters, setChapters] = useState<number>(3);
   const [sections, setSections] = useState<number>(3);
+
+  /**
+   * State to know if the book cover should be AI generated or not.
+   * @type {boolean}
+   * @default false
+   */
+  const [isAiCover, setIsAiCover] = useState<boolean>(false);
+
+  /**
+   * State to store the book cover file.
+   * @type {File | null}
+   */
+  const [file, setFile] = useState<File | null>(null);
+
+  /**
+   * State to store the loading state of the form.
+   * @type {boolean}
+   * @default false
+   */
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   /**
    * Use the socket context to get the queue informations.
@@ -70,13 +91,15 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
    * Handle the form submission.
    *
    * @param {FormEvent<HTMLFormElement>} e - The form event.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
+    let cover: string = "ai";
+
     // If the identity is loading or not available, stop the form submission.
-    if (isIdentityLoading || !identity) return;
+    if (isIdentityLoading || !identity || isLoading) return;
 
     // If the user's balance is less than 10, show an error notification.
     if (identity.user.wallet!.balance < 10)
@@ -86,8 +109,53 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
         message: "You need at least 10 credits to create a book.",
       });
 
-    // Get the form data
-    const formData: FormData = new FormData(e.currentTarget);
+    // Set the loading state to true
+    setIsLoading(true);
+
+    // Prepare the form data
+    const formData = new FormData(e.currentTarget);
+
+    if (!isAiCover) {
+      // Check if the file is available
+      if (!file) {
+        // Set the loading state to false
+        setIsLoading(false);
+
+        // Show an error notification
+        return open?.({
+          type: "error",
+          description: "Something went wrong",
+          message: "Please try re-uploading the cover image again.",
+        });
+      }
+
+      // Append the cover file to the form data
+      formData.append("cover", file, file.name);
+
+      // Upload the cover image
+      const result: Response = await fetch(`${BASE_URL}/book/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      // Check if the request was successful
+      if (result.statusText !== "Created") {
+        // Set the loading state to false
+        setIsLoading(false);
+
+        // Show an error notification
+        return open?.({
+          type: "error",
+          description: "Unable to upload image",
+          message:
+            "Your changes were saved, but we could not upload the book cover due to a technical issue on our end. Please try again.",
+        });
+      }
+
+      cover = await result.text();
+
+      formData.delete("cover");
+    }
 
     // Get the values from the form data
     const author: string = formData.get("author") as string;
@@ -99,18 +167,23 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
     // Prepare the book data
     const data: BookData = {
       name: uuidv4(),
+      //   name: "absurdity_of_death",
       author,
       title,
       topic,
       target_audience,
       num_chapters: chapters,
       num_subsections: sections,
+      cover: cover,
     };
 
     // Emit the event to join the queue based on the user's plan
     if (isFreePlan(identity.user.subscription?.plan))
       ws.emit("joinSharedQueue", data);
     else ws.emit("joinPriorityQueue", data);
+
+    // Set the loading state to false
+    setIsLoading(false);
   };
 
   /**
@@ -148,7 +221,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
             ? "Please wait while we create your book"
             : `${queue.positionInQueue} Jobs are in the queue`}
         </p>
-        {queue.positionInQueue !== 1 && (
+        {queue.positionInQueue > 1 && (
           <button
             className="w-full text-transparent bg-gradient-to-br from-purple-600 hover:from-purple-600/80 to-blue-500 hover:to-blue-500/80 webkit-bg-clip-text inline-block text-sm tracking-wide cursor-pointer transition-all duration-300 ease-in-out text-center"
             onClick={handleLeaveQueue}
@@ -216,12 +289,13 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
         sections={[sections, setSections]}
       />
 
-      <Cover />
+      <Cover file={[file, setFile]} isAiCover={[isAiCover, setIsAiCover]} />
 
       <div className="w-full mt-2">
         <button
           type="submit"
-          className="w-full text-base bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center transition-all duration-300 ease-in-out transform"
+          className="w-full text-base bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center transition-all duration-300 ease-in-out transform disabled:opacity-80 disabled:cursor-progress"
+          disabled={isLoading}
         >
           Create
         </button>

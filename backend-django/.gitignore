@@ -10,6 +10,6 @@ __pycache__/
 .migrated
 
 # Media files
-public/**/*.png
-public/**/*.docx
-public/**/*.pdf
+media/**/*.png
+media/**/*.docx
+media/**/*.pdf

@@ -61,10 +61,12 @@ export class BookResolver {
    * @query
    * @param {string} bookId - The ID of the book entity to retrieve.
    * @returns {Promise<Book>} - The book entity with the specified ID.
+   * @nullable
    */
   @Query(() => Book, {
     name: 'getBookById',
     description: 'Retrieves a book entity by ID.',
+    nullable: true,
   })
   public async getBookById(
     @Args('bookId', { type: () => String }) bookId: string,
@@ -95,10 +97,12 @@ export class BookResolver {
    * @mutation
    * @param {string} bookId - The ID of the book entity to delete.
    * @returns {Promise<Book>} - The deleted book entity.
+   * @nullable
    */
   @Mutation(() => Book, {
     name: 'deleteBookById',
     description: 'Deletes a book entity by ID.',
+    nullable: true,
   })
   public async deleteBookById(
     @Args('bookId', { type: () => String }) bookId: string,

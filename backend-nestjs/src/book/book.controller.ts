@@ -15,44 +15,38 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-// Services
-import { UserService } from 'src/user/user.service';
-// Entities
-import { User } from 'src/user/entities/user.entity';
 // Decorators
 import { Public } from 'src/auth/decorators/public.decorator';
 
 /**
- * The AvatarController class is responsible for handling requests related to avatars.
+ * The BookController class is responsible for handling requests related to books.
  *
  * @public
- * @class AvatarController
- * @module AvatarModule
+ * @class BookController
+ * @module BookModule
  */
-@Controller('avatar')
-export class AvatarController {
+@Controller('book')
+export class BookController {
   /**
-   * Creates an instance of the AvatarController class.
-   *
-   * @param {UserService} userService - The user service used for resolving user-related queries.
+   * Creates an instance of the BookController class.
    */
-  constructor(private readonly userService: UserService) {}
+  constructor() {}
 
   /**
-   * Uploads an avatar for a user.
+   * Uploads a book cover and return the URL.
    *
    * @public
    * @param {Request} req - The request object.
    * @param {Express.Multer.File} file - The uploaded file.
-   * @returns {Promise<User>} The updated user.
+   * @returns {Promise<string>} The URL of the uploaded cover.
    * @throws {ForbiddenException} If the file type is not supported.
    */
   @Public()
   @Post('upload')
   @UseInterceptors(
-    FileInterceptor('avatar', {
+    FileInterceptor('book', {
       storage: diskStorage({
-        destination: './uploads/avatars',
+        destination: './uploads/books',
         filename: (_, file: Express.Multer.File, cb) => {
           cb(
             null,
@@ -70,51 +64,60 @@ export class AvatarController {
       },
     }),
   )
-  public async uploadAvatar(
-    @Req() req: Request,
+  public async uploadCover(
+    @Req() _: Request,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<User> {
-    return this.userService.updateAvatar(
-      req.body.userId,
-      `${process.env.BASE_URL}/avatar/${file.filename}`,
-    );
+  ): Promise<string> {
+    return `${process.env.BASE_URL}/book/cover/${file.filename}`;
   }
 
   /**
-   * Resets the user's avatar to the default one.
+   * Retrieves a book cover by its filename.
    *
    * @public
-   * @param {Request} req - The request object.
-   * @returns {Promise<User>} The updated user.
-   */
-  @Public()
-  @Post('default')
-  public async setDefaultAvatar(@Req() req: Request): Promise<User> {
-    return this.userService.resetDefaultAvatar(req.body.userId);
-  }
-
-  /**
-   * Retrieves an avatar by its filename.
-   *
-   * @public
-   * @param {string} filename - The filename of the avatar.
+   * @param {string} filename - The filename of the cover.
    * @param {Response} res - The response object.
    * @returns {void}
-   * @throws {NotFoundException} If the file is not found.
+   * @throws {NotFoundException} If the cover is not found.
    */
   @Public()
-  @Get(':filename')
-  public getAvatar(
+  @Get('cover/:filename')
+  public getCover(
     @Param('filename') filename: string,
     @Res() res: Response,
   ): void {
     try {
       return res.sendFile(filename, {
-        root: 'uploads/avatars',
+        root: 'uploads/covers',
         dotfiles: 'deny',
       });
     } catch (e) {
-      throw new NotFoundException('File not found');
+      throw new NotFoundException('Cover not found');
+    }
+  }
+
+  /**
+   * Gets a book by its filename.
+   *
+   * @public
+   * @param {string} filename - The filename of the book.
+   * @param {Response} res - The response object.
+   * @returns {void}
+   * @throws {NotFoundException} If the book is not found.
+   */
+  @Public()
+  @Get(':filename')
+  public getBook(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): void {
+    try {
+      return res.sendFile(filename, {
+        root: 'uploads/books',
+        dotfiles: 'deny',
+      });
+    } catch (e) {
+      throw new NotFoundException('Book not found');
     }
   }
 }

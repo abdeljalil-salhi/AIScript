@@ -22,21 +22,23 @@ export type DeleteBookByIdMutationVariables = Types.Exact<{
 }>;
 
 export type DeleteBookByIdMutation = {
-  deleteBookById: Pick<
-    Types.Book,
-    | "id"
-    | "ownerId"
-    | "author"
-    | "title"
-    | "topic"
-    | "targetAudience"
-    | "numChapters"
-    | "numSubsections"
-    | "cover"
-    | "document"
-    | "pdf"
-    | "createdAt"
-    | "updatedAt"
+  deleteBookById?: Types.Maybe<
+    Pick<
+      Types.Book,
+      | "id"
+      | "ownerId"
+      | "author"
+      | "title"
+      | "topic"
+      | "targetAudience"
+      | "numChapters"
+      | "numSubsections"
+      | "cover"
+      | "document"
+      | "pdf"
+      | "createdAt"
+      | "updatedAt"
+    >
   >;
 };
 
@@ -236,23 +238,25 @@ export type GetBookByIdQueryVariables = Types.Exact<{
 }>;
 
 export type GetBookByIdQuery = {
-  getBookById: Pick<
-    Types.Book,
-    | "id"
-    | "author"
-    | "title"
-    | "topic"
-    | "targetAudience"
-    | "numChapters"
-    | "numSubsections"
-    | "cover"
-    | "document"
-    | "pdf"
-    | "createdAt"
-    | "updatedAt"
-  > & {
-    owner?: Types.Maybe<Pick<Types.User, "id" | "username" | "createdAt">>;
-  };
+  getBookById?: Types.Maybe<
+    Pick<
+      Types.Book,
+      | "id"
+      | "author"
+      | "title"
+      | "topic"
+      | "targetAudience"
+      | "numChapters"
+      | "numSubsections"
+      | "cover"
+      | "document"
+      | "pdf"
+      | "createdAt"
+      | "updatedAt"
+    > & {
+      owner?: Types.Maybe<Pick<Types.User, "id" | "username" | "createdAt">>;
+    }
+  >;
 };
 
 export type GetBooksByUserIdQueryVariables = Types.Exact<{

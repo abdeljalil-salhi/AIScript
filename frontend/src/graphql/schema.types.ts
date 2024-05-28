@@ -207,7 +207,7 @@ export type Mutation = {
   /** Deletes all plans from the database. */
   deleteAllPlans: Array<Plan>;
   /** Deletes a book entity by ID. */
-  deleteBookById: Book;
+  deleteBookById?: Maybe<Book>;
   /** Deletes a plan by its ID. */
   deletePlan: Plan;
   /** Deletes a subscription entity by ID. */
@@ -442,7 +442,7 @@ export type Query = {
   /** Retrieves all subscription entities. */
   getAllSubscriptions: Array<Subscription>;
   /** Retrieves a book entity by ID. */
-  getBookById: Book;
+  getBookById?: Maybe<Book>;
   /** Retrieves all book entities of a user. */
   getBooksByUserId: Array<Book>;
   /** Gets a plan by its ID. */

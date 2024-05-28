@@ -1,9 +1,13 @@
 // Dependencies
-import { FC, useState } from "react";
+import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
 import { Col, Row } from "antd";
+import { useNotification } from "@refinedev/core";
 
 // Interfaces
-interface CoverProps {}
+interface CoverProps {
+  file: [File | null, Dispatch<SetStateAction<File | null>>];
+  isAiCover: [boolean, Dispatch<SetStateAction<boolean>>];
+}
 
 /**
  * Cover Component
@@ -12,17 +16,50 @@ interface CoverProps {}
  * @returns {JSX.Element} - Cover Component
  * @exports Cover
  */
-export const Cover: FC<CoverProps> = (): JSX.Element => {
-  const [aiCover, setAiCover] = useState<boolean>(false);
+export const Cover: FC<CoverProps> = ({ file, isAiCover }): JSX.Element => {
+  /**
+   * States to store the cover values
+   */
   const [cover, setCover] = useState<string>("");
 
-  const handleCover = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0];
-    const reader = new FileReader();
+  /**
+   * Notification hook to show notifications to the user
+   */
+  const { open } = useNotification();
+
+  /**
+   * Handle the cover image upload
+   *
+   * @param {ChangeEvent<HTMLInputElement>} e - The input change event
+   * @returns {void}
+   */
+  const handleCover = (e: ChangeEvent<HTMLInputElement>): void => {
+    const previewFile: File = e.target.files![0];
+
+    // Check if the type is supported
+    if (previewFile.type !== "image/png" && previewFile.type !== "image/jpeg") {
+      // Empty the input
+      e.target.value = "";
+
+      // Show an error notification
+      return open?.({
+        type: "error",
+        description: "Unable to upload image",
+        message: "Please upload a supported image type.",
+      });
+    }
+
+    const reader: FileReader = new FileReader();
+
     reader.onloadend = () => {
       setCover(reader.result as string);
     };
-    reader.readAsDataURL(file);
+
+    // Read the file as a base64 data URL
+    reader.readAsDataURL(previewFile);
+
+    // Set the file to the state
+    file[1](previewFile);
   };
 
   return (
@@ -31,15 +68,15 @@ export const Cover: FC<CoverProps> = (): JSX.Element => {
         <input
           type="checkbox"
           className="absolute left-1/2 -translate-x-1/2 w-full h-full peer appearance-none rounded-md"
-          checked={aiCover}
-          onChange={() => setAiCover(!aiCover)}
+          checked={isAiCover[0]}
+          onChange={() => isAiCover[1](!isAiCover[0])}
         />
         <span className="w-10 h-6 flex items-center flex-shrink-0 p-1 bg-n-6/80 rounded-full duration-300 ease-in-out peer-checked:bg-n-10 after:w-4 after:h-4 after:bg-n-2 after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-4 group-hover:after:translate-x-1"></span>
         <span className="text-n-10 duration-300 ease-in-out peer-checked:text-n-2 text-sm font-['Poppins']">
           AI Generated Cover
         </span>
       </label>
-      {aiCover ? (
+      {isAiCover[0] ? (
         <div className="w-full">
           <Row gutter={[10, 10]}>
             <Col xs={24} sm={8} xl={8}>
@@ -73,7 +110,10 @@ export const Cover: FC<CoverProps> = (): JSX.Element => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                onClick={() => setCover("")}
+                onClick={() => {
+                  setCover("");
+                  file[1](null);
+                }}
               >
                 <path
                   stroke="currentColor"

@@ -249,7 +249,7 @@ type Mutation {
   deleteAllPlans: [Plan!]!
 
   """Deletes a book entity by ID."""
-  deleteBookById(bookId: String!): Book!
+  deleteBookById(bookId: String!): Book
 
   """Deletes a plan by its ID."""
   deletePlan(planId: String!): Plan!
@@ -445,7 +445,7 @@ type Query {
   getAllSubscriptions: [Subscription!]!
 
   """Retrieves a book entity by ID."""
-  getBookById(bookId: String!): Book!
+  getBookById(bookId: String!): Book
 
   """Retrieves all book entities of a user."""
   getBooksByUserId(userId: String!): [Book!]!

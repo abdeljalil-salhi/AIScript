@@ -3,7 +3,9 @@
 /node_modules
 
 # uploads
-/uploads/*.png
+/uploads/avatars/*.png
+/uploads/books/*.pdf
+/uploads/covers/*.png
 
 # Logs
 logs

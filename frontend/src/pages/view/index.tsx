@@ -193,7 +193,7 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
       <div className="w-full bg-n-7 flex flex-col font-['Poppins']">
         <div className="w-full border-n-6/90 border border-l-0">
           <h3 className="text-white text-start text-2xl font-medium px-2 pt-2">
-            The Joy of Intimacy
+            {book.data.getBookById.title}
           </h3>
 
           <p
@@ -244,7 +244,7 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
             <button
               className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               title="Download the book in PDF format"
-              onClick={() => downloadFile(book.data.getBookById.pdf)}
+              onClick={() => downloadFile(book.data.getBookById!.pdf)}
             >
               <FilePdfFilled className="text-lg -mt-0.5" />
               Get PDF
@@ -253,7 +253,7 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
             <button
               className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               title="Download the book in DOCX format"
-              onClick={() => downloadFile(book.data.getBookById.document)}
+              onClick={() => downloadFile(book.data.getBookById!.document)}
             >
               <FileWordFilled className="text-lg -mt-0.5" />
               Get DOCX

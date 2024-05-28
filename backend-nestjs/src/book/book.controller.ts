@@ -36,7 +36,7 @@ export class BookController {
    * Uploads a book cover and return the URL.
    *
    * @public
-   * @param {Request} req - The request object.
+   * @param {Request} _ - The request object.
    * @param {Express.Multer.File} file - The uploaded file.
    * @returns {Promise<string>} The URL of the uploaded cover.
    * @throws {ForbiddenException} If the file type is not supported.
@@ -44,9 +44,9 @@ export class BookController {
   @Public()
   @Post('upload')
   @UseInterceptors(
-    FileInterceptor('book', {
+    FileInterceptor('cover', {
       storage: diskStorage({
-        destination: './uploads/books',
+        destination: './uploads/covers',
         filename: (_, file: Express.Multer.File, cb) => {
           cb(
             null,

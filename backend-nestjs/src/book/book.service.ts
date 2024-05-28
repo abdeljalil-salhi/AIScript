@@ -115,6 +115,9 @@ export class BookService {
       include: {
         owner: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
@@ -145,6 +148,9 @@ export class BookService {
     return this.prismaService.book.findMany({
       where: {
         ownerId: userId,
+      },
+      orderBy: {
+        createdAt: 'asc',
       },
     });
   }

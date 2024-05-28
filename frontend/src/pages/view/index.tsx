@@ -32,11 +32,34 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
  * @exports ViewPage
  */
 export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
-  const [numPages, setNumPages] = useState<number>(0);
+  /**
+   * The number of pages in the PDF
+   * @type {number}
+   * @default 1
+   */
+  const [numPages, setNumPages] = useState<number>(1);
+  /**
+   * The current page number
+   * @type {number}
+   * @default 1
+   */
   const [pageNumber, setPageNumber] = useState<number>(1);
+
+  /**
+   * The reference to the PDF container element and its dimensions (width and height)
+   * @type {RefObject<HTMLDivElement>}
+   * @exports ref - The reference to the PDF container element
+   * @exports width - The width of the PDF container element
+   * @exports height - The height of the PDF container element
+   */
   const { ref, width = 1, height = 1 } = useResizeObserver<HTMLDivElement>();
 
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+  /**
+   * Set the number of pages in the PDF
+   * @param {number} numPages - The number of pages in the PDF
+   * @returns {void}
+   */
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
     setNumPages(numPages);
   };
 
@@ -60,13 +83,18 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
     }
   };
 
-  function downloadFile(url) {
+  /**
+   * Download a file from a URL
+   * @param {string} url - The URL of the file to download
+   * @returns {void}
+   */
+  const downloadFile = (url: string): void => {
     // Create a new anchor element
-    const link = document.createElement("a");
+    const link: HTMLAnchorElement = document.createElement("a");
     link.href = url;
 
     // Extract the file name from the URL
-    const fileName = url.substring(url.lastIndexOf("/") + 1);
+    const fileName: string = url.substring(url.lastIndexOf("/") + 1);
 
     // Set the download attribute with the file name
     link.download = fileName;
@@ -82,14 +110,26 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
 
     // Remove the anchor element from the document body
     document.body.removeChild(link);
-  }
+  };
 
-  const memoizedFile = useMemo(
+  /**
+   * The memoized file object
+   * @type {{ url: string }}
+   * @default {url:"http://localhost:3000/book/the_joy_of_intimacy.pdf"}
+   */
+  const memoizedFile: { url: string } = useMemo(
     () => ({
       url: "http://localhost:3000/book/the_joy_of_intimacy.pdf",
     }),
     []
   );
+
+  /**
+   * The topic of the book
+   * @type {string}
+   */
+  const topic: string =
+    "The Joy of Intimacy is a book that explores the importance of intimacy in relationships. It is a guide to help couples build stronger connections and improve their relationships. The book covers topics such as communication, trust, and emotional intimacy. It also provides practical tips and exercises to help couples deepen their connection and create a more fulfilling relationship.";
 
   return (
     <div
@@ -101,50 +141,50 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
           <h3 className="text-white text-start text-2xl font-medium px-2 pt-2">
             The Joy of Intimacy
           </h3>
+
           <p
-            className="hidden sm:block text-xs text-n-1/85 text-start font-light p-2 pt-0"
-            title="The Joy of Intimacy is a book that explores the importance of intimacy in relationships. It is a guide to help couples build stronger connections and improve their relationships. The book covers topics such as communication, trust, and emotional intimacy. It also provides practical tips and exercises to help couples deepen their connection and create a more fulfilling relationship."
+            className="text-xs text-n-1/85 font-light p-2 pt-0 text-justify"
+            title={
+              topic.length > (width < 625 ? 200 : width < 1024 ? 400 : 600)
+                ? topic
+                : ""
+            }
           >
-            {"The Joy of Intimacy is a book that explores the importance of intimacy in relationships. It is a guide to help couples build stronger connections and improve their relationships. The book covers topics such as communication, trust, and emotional intimacy. It also provides practical tips and exercises to help couples deepen their connection and create a more fulfilling relationship.".slice(
-              0,
-              100
-            ) + "..."}
-          </p>
-          <p className="block sm:hidden text-xs text-n-1/85 font-light p-2 pt-0 text-justify">
-            The Joy of Intimacy is a book that explores the importance of
-            intimacy in relationships. It is a guide to help couples build
-            stronger connections and improve their relationships. The book
-            covers topics such as communication, trust, and emotional intimacy.
-            It also provides practical tips and exercises to help couples deepen
-            their connection and create a more fulfilling relationship.
+            {topic.slice(0, width < 625 ? 200 : width < 1024 ? 400 : 600)}
+            {topic.length > (width < 625 ? 200 : width < 1024 ? 400 : 600) &&
+              "..."}
           </p>
         </div>
-        <div className="w-full flex flex-row">
-          <div className="w-1/2 flex flex-row">
+
+        <div className="w-full flex flex-col sm:flex-row">
+          <div className="w-full sm:w-1/2 flex flex-row h-8 justify-center items-center">
             <button
               type="button"
-              className="w-1/4 border-n-6/90 border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 py-1 cursor-pointer"
+              className="w-1/4 h-full border-n-6/90 border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 cursor-pointer"
               onClick={onPrevPage}
             >
               <ArrowLeftOutlined />
             </button>
+
             <button
               type="button"
-              className="w-2/4 border-n-6/90 border-b text-sm font-medium bg-n-7/90 text-white px-4 py-1 cursor-default"
+              className="w-2/4 h-full border-n-6/90 border-b text-sm font-medium bg-n-7/90 text-white px-4 cursor-default"
             >
               {pageNumber} / {numPages}
             </button>
+
             <button
               type="button"
-              className="w-1/4 border-n-6/90 border-l border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 py-1 cursor-pointer"
+              className="w-1/4 h-full border-n-6/90 border-l border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 cursor-pointer"
               onClick={onNextPage}
             >
               <ArrowRightOutlined />
             </button>
           </div>
-          <div className="w-1/2 flex flex-row border-r border-n-6/90">
+
+          <div className="w-full sm:w-1/2 flex flex-row border-r border-b border-n-6/90 h-8 justify-center items-center">
             <button
-              className="flex flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
+              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               title="Download the book in PDF format"
               onClick={() =>
                 downloadFile(
@@ -155,8 +195,9 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
               <FilePdfFilled className="text-lg -mt-0.5" />
               Get PDF
             </button>
+
             <button
-              className="flex flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
+              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               title="Download the book in DOCX format"
               onClick={() =>
                 downloadFile(
@@ -167,9 +208,10 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
               <FileWordFilled className="text-lg -mt-0.5" />
               Get DOCX
             </button>
+
             <button
-              className="flex flex-row items-center justify-center gap-1.5 flex-grow hover:bg-n-6/60 transition-all ease-in-out duration-300"
-              onClick={() => {}}
+              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow hover:bg-n-6/60 transition-all ease-in-out duration-300"
+              onClick={() => window.print()}
             >
               <PrinterFilled className="text-lg" />
               Print
@@ -177,6 +219,7 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
           </div>
         </div>
       </div>
+
       <Document
         loading={<Spin />}
         noData={<Spin />}
@@ -202,12 +245,14 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
             >
               <ArrowLeftOutlined />
             </button>
+
             <button
               type="button"
               className="w-full border-n-6/90 border text-sm font-medium bg-n-7/90 flex-grow text-white px-4 py-1"
             >
               {pageNumber} / {numPages}
             </button>
+
             <button
               type="button"
               className="w-full border-n-6/90 border-t border-b border-r text-base rounded-r-md bg-n-7/90 text-white px-4 py-1 cursor-pointer"

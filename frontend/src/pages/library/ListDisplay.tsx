@@ -1,5 +1,6 @@
 // Dependencies
 import { FC } from "react";
+import { Link } from "react-router-dom";
 import { useCustom, useGetIdentity } from "@refinedev/core";
 
 // Assets
@@ -52,9 +53,11 @@ export const ListDisplay: FC<ListDisplayProps> = (): JSX.Element => {
     <div className="w-full h-full flex flex-col font-['Poppins']">
       {books && books.data.getBooksByUserId.length > 0 ? (
         books?.data.getBooksByUserId.map((book: Book) => (
-          <div
+          <Link
             key={book.id}
+            to={`/view/${book.id}`}
             className="w-full flex flex-row items-center justify-start gap-3 bg-n-8 hover:bg-n-7 transition-all duration-200 p-2 cursor-pointer"
+            draggable={false}
           >
             <div className="min-w-[70px] min-h-[70px] h-[70px] w-[70px] rounded-lg overflow-hidden shadow-md bg-n-9/35">
               <img
@@ -78,7 +81,7 @@ export const ListDisplay: FC<ListDisplayProps> = (): JSX.Element => {
                 {book.topic}
               </p>
             </div>
-          </div>
+          </Link>
         ))
       ) : (
         <div className="w-full h-full flex flex-col sm:flex-row items-center justify-center gap-3">

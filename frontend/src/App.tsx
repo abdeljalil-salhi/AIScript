@@ -48,6 +48,7 @@ import { VerifyEmailPage } from "./pages/verify-email";
 import { Verify2FAPage } from "./pages/verify-2fa";
 import { SocketContextProvider } from "./contexts/socket";
 import { QueueModal } from "./pages/QueueModal";
+import { ViewPage } from "./pages/view";
 
 // Interfaces
 interface AppProps {}
@@ -108,6 +109,13 @@ export const App: FC<AppProps> = (): JSX.Element => {
                         <Route path="/profile" element={<ProfilePage />} />
                         <Route path="/subscription">
                           <Route index element={<SubscriptionPage />} />
+                        </Route>
+                        <Route path="/view">
+                          <Route
+                            index
+                            element={<CatchAllNavigate to="/library" />}
+                          />
+                          <Route path=":bookId" element={<ViewPage />} />
                         </Route>
                         <Route path="/404" element={<Error404Page />} />
                         <Route

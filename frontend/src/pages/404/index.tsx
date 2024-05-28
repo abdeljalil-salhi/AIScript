@@ -25,7 +25,7 @@ export const Error404Page: FC<Error404PageProps> = (): JSX.Element => {
           <p className="text-3xl md:text-4xl lg:text-5xl text-n-3/70 mt-12">
             Page not found
           </p>
-          <p className="md:text-lg lg:text-xl text-n-3/70 mt-8">
+          <p className="text-center md:text-lg lg:text-xl text-n-3/70 mt-8">
             Looks like you've found the doorway to the great nothingness.
           </p>
           <Link
@@ -39,9 +39,9 @@ export const Error404Page: FC<Error404PageProps> = (): JSX.Element => {
               fill="currentColor"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
             <span>Return Home</span>

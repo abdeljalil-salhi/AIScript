@@ -1,6 +1,7 @@
 // Dependencies
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Spin } from "antd";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import useResizeObserver from "use-resize-observer";
 import {
@@ -10,13 +11,30 @@ import {
   FileWordFilled,
   PrinterFilled,
 } from "@ant-design/icons";
+import { useCustom } from "@refinedev/core";
 
 // Dependency Styles
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 
+// GraphQL Queries
+import { QUERY_GET_BOOK_BY_ID } from "@/graphql/queries/getBookById";
+// GraphQL Types
+import { GetBookByIdQuery } from "@/graphql/types";
+// Providers
+import { API_URL } from "@/providers";
+// Pages
+import { LoadingPage } from "../loading";
+
 // Interfaces
 interface ViewPageProps {}
+
+interface ViewPageParams {
+  // Book ID from the URL
+  bookId: string;
+  // Allow for other params
+  [key: string]: string | undefined;
+}
 
 /**
  * Set the PDF worker source to the CDN
@@ -44,6 +62,38 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
    * @default 1
    */
   const [pageNumber, setPageNumber] = useState<number>(1);
+
+  /**
+   * Navigate function for redirecting to other pages
+   * @type {NavigateFunction}
+   * @function
+   */
+  const navigate: NavigateFunction = useNavigate();
+
+  /**
+   * Get the book ID from the URL
+   */
+  const { bookId }: Readonly<Partial<ViewPageParams>> =
+    useParams<ViewPageParams>();
+
+  /**
+   * Get the book by its ID
+   * @type {GetBookByIdQuery}
+   */
+  const {
+    data: book,
+    isLoading: isBookLoading,
+    isError: isBookError,
+  } = useCustom<GetBookByIdQuery>({
+    url: API_URL,
+    method: "post",
+    meta: {
+      gqlQuery: QUERY_GET_BOOK_BY_ID,
+      variables: {
+        bookId,
+      },
+    },
+  });
 
   /**
    * The reference to the PDF container element and its dimensions (width and height)
@@ -119,19 +169,23 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
    */
   const memoizedFile: { url: string } = useMemo(
     () => ({
-      url: "http://localhost:3000/book/the_joy_of_intimacy.pdf",
+      url: book && book.data.getBookById ? book.data.getBookById.pdf : "",
     }),
-    []
+    [book]
   );
 
   /**
-   * The topic of the book
-   * @type {string}
+   * Effect to navigate to the 404 page if the book is not found
+   * or if there is an error fetching the book
    */
-  const topic: string =
-    "The Joy of Intimacy is a book that explores the importance of intimacy in relationships. It is a guide to help couples build stronger connections and improve their relationships. The book covers topics such as communication, trust, and emotional intimacy. It also provides practical tips and exercises to help couples deepen their connection and create a more fulfilling relationship.";
+  useEffect(() => {
+    if (!isBookLoading && (isBookError || !book.data.getBookById))
+      navigate("/404", { replace: true });
+  }, [isBookLoading, isBookError, book, navigate]);
 
-  return (
+  return isBookLoading || !book || !book.data.getBookById ? (
+    <LoadingPage />
+  ) : (
     <div
       ref={ref}
       className="w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden"
@@ -145,14 +199,18 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
           <p
             className="text-xs text-n-1/85 font-light p-2 pt-0 text-justify"
             title={
-              topic.length > (width < 625 ? 200 : width < 1024 ? 400 : 600)
-                ? topic
+              book.data.getBookById.topic.length >
+              (width < 625 ? 200 : width < 1024 ? 400 : 600)
+                ? book.data.getBookById.topic
                 : ""
             }
           >
-            {topic.slice(0, width < 625 ? 200 : width < 1024 ? 400 : 600)}
-            {topic.length > (width < 625 ? 200 : width < 1024 ? 400 : 600) &&
-              "..."}
+            {book.data.getBookById.topic.slice(
+              0,
+              width < 625 ? 200 : width < 1024 ? 400 : 600
+            )}
+            {book.data.getBookById.topic.length >
+              (width < 625 ? 200 : width < 1024 ? 400 : 600) && "..."}
           </p>
         </div>
 
@@ -186,11 +244,7 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
             <button
               className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               title="Download the book in PDF format"
-              onClick={() =>
-                downloadFile(
-                  "http://localhost:3000/book/the_joy_of_intimacy.pdf"
-                )
-              }
+              onClick={() => downloadFile(book.data.getBookById.pdf)}
             >
               <FilePdfFilled className="text-lg -mt-0.5" />
               Get PDF
@@ -199,11 +253,7 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
             <button
               className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               title="Download the book in DOCX format"
-              onClick={() =>
-                downloadFile(
-                  "http://localhost:8000/media/docs/the_joy_of_intimacy.docx"
-                )
-              }
+              onClick={() => downloadFile(book.data.getBookById.document)}
             >
               <FileWordFilled className="text-lg -mt-0.5" />
               Get DOCX

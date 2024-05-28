@@ -115,7 +115,7 @@ export const App: FC<AppProps> = (): JSX.Element => {
                             index
                             element={<CatchAllNavigate to="/library" />}
                           />
-                          <Route path=":id" element={<ViewPage />} />
+                          <Route path=":bookId" element={<ViewPage />} />
                         </Route>
                         <Route path="/404" element={<Error404Page />} />
                         <Route

@@ -28,10 +28,10 @@ class DocumentGenerator:
 
         # Render the template and save it
         self.template.render(context)
-        self.template.save(f"public/docs/{self.book['id']}.docx")
+        self.template.save(f"media/docs/{self.book['id']}.docx")
 
     def generate_document(self) -> None:
-        self.document = Document(f"public/docs/{self.book['id']}.docx")
+        self.document = Document(f"media/docs/{self.book['id']}.docx")
 
         # Add table of contents
         self.add_table_of_contents()
@@ -40,7 +40,7 @@ class DocumentGenerator:
         self.add_content()
 
         # Save the document
-        self.document.save(f"public/docs/{self.book['id']}.docx")
+        self.document.save(f"media/docs/{self.book['id']}.docx")
 
     def add_table_of_contents(self) -> None:
         self.document.add_page_break()
@@ -82,7 +82,10 @@ class DocumentGenerator:
                 self.document.add_paragraph()
 
             chapter_title = self.document.add_paragraph()
-            ch = chapter.get("chapter").split(":", 1)[1].strip()
+            if chapter.get("chapter").lower().startswith(
+                "chapter"
+            ) and ":" in chapter.get("chapter"):
+                ch = chapter.get("chapter").split(":", 1)[1].strip()
 
             r = chapter_title.add_run(ch)
             r.bold = True

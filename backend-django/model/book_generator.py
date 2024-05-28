@@ -19,7 +19,7 @@ class BookGenerator:
             "target_audience": data.target_audience,
             "num_chapters": data.num_chapters,
             "num_subsections": data.num_subsections,
-            "cover": "null",
+            "cover": data.cover if data.cover != "ai" else "null",
             "table_of_contents": [],
             "content": [],
         }
@@ -51,13 +51,11 @@ class BookGenerator:
         c, s = 1, 1
         # Format outline
         for chapter in outline:
-            print(chapter)
             self.book["table_of_contents"].append(
                 {"chapter": chapter, "subsections": []}
             )
             s = 1
             for subsection in outline[chapter]:
-                print(subsection)
                 if subsection.lower().startswith("section"):
                     subsection = subsection.split(":", 1)[1].strip()
                 if not subsection.startswith(f"{c}.{s}"):

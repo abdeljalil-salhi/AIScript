@@ -24,6 +24,7 @@ def ApiOverview(_: Request) -> Response:
         "Create": "/book-create/",
         "Update": "/book-update/<int:pk>/",
         "Delete": "/book-delete/<int:pk>/",
+        "Static Media": "/media/<path>/",
     }
     return Response(api_urls)
 
@@ -61,13 +62,11 @@ def BookCreate(req: Request) -> Response:
 
     # Generate the chapters and content
     book.generate_chapters()
-    
+
     # Generate the cover
     cover = CoverGenerator(book.book)
     book.book["cover"] = cover.generate_cover()
-    
-    print(book.book)
-    
+
     # Generate the document
     document = DocumentGenerator(book.book)
     document.generate_cover_page()

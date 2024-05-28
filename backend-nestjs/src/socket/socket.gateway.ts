@@ -182,7 +182,7 @@ export class SocketGateway
     client.emit('priorityQueueStatus', {
       status: 'checked',
       userId,
-      position: isUserInQueue ? inQueuePosition + 1 : null,
+      position: isUserInQueue ? inQueuePosition + 1 : -1,
     });
   }
 
@@ -437,7 +437,12 @@ export class SocketGateway
       instance.data,
     );
 
-    if (!book) instance.client.emit('bookError', instance.data.title);
+    if (!book) {
+      instance.client.emit('bookError', instance.data.title);
+      return;
+    }
+
+    console.log(book);
 
     // Notify the client that their book has been created
     instance.client.emit('bookCreated', {

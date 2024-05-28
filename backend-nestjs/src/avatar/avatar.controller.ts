@@ -52,7 +52,7 @@ export class AvatarController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './uploads',
+        destination: './uploads/avatars',
         filename: (_, file: Express.Multer.File, cb) => {
           cb(
             null,
@@ -110,7 +110,7 @@ export class AvatarController {
   ): void {
     try {
       return res.sendFile(filename, {
-        root: 'uploads',
+        root: 'uploads/avatars',
       });
     } catch (e) {
       throw new NotFoundException('File not found');

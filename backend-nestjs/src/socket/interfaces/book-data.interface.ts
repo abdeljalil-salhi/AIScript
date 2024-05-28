@@ -10,6 +10,7 @@
  * @property {string} targetAudience - The target audience of the book.
  * @property {number} numChapters - The number of chapters of the book.
  * @property {number} numSections - The number of sections of the book.
+ * @property {string} cover - The cover of the book.
  */
 export interface BookData {
   name: string;
@@ -19,4 +20,5 @@ export interface BookData {
   targetAudience: string;
   numChapters: number;
   numSections: number;
+  cover: string;
 }

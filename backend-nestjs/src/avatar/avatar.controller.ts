@@ -111,6 +111,7 @@ export class AvatarController {
     try {
       return res.sendFile(filename, {
         root: 'uploads/avatars',
+        dotfiles: 'deny',
       });
     } catch (e) {
       throw new NotFoundException('File not found');

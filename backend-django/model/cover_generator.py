@@ -14,19 +14,35 @@ class CoverGenerator:
 
     def generate_cover(self) -> str:
         # Check if the cover is not AI generated
-        if self.book["cover"] != "ai":
+        if self.book["cover"] != "null":
             image_url = self.book["cover"]
         # If the cover is AI generated use the API to generate a new one
         else:
-            # Define prompt
-            outline_prompt = f'"{self.book["title"]}" in the style of Vicent van Gogh with black background and dark colors, high quality, only using dark colors, and a dark, mysterious, and eerie atmosphere.'
+            # Define prompt that will generate a good prompt for the book's topic
+            outline_prompt = (
+                f'Generate a good dall-e-2 prompt that will suit this topic: "{self.book["topic"]}".'
+                "Output Format: the prompt string directly without double quotes."
+            )
+
+            # Call API to generate the prompt
+            response_prompt = self.client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": outline_prompt}],
+            )
+            outline = response_prompt.choices[0].message.content.strip()
+
+            # Add a general description to the outline
+            outline = (
+                outline.rsplit(".", 1)[0]
+                + ", rendered in great great great detail, with no text in the image."
+            )
 
             try:
-                # Call API
+                # Call DALL-E-2 API to generate the image
                 response = self.client.images.generate(
                     model="dall-e-2",
-                    prompt=outline_prompt,
-                    size="512x512",
+                    prompt=outline,
+                    size="1024x1024",
                     n=1,
                 )
                 image_url = response.data[0].url

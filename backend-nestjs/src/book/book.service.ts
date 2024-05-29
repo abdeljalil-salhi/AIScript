@@ -49,7 +49,7 @@ export class BookService {
     return (
       (isOverFiveChapters ? 15 : 10) +
       (isOverFiveSectionsAndFiveChapters ? 5 : 0) +
-      (isCoverAiGenerated ? 5 : 0)
+      (isCoverAiGenerated ? 10 : 0)
     );
   }
 

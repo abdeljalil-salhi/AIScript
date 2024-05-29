@@ -87,7 +87,7 @@ export const authProvider: AuthProvider = {
               email,
               username,
               password,
-              filename: "default.png",
+              filename: "/default.png",
             },
           },
           rawQuery: MUTATION_REGISTER,

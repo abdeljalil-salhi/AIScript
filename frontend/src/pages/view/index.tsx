@@ -7,11 +7,14 @@ import useResizeObserver from "use-resize-observer";
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  DeleteFilled,
   FilePdfFilled,
   FileWordFilled,
   PrinterFilled,
 } from "@ant-design/icons";
-import { useCustom } from "@refinedev/core";
+import { useCustom, useCustomMutation } from "@refinedev/core";
 
 // Dependency Styles
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
@@ -20,11 +23,12 @@ import "react-pdf/dist/esm/Page/TextLayer.css";
 // GraphQL Queries
 import { QUERY_GET_BOOK_BY_ID } from "@/graphql/queries/getBookById";
 // GraphQL Types
-import { GetBookByIdQuery } from "@/graphql/types";
+import { DeleteBookByIdMutation, GetBookByIdQuery } from "@/graphql/types";
 // Providers
 import { API_URL } from "@/providers";
 // Pages
 import { LoadingPage } from "../loading";
+import { MUTATION_DELETE_BOOK_BY_ID } from "@/graphql/mutations/deleteBookById";
 
 // Interfaces
 interface ViewPageProps {}
@@ -62,6 +66,12 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
    * @default 1
    */
   const [pageNumber, setPageNumber] = useState<number>(1);
+  /**
+   * The confirmation state for deleting a book
+   * @type {boolean}
+   * @default false
+   */
+  const [isConfirmDelete, setIsConfirmDelete] = useState<boolean>(false);
 
   /**
    * Navigate function for redirecting to other pages
@@ -94,6 +104,17 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
       },
     },
   });
+
+  /**
+   * Delete a book by its ID
+   * @type {DeleteBookByIdMutation}
+   */
+  const {
+    mutate: deleteBook,
+    isLoading: isDeleteLoading,
+    isError: isDeleteError,
+    data: deleteBookData,
+  } = useCustomMutation<DeleteBookByIdMutation>();
 
   /**
    * The reference to the PDF container element and its dimensions (width and height)
@@ -175,13 +196,47 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
   );
 
   /**
+   * Delete the book
+   * @returns {void}
+   */
+  const deleteFile = (): void => {
+    if (isDeleteLoading || isBookLoading || !book || !book.data.getBookById)
+      return;
+
+    deleteBook({
+      url: API_URL,
+      method: "post",
+      meta: {
+        gqlMutation: MUTATION_DELETE_BOOK_BY_ID,
+        variables: {
+          bookId,
+        },
+      },
+      values: {},
+    });
+  };
+
+  /**
    * Effect to navigate to the 404 page if the book is not found
    * or if there is an error fetching the book
+   * Effect to navigate to the library page if the book is deleted
    */
   useEffect(() => {
+    // If the book is not found or there is an error fetching the book, navigate to the 404 page
     if (!isBookLoading && (isBookError || !book.data.getBookById))
       navigate("/404", { replace: true });
-  }, [isBookLoading, isBookError, book, navigate]);
+
+    // If the book is deleted, navigate to the library page
+    if (!isDeleteError && deleteBookData)
+      navigate("/library", { replace: true });
+  }, [
+    isBookLoading,
+    isBookError,
+    book,
+    navigate,
+    deleteBookData,
+    isDeleteError,
+  ]);
 
   return isBookLoading || !book || !book.data.getBookById ? (
     <LoadingPage />
@@ -260,12 +315,38 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
             </button>
 
             <button
-              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow hover:bg-n-6/60 transition-all ease-in-out duration-300"
+              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
               onClick={() => window.print()}
             >
               <PrinterFilled className="text-lg" />
               Print
             </button>
+
+            <div className="flex h-full flex-row items-center justify-center flex-grow">
+              {isConfirmDelete ? (
+                <>
+                  <button
+                    className="flex-grow h-full flex items-center justify-center hover:bg-green-500/20 transition-all ease-in-out duration-300"
+                    onClick={deleteFile}
+                  >
+                    <CheckOutlined className="text-green-500" />
+                  </button>
+                  <button
+                    className="flex-grow h-full flex items-center justify-center hover:bg-red-500/20 transition-all ease-in-out duration-300 border-l border-n-6/90"
+                    onClick={() => setIsConfirmDelete(false)}
+                  >
+                    <CloseOutlined className="text-red-500" />
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="w-full h-full flex items-center justify-center hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                  onClick={() => setIsConfirmDelete(true)}
+                >
+                  <DeleteFilled className="text-lg" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -20,5 +20,5 @@ export interface BookData {
   target_audience: string;
   num_chapters: number;
   num_subsections: number;
-  cover?: string;
+  cover: string;
 }

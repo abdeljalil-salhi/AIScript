@@ -263,7 +263,7 @@ export class SocketGateway
     }
 
     // Calculate the price of the book
-    const price: number = data.numChapters > 5 ? 20 : 10;
+    const price: number = this.bookService.calculateBookPrice(data);
 
     // Check if the user has enough funds to join the shared queue
     if (wallet.balance < price) {
@@ -358,7 +358,7 @@ export class SocketGateway
     }
 
     // Calculate the price of the book
-    const price: number = data.numChapters > 5 ? 20 : 10;
+    const price: number = this.bookService.calculateBookPrice(data);
 
     // Check if the user has enough funds to join the priority queue
     if (wallet.balance < price) {

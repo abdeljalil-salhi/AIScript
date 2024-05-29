@@ -36,6 +36,24 @@ export class BookService {
   ) {}
 
   /**
+   * Calculates the price of a book based on the provided book data.
+   *
+   * @param {BookData} bookData - The data to calculate the book price.
+   * @returns {number} - The calculated price of the book.
+   */
+  public calculateBookPrice(bookData: BookData): number {
+    const isOverFiveChapters: boolean = bookData.numChapters > 5;
+    const isOverFiveSectionsAndFiveChapters: boolean =
+      isOverFiveChapters && bookData.numSections > 5;
+    const isCoverAiGenerated: boolean = bookData.cover === 'ai';
+    return (
+      (isOverFiveChapters ? 15 : 10) +
+      (isOverFiveSectionsAndFiveChapters ? 5 : 0) +
+      (isCoverAiGenerated ? 5 : 0)
+    );
+  }
+
+  /**
    * Generates a book by calling the Django server.
    *
    * @param {string} userId - The ID of the user generating the book.
@@ -48,7 +66,7 @@ export class BookService {
     userId: string,
     bookData: BookData,
     wallet: Wallet,
-    price: number = 20,
+    price: number = this.calculateBookPrice(bookData),
   ): Promise<Book> {
     const inputData = bookData;
 

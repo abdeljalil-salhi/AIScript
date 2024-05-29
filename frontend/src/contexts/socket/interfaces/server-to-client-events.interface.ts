@@ -4,6 +4,7 @@ import { SocketUser } from "./entities/socket-user.interface";
 // Events Interfaces
 import { QueueEvent } from "./events/queue.event.interface";
 import { QueueStatusEvent } from "./events/queue-status.event.interface";
+import { WalletErrorEvent } from "./events/wallet-error.event.interface";
 
 /**
  * Interface of the server to client events.
@@ -26,4 +27,5 @@ export interface ServerToClientEvents {
   priorityQueueStatus: ({ status, userId, position }: QueueStatusEvent) => void;
   bookError: (title: string) => void;
   bookCreated: (book: BookData) => void;
+  walletError: ({ status, userId, reason }: WalletErrorEvent) => void;
 }

@@ -13,6 +13,7 @@ import { SocketUser } from "./interfaces/entities/socket-user.interface";
 // Events Interfaces
 import { QueueEvent } from "./interfaces/events/queue.event.interface";
 import { QueueStatusEvent } from "./interfaces/events/queue-status.event.interface";
+import { WalletErrorEvent } from "./interfaces/events/wallet-error.event.interface";
 // Actions
 import { setQueue, setQueueStatus, setUserId, setUsers } from "./actions";
 // Reducers
@@ -132,6 +133,15 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
         type: "error",
         description: "Book creation failed",
         message: `An error occurred while creating the book '${title}'. No credits were deducted. Please try again.`,
+      });
+    });
+
+    ws.on("walletError", ({ status, reason }: WalletErrorEvent) => {
+      open?.({
+        type: "error",
+        description: "Unable to create book",
+        message: reason,
+        key: status,
       });
     });
   }, [identity, isIdentityLoading, open]);

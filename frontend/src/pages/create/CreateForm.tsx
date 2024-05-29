@@ -88,6 +88,29 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
     useGetIdentity<MeResponse>();
 
   /**
+   * Calculates the price of the book based on the provided book data.
+   *
+   * @returns {number} - The calculated price of the book.
+   */
+  const calculateBookPrice = (): number => {
+    const isOverFiveChapters: boolean = chapters > 5;
+    const isOverFiveSectionsAndFiveChapters: boolean =
+      isOverFiveChapters && sections > 5;
+    const isCoverAiGenerated: boolean = isAiCover;
+    return (
+      (isOverFiveChapters ? 15 : 10) +
+      (isOverFiveSectionsAndFiveChapters ? 5 : 0) +
+      (isCoverAiGenerated ? 5 : 0)
+    );
+  };
+
+  /**
+   * The price of the book creation.
+   * @type {number}
+   */
+  const price: number = calculateBookPrice();
+
+  /**
    * Handle the form submission.
    *
    * @param {FormEvent<HTMLFormElement>} e - The form event.
@@ -102,11 +125,14 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
     if (isIdentityLoading || !identity || isLoading) return;
 
     // If the user's balance is less than 10, show an error notification.
-    if (identity.user.wallet!.balance < 10)
+    if (identity.user.wallet!.balance < price)
       return open?.({
         type: "error",
         description: "Insufficient Balance",
-        message: "You need at least 10 credits to create a book.",
+        message: `You need ${price} credits to create your book. Your current balance is ${
+          identity.user.wallet!.balance
+        } credits. Please add funds to your wallet.`,
+        key: "insufficient-balance",
       });
 
     // Set the loading state to true
@@ -126,6 +152,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           type: "error",
           description: "Something went wrong",
           message: "Please try re-uploading the cover image again.",
+          key: "cover-image",
         });
       }
 
@@ -149,6 +176,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           description: "Unable to upload image",
           message:
             "Your changes were saved, but we could not upload the book cover due to a technical issue on our end. Please try again.",
+          key: "cover-image-upload",
         });
       }
 
@@ -297,8 +325,12 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           className="w-full text-base bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center transition-all duration-300 ease-in-out transform disabled:opacity-80 disabled:cursor-progress"
           disabled={isLoading}
         >
-          Create
+          Create for {price} credits
         </button>
+      </div>
+      <div className="w-full text-xs text-n-4">
+        The book will be created in the background. You can close this page and
+        come back later to see the progress.
       </div>
     </form>
   );

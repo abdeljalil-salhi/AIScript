@@ -1,5 +1,5 @@
 // Dependencies
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCustom, useGetIdentity } from "@refinedev/core";
 
@@ -13,6 +13,7 @@ import { Book, MeResponse } from "@/graphql/schema.types";
 // Providers
 import { API_URL } from "@/providers";
 import { EyeFilled } from "@ant-design/icons";
+import { ws } from "@/sockets";
 
 // Interfaces
 interface ListDisplayProps {}
@@ -39,6 +40,7 @@ export const ListDisplay: FC<ListDisplayProps> = (): JSX.Element => {
     data: books,
     isLoading: isBooksLoading,
     isError: isBooksError,
+    refetch: refetchBooks,
   } = useCustom<GetBooksByUserIdQuery>({
     url: API_URL,
     method: "post",
@@ -52,6 +54,15 @@ export const ListDisplay: FC<ListDisplayProps> = (): JSX.Element => {
       enabled: !!identity,
     },
   });
+
+  /**
+   * Listen for book creation and refetch the books
+   */
+  useEffect(() => {
+    ws.on("bookCreated", () => {
+      refetchBooks();
+    });
+  }, [refetchBooks]);
 
   return (
     <div className="w-full h-full flex flex-col font-['Poppins']">

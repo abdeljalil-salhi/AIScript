@@ -17,6 +17,7 @@ import {
 // Services
 import { SocketService } from './socket.service';
 import { BookService } from 'src/book/book.service';
+import { WalletService } from 'src/wallet/wallet.service';
 // Middlewares
 import { SocketIOMiddleware } from 'src/auth/middlewares/socket-io.middleware';
 import { WebsocketMiddleware } from 'src/auth/middlewares/websocket.middleware';
@@ -25,6 +26,8 @@ import { getClientHandshake } from 'src/auth/guards/websocket.guard';
 // Interfaces
 import { BookData } from './interfaces/book-data.interface';
 import { QueueMember } from './interfaces/queue-member.interface';
+// Entities
+import { Wallet } from 'src/wallet/entities/wallet.entity';
 
 /**
  * @description
@@ -75,6 +78,7 @@ export class SocketGateway
   constructor(
     private readonly socketService: SocketService,
     private readonly bookService: BookService,
+    private readonly walletService: WalletService,
   ) {}
 
   /**
@@ -243,11 +247,49 @@ export class SocketGateway
       return;
     }
 
+    // Get the user's wallet
+    const wallet: Wallet = await this.walletService.getWalletByUserId(userId);
+
+    if (!wallet) {
+      // Notify the client that an error occurred while loading the wallet
+      client.emit('walletError', {
+        status: 'notFound',
+        userId,
+        reason:
+          'An error occurred while loading your wallet. Please try again.',
+      });
+
+      return;
+    }
+
+    // Calculate the price of the book
+    const price: number = data.numChapters > 5 ? 20 : 10;
+
+    // Check if the user has enough funds to join the shared queue
+    if (wallet.balance < price) {
+      // Notify the client that they do not have enough funds to join the priority queue
+      client.emit('walletError', {
+        status: 'insufficientFunds',
+        userId,
+        reason:
+          'You do not have enough funds to generate your book. Please consider subscribing to a higher plan or adding funds to your wallet.',
+      });
+
+      return;
+    }
+
     // Generate a unique instance ID for the client
     const instanceId: string = uuidv4();
 
     // Add the client to the shared queue
-    this.sharedQueue.enqueue({ instanceId, client, userId, data });
+    this.sharedQueue.enqueue({
+      instanceId,
+      client,
+      userId,
+      data,
+      wallet,
+      price,
+    });
 
     console.log(
       `Client added to shared queue. ID #${instanceId}. Queue size: ${this.sharedQueue.size()}`,
@@ -300,11 +342,49 @@ export class SocketGateway
       return;
     }
 
+    // Get the user's wallet
+    const wallet: Wallet = await this.walletService.getWalletByUserId(userId);
+
+    if (!wallet) {
+      // Notify the client that an error occurred while loading the wallet
+      client.emit('walletError', {
+        status: 'notFound',
+        userId,
+        reason:
+          'An error occurred while loading your wallet. Please try again.',
+      });
+
+      return;
+    }
+
+    // Calculate the price of the book
+    const price: number = data.numChapters > 5 ? 20 : 10;
+
+    // Check if the user has enough funds to join the priority queue
+    if (wallet.balance < price) {
+      // Notify the client that they do not have enough funds to join the priority queue
+      client.emit('walletError', {
+        status: 'insufficientFunds',
+        userId,
+        reason:
+          'You do not have enough funds to generate your book. Please consider subscribing to a higher plan or adding funds to your wallet.',
+      });
+
+      return;
+    }
+
     // Generate a unique instance ID for the client
     const instanceId: string = uuidv4();
 
     // Add the client to the priority queue
-    this.priorityQueue.enqueue({ instanceId, client, userId, data });
+    this.priorityQueue.enqueue({
+      instanceId,
+      client,
+      userId,
+      data,
+      wallet,
+      price,
+    });
 
     console.log(
       `Client added to priority queue. ID #${instanceId}. Queue size: ${this.priorityQueue.size()}`,
@@ -435,6 +515,8 @@ export class SocketGateway
     const book = await this.bookService.generateBook(
       instance.userId,
       instance.data,
+      instance.wallet,
+      instance.price,
     );
 
     if (!book) {

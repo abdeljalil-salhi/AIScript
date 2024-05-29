@@ -1,12 +1,14 @@
 // Dependencies
 import { firstValueFrom } from 'rxjs';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
+import { WalletService } from 'src/wallet/wallet.service';
 // Entities
 import { Book } from './entities/book.entity';
+import { Wallet } from 'src/wallet/entities/wallet.entity';
 // DTOs
 import { NewBookInput } from './dtos/new-book.input';
 // Interfaces
@@ -30,6 +32,7 @@ export class BookService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly httpService: HttpService,
+    private readonly walletService: WalletService,
   ) {}
 
   /**
@@ -37,12 +40,26 @@ export class BookService {
    *
    * @param {string} userId - The ID of the user generating the book.
    * @param {BookData} bookData - The data to generate the book.
+   * @param {Wallet} wallet - The user's wallet entity.
+   * @param {number} [price=10] - The price of the book.
    * @returns {Promise<Book>} - The generated book.
    */
-  public async generateBook(userId: string, bookData: BookData): Promise<Book> {
+  public async generateBook(
+    userId: string,
+    bookData: BookData,
+    wallet: Wallet,
+    price: number = 20,
+  ): Promise<Book> {
     const inputData = bookData;
 
+    // Check if the user has enough credits
+    if (wallet.balance < price)
+      throw new ForbiddenException(
+        'You do not have enough credits to generate this book. Please consider adding funds to your wallet.',
+      );
+
     try {
+      // Send a POST request to the Django server to generate the book
       const response = await firstValueFrom(
         this.httpService.post(
           `${process.env.DJANGO_URL}/book-create/`,
@@ -55,8 +72,13 @@ export class BookService {
         ),
       );
 
+      // Extract the response data
       const responseData = response.data;
 
+      // Deduct the price of the book from the user's wallet
+      await this.walletService.deductCreditsFromWallet(wallet.id, price);
+
+      // Store the book in the database
       return this.createBook({
         ownerId: userId,
         author: responseData.author,

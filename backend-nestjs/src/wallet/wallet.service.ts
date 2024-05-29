@@ -129,6 +129,20 @@ export class WalletService {
   }
 
   /**
+   * Retrieves a wallet entity by the user ID.
+   *
+   * @param {string} userId - The ID of the user to retrieve the wallet entity for.
+   * @returns {Promise<Wallet>} - The wallet entity for the specified user.
+   */
+  public async getWalletByUserId(userId: string): Promise<Wallet> {
+    return this.prismaService.wallet.findFirst({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  /**
    * Retrieves all wallet entities.
    *
    * @returns {Promise<Wallet[]>} - An array of all wallet entities.

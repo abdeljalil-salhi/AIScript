@@ -7,6 +7,7 @@ import { BookResolver } from './book.resolver';
 // Services
 import { BookService } from './book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { WalletService } from 'src/wallet/wallet.service';
 // Controllers
 import { BookController } from './book.controller';
 
@@ -25,6 +26,7 @@ import { BookController } from './book.controller';
     // Services
     BookService,
     PrismaService,
+    WalletService,
   ],
   exports: [BookService],
   controllers: [BookController],

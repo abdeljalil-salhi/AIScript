@@ -100,7 +100,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
     return (
       (isOverFiveChapters ? 15 : 10) +
       (isOverFiveSectionsAndFiveChapters ? 5 : 0) +
-      (isCoverAiGenerated ? 5 : 0)
+      (isCoverAiGenerated ? 10 : 0)
     );
   };
 
@@ -195,7 +195,6 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
     // Prepare the book data
     const data: BookData = {
       name: uuidv4(),
-      //   name: "absurdity_of_death",
       author,
       title,
       topic,

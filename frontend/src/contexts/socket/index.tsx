@@ -124,6 +124,7 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
         type: "success",
         description: "Book created successfully",
         message: `Your book '${data.title}' has been created successfully!`,
+        key: "book-created",
       });
     });
 
@@ -133,6 +134,7 @@ export const SocketContextProvider: FC<SocketContextProps> = ({
         type: "error",
         description: "Book creation failed",
         message: `An error occurred while creating the book '${title}'. No credits were deducted. Please try again.`,
+        key: "book-error",
       });
     });
 

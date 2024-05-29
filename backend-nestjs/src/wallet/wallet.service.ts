@@ -1,5 +1,9 @@
 // Dependencies
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 // Services
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -42,6 +46,76 @@ export class WalletService {
         },
       },
     });
+  }
+
+  /**
+   * Deducts credits from a wallet entity.
+   * The credits are deducted in the following order:
+   * 1. Free credits
+   * 2. Subscription credits
+   * 3. Top-up credits
+   * If the wallet does not have enough credits, a ForbiddenException is thrown.
+   *
+   * @param {string} walletId - The ID of the wallet entity to deduct credits from.
+   * @param {number} amount - The amount of credits to deduct.
+   * @returns {Promise<Wallet>} - The updated wallet entity.
+   * @throws {NotFoundException} - If the wallet entity is not found.
+   * @throws {ForbiddenException} - If the wallet does not have enough credits.
+   */
+  public async deductCreditsFromWallet(
+    walletId: string,
+    amount: number,
+  ): Promise<Wallet> {
+    const wallet: Wallet = await this.getWalletById(walletId);
+    if (!wallet) throw new NotFoundException('Wallet not found');
+
+    if (wallet.freeCredits >= amount) {
+      return this.prismaService.wallet.update({
+        where: {
+          id: walletId,
+        },
+        data: {
+          freeCredits: {
+            decrement: amount,
+          },
+          balance: {
+            decrement: amount,
+          },
+        },
+      });
+    } else if (wallet.subscriptionCredits >= amount) {
+      return this.prismaService.wallet.update({
+        where: {
+          id: walletId,
+        },
+        data: {
+          subscriptionCredits: {
+            decrement: amount,
+          },
+          balance: {
+            decrement: amount,
+          },
+        },
+      });
+    } else if (wallet.topUpCredits >= amount) {
+      return this.prismaService.wallet.update({
+        where: {
+          id: walletId,
+        },
+        data: {
+          topUpCredits: {
+            decrement: amount,
+          },
+          balance: {
+            decrement: amount,
+          },
+        },
+      });
+    } else {
+      throw new ForbiddenException(
+        'You do not have enough credits to perform this action.',
+      );
+    }
   }
 
   /**

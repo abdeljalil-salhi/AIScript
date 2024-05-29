@@ -185,6 +185,9 @@ export class WalletService {
       where: { id },
       data: {
         subscriptionCredits: credits,
+        balance: {
+          increment: credits,
+        },
       },
       include: {
         user: true,
@@ -192,6 +195,13 @@ export class WalletService {
     });
   }
 
+  /**
+   * Sets the subscription credits for multiple wallet entities.
+   *
+   * @param {string[]} walletsIds - The IDs of the wallet entities to add credits to.
+   * @param {number} credits - The number of credits to add to each wallet entity.
+   * @returns {Promise<void>} - An empty promise.
+   */
   public async setSubscriptionCreditsToWallets(
     walletsIds: string[],
     credits: number,
@@ -204,6 +214,9 @@ export class WalletService {
       },
       data: {
         subscriptionCredits: credits,
+        balance: {
+          increment: credits,
+        },
       },
     });
   }

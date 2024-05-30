@@ -72,19 +72,16 @@ def BookCreate(req: Request) -> Response:
     document.generate_cover_page()
     document.generate_document()
 
+    # Generate the PDF
+    document.generate_pdf()
+
     # Serialize the data
     serializer = BookSerializer(data=book.book)
-
-    # Validating for already existing data
-    if Book.objects.filter(title=book.book.get("title")).exists():
-        return Response(
-            status=status.HTTP_400_BAD_REQUEST, data={"message": "Book already exists"}
-        )
 
     # If the data is valid, save it and return the data
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     # If the data is not valid, return a 400 status code
     return Response(status=status.HTTP_400_BAD_REQUEST)

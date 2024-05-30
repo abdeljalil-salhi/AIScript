@@ -107,6 +107,7 @@ export class BookService {
         numSubsections: responseData.num_subsections,
         cover: `${process.env.DJANGO_URL}/${responseData.cover}`,
         document: `${process.env.MEDIA_CDN_URL}/docs/${bookData.name}.docx`,
+        pdf: `${process.env.MEDIA_CDN_URL}/pdfs/${bookData.name}.pdf`,
       });
     } catch (error: unknown) {
       // Handle the error appropriately
@@ -137,7 +138,7 @@ export class BookService {
         numSubsections: newBookInput.numSubsections,
         cover: newBookInput.cover,
         document: newBookInput.document,
-        pdf: '/path/to/pdf.pdf',
+        pdf: newBookInput.pdf,
       },
       include: {
         owner: true,

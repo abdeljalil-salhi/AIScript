@@ -1,6 +1,7 @@
 // Dependencies
 import { FC, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { EyeFilled } from "@ant-design/icons";
 import { useCustom, useGetIdentity } from "@refinedev/core";
 
 // Assets
@@ -12,7 +13,13 @@ import { GetBooksByUserIdQuery } from "@/graphql/types";
 import { Book, MeResponse } from "@/graphql/schema.types";
 // Providers
 import { API_URL } from "@/providers";
-import { EyeFilled } from "@ant-design/icons";
+
+/**
+ * @description
+ * The websocket connection.
+ * It is used to emit and listen to events.
+ * @type {Socket<ServerToClientEvents, ClientToServerEvents>}
+ */
 import { ws } from "@/sockets";
 
 // Interfaces

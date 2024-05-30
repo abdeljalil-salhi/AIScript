@@ -13,3 +13,6 @@ __pycache__/
 media/**/*.png
 media/**/*.docx
 media/**/*.pdf
+
+# License files
+aspose.lic

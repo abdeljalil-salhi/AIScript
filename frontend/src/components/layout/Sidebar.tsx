@@ -1,9 +1,9 @@
 // Dependencies
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, ConfigProvider } from "antd";
-import { useGetIdentity, useLogout, useWarnAboutChange } from "@refinedev/core";
 import { LogoutOutlined } from "@ant-design/icons";
+import { useGetIdentity, useLogout, useWarnAboutChange } from "@refinedev/core";
 
 // Assets
 import Logo from "@/assets/logo.webp";
@@ -14,6 +14,14 @@ import { navigationLinks } from "@/constants/sidebar";
 import { NavigationLink } from "@/constants/types";
 // GraphQL Types
 import { MeResponse } from "@/graphql/schema.types";
+
+/**
+ * @description
+ * The websocket connection.
+ * It is used to emit and listen to events.
+ * @type {Socket<ServerToClientEvents, ClientToServerEvents>}
+ */
+import { ws } from "@/sockets";
 
 // Interfaces
 interface SidebarProps {}
@@ -42,8 +50,11 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
    * Get the user's identity
    * @type {MeResponse}
    */
-  const { data: identity, isLoading: isIdentityLoading } =
-    useGetIdentity<MeResponse>();
+  const {
+    data: identity,
+    isLoading: isIdentityLoading,
+    refetch: refetchIdentity,
+  } = useGetIdentity<MeResponse>();
 
   /**
    * Dropdown state to toggle the dropdown menu
@@ -68,6 +79,15 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
       }
     } else logout();
   };
+
+  /**
+   * Listen for book creation and refetch the identity
+   */
+  useEffect(() => {
+    ws.on("bookCreated", () => {
+      refetchIdentity();
+    });
+  }, [refetchIdentity]);
 
   return (
     <ConfigProvider

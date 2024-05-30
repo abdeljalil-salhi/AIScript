@@ -339,6 +339,9 @@ input NewBookInput {
   """ID of the book owner"""
   ownerId: String!
 
+  """PDF URL of the book"""
+  pdf: String!
+
   """Target audience of the book"""
   targetAudience: String
 

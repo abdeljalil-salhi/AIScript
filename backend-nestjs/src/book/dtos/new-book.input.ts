@@ -96,4 +96,13 @@ export class NewBookInput {
   @IsString({ message: 'Book document URL must be a string' })
   @Field(() => String, { description: 'Document URL of the book' })
   public document: string;
+
+  /**
+   * PDF URL of the book
+   * @type {string}
+   */
+  @IsNotEmpty({ message: 'Book PDF URL must not be empty' })
+  @IsString({ message: 'Book PDF URL must be a string' })
+  @Field(() => String, { description: 'PDF URL of the book' })
+  public pdf: string;
 }

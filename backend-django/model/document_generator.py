@@ -2,6 +2,10 @@ from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docxtpl import DocxTemplate
+from aspose.words import Document as AsposeDocument
+from aspose.words import License
+from sys import platform
+from docx2pdf import convert
 
 
 from .settings import TOC_FONT, TITLE_FONT, CONTENT_FONT
@@ -10,6 +14,13 @@ from .settings import TOC_FONT, TITLE_FONT, CONTENT_FONT
 class DocumentGenerator:
     def __init__(self, book) -> None:
         self.book = book
+
+        try:
+            # Set the Aspose license for the document generator
+            self.license = License()
+            self.license.set_license("aspose.lic")
+        except Exception as e:
+            print(f"Error setting Aspose license: {e}")
 
         self.template = None
         self.document = None
@@ -29,6 +40,45 @@ class DocumentGenerator:
         # Render the template and save it
         self.template.render(context)
         self.template.save(f"media/docs/{self.book['id']}.docx")
+
+    def generate_pdf(self) -> None:
+        try:
+            # Convert the document to PDF using Aspose (cross-platform)
+            doc = AsposeDocument(f"media/docs/{self.book['id']}.docx")
+            doc.save(f"media/pdfs/{self.book['id']}.pdf")
+
+        # If Aspose fails, try using more platform-specific libraries
+        except Exception as e:
+            print(f"Error converting to PDF using Aspose: {e}")
+
+            if platform.startswith("linux"):
+                try:
+                    from subprocess import call
+
+                    # Convert the document to PDF using LibreOffice (Linux only)
+                    call(
+                        [
+                            "libreoffice",
+                            "--headless",
+                            "--convert-to",
+                            "pdf",
+                            "--outdir",
+                            "media/pdfs",
+                            f"media/docs/{self.book['id']}.docx",
+                        ]
+                    )
+                except Exception as e:
+                    print(f"Error converting to PDF using LibreOffice: {e}")
+
+            else:
+                try:
+                    # Convert the document to PDF using docx2pdf (Windows/MacOS only)
+                    convert(
+                        f"media/docs/{self.book['id']}.docx",
+                        f"media/pdfs/{self.book['id']}.pdf",
+                    )
+                except Exception as e:
+                    print(f"Error converting to PDF using docx2pdf: {e}")
 
     def generate_document(self) -> None:
         self.document = Document(f"media/docs/{self.book['id']}.docx")
@@ -82,6 +132,8 @@ class DocumentGenerator:
                 self.document.add_paragraph()
 
             chapter_title = self.document.add_paragraph()
+
+            ch = chapter.get("chapter")
             if chapter.get("chapter").lower().startswith(
                 "chapter"
             ) and ":" in chapter.get("chapter"):

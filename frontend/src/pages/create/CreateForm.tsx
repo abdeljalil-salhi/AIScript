@@ -21,6 +21,8 @@ import { SocketContext as ISocketContext } from "@/contexts/socket/interfaces/so
 import { MeResponse } from "@/graphql/schema.types";
 // Utils
 import { isFreePlan } from "@/utils/isFreePlan";
+// Providers
+import { BASE_URL } from "@/providers";
 
 /**
  * @description
@@ -29,7 +31,6 @@ import { isFreePlan } from "@/utils/isFreePlan";
  * @type {Socket<ServerToClientEvents, ClientToServerEvents>}
  */
 import { ws } from "@/sockets";
-import { BASE_URL } from "@/providers";
 
 // Interfaces
 interface CreateFormProps {}

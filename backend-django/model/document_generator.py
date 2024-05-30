@@ -132,6 +132,8 @@ class DocumentGenerator:
                 self.document.add_paragraph()
 
             chapter_title = self.document.add_paragraph()
+
+            ch = chapter.get("chapter")
             if chapter.get("chapter").lower().startswith(
                 "chapter"
             ) and ":" in chapter.get("chapter"):

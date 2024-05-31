@@ -68,9 +68,13 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
-        <Link to="/" className="block w-[12rem] xl:mr-8">
+        <a
+          href="/#hero"
+          onClick={handleClick}
+          className="block w-[12rem] xl:mr-8"
+        >
           <img src={AIScriptLogo} height={40} alt="AIScript" draggable />
-        </Link>
+        </a>
         <nav
           className={`${
             openNavigation ? "flex" : "hidden"
@@ -82,7 +86,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
                 href={item.url}
                 key={item.id}
                 onClick={handleClick}
-                className={`block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-color-1 ${
+                className={`block relative font-grotesk text-2xl uppercase text-n-1 transition-colors hover:text-purple-300 ${
                   item.onlyMobile ? "lg:hidden" : ""
                 } px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-xs lg:font-semibold ${
                   item.url === pathname.hash
@@ -99,11 +103,14 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
         </nav>
         <Link
           to="/register"
-          className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
+          className="button font-grotesk hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
         >
-          New account
+          Sign up
         </Link>
-        <Button className="hidden lg:flex" href="/login">
+        <Button
+          className="hidden font-grotesk lg:flex hover:text-blue-200"
+          href="/login"
+        >
           Log in
         </Button>
         <Button

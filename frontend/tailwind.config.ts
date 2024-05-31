@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import { fontFamily } from "tailwindcss/defaultTheme";
 import plugin from "tailwindcss/plugin";
+import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 
 export default {
   content: [
@@ -81,9 +82,21 @@ export default {
         "benefit-card-5": "url(assets/benefits/card-5.svg)",
         "benefit-card-6": "url(assets/benefits/card-6.svg)",
       },
+      animation: {
+        scroll:
+          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+      },
+      keyframes: {
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
+      },
     },
   },
   plugins: [
+    addVariablesForColors,
     plugin(function ({ addBase, addComponents, addUtilities }) {
       addBase({});
       addComponents({
@@ -140,3 +153,14 @@ export default {
     }),
   ],
 };
+
+function addVariablesForColors({ addBase, theme }) {
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

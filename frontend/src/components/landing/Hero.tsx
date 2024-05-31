@@ -107,7 +107,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
           </div>
           <BackgroundCircles />
         </div>
-        <CompanyLogos className="hidden relative z-10 mt-20 lg:block" />
+        <CompanyLogos className="block relative z-10 mt-20 lg:block" />
       </div>
       <BottomLine />
     </Section>

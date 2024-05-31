@@ -36,48 +36,11 @@ import {
   yourlogo,
 } from "../assets";
 
-// Interfaces
-import { Navigation } from "./types";
-
 // Export constants from external files
 export * from "./auth";
+export * from "./landing";
 
 export const defaultProfilePicture: string = "/default.png";
-
-export const navigations: Navigation[] = [
-  {
-    id: "0",
-    title: "Features",
-    url: "#features",
-  },
-  {
-    id: "1",
-    title: "How to use",
-    url: "#how-to-use",
-  },
-  {
-    id: "2",
-    title: "Pricing",
-    url: "#pricing",
-  },
-  {
-    id: "3",
-    title: "Roadmap",
-    url: "#roadmap",
-  },
-  {
-    id: "4",
-    title: "New account",
-    url: "/register",
-    onlyMobile: true,
-  },
-  {
-    id: "5",
-    title: "Sign in",
-    url: "/login",
-    onlyMobile: true,
-  },
-];
 
 export const heroIcons = [homeSmile, file02, searchMd, plusSquare];
 

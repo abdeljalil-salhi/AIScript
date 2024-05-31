@@ -72,8 +72,14 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
           href="/#hero"
           onClick={handleClick}
           className="block w-[12rem] xl:mr-8"
+          draggable={false}
         >
-          <img src={AIScriptLogo} height={40} alt="AIScript" draggable />
+          <img
+            src={AIScriptLogo}
+            height={40}
+            alt="AIScript"
+            draggable={false}
+          />
         </a>
         <nav
           className={`${
@@ -92,7 +98,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
                   item.url === pathname.hash
                     ? "z-2 lg:text-n-1"
                     : "lg:text-n-1/50"
-                } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
+                } lg:leading-5 lg:hover:text-n-1 xl:px-12 active:text-n-1/75`}
                 draggable={false}
               >
                 {item.title}
@@ -103,12 +109,13 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
         </nav>
         <Link
           to="/register"
-          className="button font-grotesk hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
+          className="button font-grotesk hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block active:text-n-1/75"
+          draggable={false}
         >
           Sign up
         </Link>
         <Button
-          className="hidden font-grotesk lg:flex hover:text-blue-200"
+          className="hidden font-grotesk lg:flex hover:text-blue-200 active:text-blue-300"
           href="/login"
         >
           Log in

@@ -1,22 +1,18 @@
 // Dependencies
 import { FC, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Location, useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
 // Assets
-import { brainwave } from "@/assets";
-
+import { AIScriptLogo } from "@/assets/landing";
 // Constants
 import { navigations } from "@/constants";
 import { Navigation } from "@/constants/types";
-
 // SVGs
 import { MenuSvg } from "@/assets/svg/MenuSvg";
-
 // Components
 import { Button } from "./Button";
 import { HamburgerMenu } from "./design/Header";
-
 // Interfaces
 interface HeaderProps {}
 
@@ -28,8 +24,18 @@ interface HeaderProps {}
  * @exports Header
  */
 export const Header: FC<HeaderProps> = (): JSX.Element => {
-  const pathname = useLocation();
+  /**
+   * State to toggle the navigation menu
+   * @type {boolean}
+   * @default false
+   */
   const [openNavigation, setOpenNavigation] = useState<boolean>(false);
+
+  /**
+   * Get the current pathname
+   * @type {Location<any>}
+   */
+  const pathname: Location = useLocation();
 
   /**
    * Toggle the navigation menu when the hamburger menu is clicked
@@ -63,7 +69,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
         <Link to="/" className="block w-[12rem] xl:mr-8">
-          <img src={brainwave} width={190} height={40} alt="AIScript" />
+          <img src={AIScriptLogo} height={40} alt="AIScript" draggable />
         </Link>
         <nav
           className={`${
@@ -83,6 +89,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
                     ? "z-2 lg:text-n-1"
                     : "lg:text-n-1/50"
                 } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
+                draggable={false}
               >
                 {item.title}
               </a>

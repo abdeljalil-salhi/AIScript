@@ -3,7 +3,8 @@ import { FC, useRef } from "react";
 import { ScrollParallax } from "react-just-parallax";
 
 // Assets
-import { curve, heroBackground, robot } from "@/assets";
+import { heroBackground, robot } from "@/assets";
+import { Curve } from "@/assets/landing";
 
 // Constants
 import { heroIcons } from "@/constants";
@@ -37,24 +38,26 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
       id="hero"
     >
       <div className="container relative" ref={parallaxRef}>
-        <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[4rem] md:mb-20 lg:mb-[6rem]">
-          <h1 className="h1 mb-6">
-            Explore the Possibilities of&nbsp;AI&nbsp;Writing with{" "}
+        <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[4rem] md:mb-20 lg:mb-[6rem] flex flex-col items-center">
+          <h1 className="h3 sm:h1 mb-6">
+            Turn Ideas into&nbsp;Books
+            <br />
+            Instantly&nbsp;with{" "}
             <span className="inline-block relative">
               AIScript{" "}
               <img
-                src={curve}
+                src={Curve}
                 className="absolute top-full left-0 w-full xl:-mt-2"
                 width={624}
                 height={28}
                 alt="Curve"
+                draggable={false}
               />
             </span>
           </h1>
           <p className="body-1 max-w-3xl mx-auto mb-6 text-n-2 lg:mb-8">
-            Unleash the power of AI within AIScript. Upgrade your productivity
-            with AIScript, the AI-powered tool that helps you write ebooks in
-            seconds.
+            Experience the Future of Writing with AIScript. <br />
+            Enhance Your Workflow and Produce High-Quality Books in Seconds.
           </p>
           <Button href="/register" white>
             Get Started

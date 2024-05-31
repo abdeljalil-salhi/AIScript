@@ -115,7 +115,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
           Sign up
         </Link>
         <Button
-          className="hidden font-grotesk lg:flex hover:text-blue-200 active:text-blue-300"
+          className="hidden font-grotesk lg:flex"
           href="/login"
         >
           Log in

@@ -3,8 +3,7 @@ import { FC, useRef } from "react";
 import { ScrollParallax } from "react-just-parallax";
 
 // Assets
-import { heroBackground, robot } from "@/assets";
-import { Curve } from "@/assets/landing";
+import { Curve, Hero as HeroCard, HeroBackground } from "@/assets/landing";
 
 // Constants
 import { heroIcons } from "@/constants";
@@ -69,7 +68,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
               <div className="h-[1.4rem] bg-n-10 rounded-t-[0.9rem]"></div>
               <div className="aspect-[33/40] rounded-b-[0.9rem] overflow-hidden md:aspect-[688/490] lg:aspect-[1024/490]">
                 <img
-                  src={robot}
+                  src={HeroCard}
                   className="w-full scale-[1.7] translate-y-[8%] md:scale-[1] md:-translate-y-[10%] lg:-translate-y-[23%]"
                   width={1024}
                   height={490}
@@ -98,7 +97,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
           </div>
           <div className="absolute -top-[54%] left-1/2 w-[234%] -translate-x-1/2 md:-top-[46%] md:w-[138%] lg:-top-[104%]">
             <img
-              src={heroBackground}
+              src={HeroBackground}
               className="w-full"
               width={1440}
               height={1800}

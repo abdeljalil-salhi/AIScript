@@ -1,5 +1,8 @@
+// Assets
+import { PeopleOne } from "@/assets/landing";
 // Interfaces
 import { Navigation } from "./types";
+import { notification1, notification2, notification3 } from "@/assets";
 
 /**
  * Navigation links for the landing page header
@@ -39,3 +42,9 @@ export const navigations: Navigation[] = [
     onlyMobile: true,
   },
 ];
+
+/**
+ * Notification images for the notification component
+ * @type {string[]}
+ */
+export const notificationImages: string[] = [PeopleOne, notification3, notification2];

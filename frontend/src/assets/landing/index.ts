@@ -7,6 +7,8 @@ import LogoWattpad from "./logo-wattpad.svg";
 import LogoKindle from "./logo-kindle.png";
 import LogoGoodreads from "./logo-goodreads.png";
 import LogoDeviantArt from "./logo-deviantart.png";
+import AIScriptNotification from "./aiscript-notification.png";
+import PeopleOne from "./people-1.png";
 
 export {
   AIScriptLogo,
@@ -18,4 +20,6 @@ export {
   LogoKindle,
   LogoGoodreads,
   LogoDeviantArt,
+  AIScriptNotification,
+  PeopleOne,
 };

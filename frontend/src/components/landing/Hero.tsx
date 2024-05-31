@@ -78,9 +78,15 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
                 <Generating className="absolute left-4 right-4 bottom-5 md:left-1/2 md:right-auto md:bottom-8 md:w-[31rem] md:-translate-x-1/2" />
                 <ScrollParallax isAbsolutelyPositioned>
                   <ul className="hidden absolute -left-[5.5rem] bottom-[7.5rem] px-1 py-1 bg-n-9/40 backdrop-blur border border-n-1/10 rounded-2xl xl:flex">
-                    {heroIcons.map((icon, index) => (
+                    {heroIcons.map((icon: string, index: number) => (
                       <li className="p-5" key={index}>
-                        <img src={icon} width={24} height={25} alt={icon} />
+                        <img
+                          src={icon}
+                          width={24}
+                          height={25}
+                          alt={icon}
+                          draggable={false}
+                        />
                       </li>
                     ))}
                   </ul>

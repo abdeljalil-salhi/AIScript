@@ -95,12 +95,12 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
             </div>
             <Gradient />
           </div>
-          <div className="absolute -top-[54%] left-1/2 w-[234%] -translate-x-1/2 md:-top-[46%] md:w-[138%] lg:-top-[104%]">
+          <div className="absolute -top-[104%] left-1/2 w-[234%] -translate-x-1/2 md:-top-[104%] md:w-[138%] 2xl:w-[200%]">
             <img
               src={HeroBackground}
               className="w-full"
-              width={1440}
-              height={1800}
+              width={1800}
+              height={2250}
               draggable={false}
               alt="Hero"
             />

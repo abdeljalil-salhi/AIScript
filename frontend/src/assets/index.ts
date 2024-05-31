@@ -75,10 +75,11 @@ import instagram from "./socials/instagram.svg";
 import telegram from "./socials/telegram.svg";
 import twitter from "./socials/twitter.svg";
 
-import { AIScriptLogo } from "./landing";
+import { AIScriptLogo, AIScriptNoText } from "./landing";
 
 export {
   AIScriptLogo,
+  AIScriptNoText,
   brainwave,
   check,
   check2,

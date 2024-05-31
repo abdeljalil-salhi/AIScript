@@ -5,7 +5,7 @@ import { Spin } from "antd";
 import { useLogin } from "@refinedev/core";
 
 // Assets
-import { brainwave, heroBackground } from "@/assets";
+import { AIScriptLogo, heroBackground } from "@/assets";
 // Constants
 import { OAuthProviders } from "@/constants";
 import { OAuthProvider } from "@/constants/types";
@@ -62,7 +62,12 @@ export const LeftSide: FC<LeftSideProps> = ({ page }): JSX.Element => {
         draggable={false}
       />
       <div className="absolute top-0 left-0 right-0 bottom-0 hidden min-w-[30rem] max-h-[90vh] items-start justify-between flex-col p-10 lg:flex">
-        <img src={brainwave} alt="AIScript Logo" draggable={false} />
+        <img
+          src={AIScriptLogo}
+          className="h-12 lg:h-15 aspect-auto"
+          alt="AIScript Logo"
+          draggable={false}
+        />
         <div className="flex flex-col items-start justify-center h-full gap-7 text-n-1">
           <h4 className="h4 font-bold">Write e-books in seconds</h4>
           <Button>Watch Demo</Button>

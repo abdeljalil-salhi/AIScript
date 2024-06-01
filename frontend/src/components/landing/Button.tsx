@@ -34,7 +34,7 @@ export const Button: FC<ButtonProps> = ({
   type,
   disabled = false,
 }: ButtonProps): JSX.Element => {
-  const classes = `button relative inline-flex items-center justify-center h-11 transition-colors ${
+  const classes = `button relative font-grotesk inline-flex items-center justify-center h-11 transition-colors ${
     px || "px-7"
   } ${
     white

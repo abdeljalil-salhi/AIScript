@@ -38,7 +38,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
     >
       <div className="container relative" ref={parallaxRef}>
         <div className="relative z-1 max-w-[62rem] mx-auto text-center mb-[4rem] md:mb-20 lg:mb-[6rem] flex flex-col items-center">
-          <h1 className="h3 sm:h1 mb-6">
+          <h1 className="h3 sm:h1 mb-6 font-['Poppins']">
             Turn Ideas into&nbsp;Books
             <br />
             Instantly&nbsp;with{" "}
@@ -54,7 +54,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
               />
             </span>
           </h1>
-          <p className="body-1 max-w-3xl mx-auto mb-6 text-n-2 lg:mb-8">
+          <p className="body-1 max-w-3xl mx-auto mb-6 text-n-2 lg:mb-8 font-['Poppins']">
             Experience the Future of Writing with AIScript. <br />
             Enhance Your Workflow and Produce High-Quality Books in Seconds.
           </p>

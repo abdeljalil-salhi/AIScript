@@ -2,13 +2,22 @@
 import { FC } from "react";
 
 /**
- * General Interfaces
+ * Landing Interfaces
  */
 export interface Navigation {
   id: string;
   title: string;
   url: string;
   onlyMobile?: boolean;
+}
+export interface Benefit {
+  id: string;
+  title: string;
+  text: string;
+  backgroundUrl: string;
+  iconUrl: string;
+  imageUrl?: string;
+  light?: boolean;
 }
 
 /**

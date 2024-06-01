@@ -1,28 +1,15 @@
 // Assets
 import {
-  LogoDeviantArt,
-  LogoGoodreads,
-  LogoKindle,
-  LogoWattpad,
-} from "@/assets/landing";
-import {
-  benefitIcon1,
-  benefitIcon2,
-  benefitIcon3,
-  benefitImage2,
   chromecast,
   disc02,
   discord,
   discordBlack,
   facebook,
   figma,
-  file02,
   framer,
-  homeSmile,
   instagram,
   notion,
   photoshop,
-  plusSquare,
   protopie,
   raindrop,
   recording01,
@@ -31,7 +18,6 @@ import {
   roadmap2,
   roadmap3,
   roadmap4,
-  searchMd,
   slack,
   sliders04,
   telegram,
@@ -43,15 +29,6 @@ export * from "./auth";
 export * from "./landing";
 
 export const defaultProfilePicture: string = "/default.png";
-
-export const heroIcons = [homeSmile, file02, searchMd, plusSquare];
-
-export const companyLogos = [
-  LogoWattpad,
-  LogoKindle,
-  LogoGoodreads,
-  LogoDeviantArt,
-];
 
 export const brainwaveServices = [
   "Photo generating",
@@ -214,34 +191,6 @@ export const pricing = [
       "Personalized recommendations based on your preferences",
       "Ability to explore the app and its features without any cost",
     ],
-  },
-];
-
-export const benefits = [
-  {
-    id: "0",
-    title: "Ask anything",
-    text: "Lets users quickly find answers to their questions without having to search through multiple sources.",
-    backgroundUrl: "./src/assets/benefits/card-1.svg",
-    iconUrl: benefitIcon1,
-    imageUrl: benefitImage2,
-  },
-  {
-    id: "1",
-    title: "Improve everyday",
-    text: "The app uses natural language processing to understand user queries and provide accurate and relevant responses.",
-    backgroundUrl: "./src/assets/benefits/card-2.svg",
-    iconUrl: benefitIcon2,
-    imageUrl: benefitImage2,
-    light: true,
-  },
-  {
-    id: "2",
-    title: "Connect everywhere",
-    text: "Connect with the AI chatbot from anywhere, on any device, making it more accessible and convenient.",
-    backgroundUrl: "./src/assets/benefits/card-3.svg",
-    iconUrl: benefitIcon3,
-    imageUrl: benefitImage2,
   },
 ];
 

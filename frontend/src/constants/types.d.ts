@@ -19,6 +19,18 @@ export interface Benefit {
   imageUrl?: string;
   light?: boolean;
 }
+export interface CollaborationContent {
+  id: string;
+  title: string;
+  text?: string;
+}
+export interface CollaborationApp {
+  id: string;
+  title: string;
+  icon: string;
+  width: number;
+  height: number;
+}
 
 /**
  * Authentication Interfaces

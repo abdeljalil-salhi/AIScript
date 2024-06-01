@@ -42,7 +42,7 @@ export const Hero: FC<HeroProps> = (): JSX.Element => {
             Turn Ideas into&nbsp;Books
             <br />
             Instantly&nbsp;with{" "}
-            <span className="inline-block relative">
+            <span className="inline-block relative text-transparent bg-gradient-to-tr from-purple-600 to-blue-500 webkit-bg-clip-text">
               AIScript{" "}
               <img
                 src={Curve}

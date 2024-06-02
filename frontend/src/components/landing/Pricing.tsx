@@ -44,7 +44,7 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
           </div>
         </div>
         <Heading
-          tag="Get started with AIScript"
+          tag="Ready to Get Started?"
           title="Simple Pricing, No Surprises"
         />
         <div className="relative">

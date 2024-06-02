@@ -42,6 +42,15 @@ export interface Pricing {
   price: string;
   features: string[];
 }
+export interface Roadmap {
+  id: string;
+  title: string;
+  text: string;
+  date: string;
+  status: "done" | "progress";
+  imageUrl: string;
+  colorful?: boolean;
+}
 
 /**
  * Authentication Interfaces

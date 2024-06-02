@@ -82,6 +82,17 @@ import Stars from "./pricing/stars.svg";
 import Lines from "./pricing/lines.svg";
 import CheckSimpleIcon from "./pricing/check-simple.svg";
 
+/**
+ * Assets for the roadmap section.
+ */
+import Grid from "./roadmap/grid.webp";
+import StorytellingSupport from "./roadmap/storytelling-support.webp";
+import EnhancedCoverGeneration from "./roadmap/enhanced-cover-generation.webp";
+import InstantBookGeneration from "./roadmap/instant-book-generation.webp";
+import EnhancedSecurity from "./roadmap/enhanced-security.webp";
+import Loading from "./roadmap/loading.svg";
+import CheckLined from "./roadmap/check-lined.svg";
+
 export {
   // AIScript Logo
   AIScriptLogo,
@@ -143,4 +154,12 @@ export {
   Stars,
   Lines,
   CheckSimpleIcon,
+  // Roadmap Section
+  Grid,
+  StorytellingSupport,
+  EnhancedCoverGeneration,
+  InstantBookGeneration,
+  EnhancedSecurity,
+  Loading,
+  CheckLined,
 };

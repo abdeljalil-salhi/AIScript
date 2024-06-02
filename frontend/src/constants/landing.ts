@@ -29,6 +29,10 @@ import {
   ServiceIconThree,
   ServiceIconFour,
   ServiceIconFive,
+  StorytellingSupport,
+  EnhancedCoverGeneration,
+  InstantBookGeneration,
+  EnhancedSecurity,
 } from "@/assets/landing";
 import { notification2, notification3 } from "@/assets";
 // Interfaces
@@ -38,6 +42,7 @@ import {
   CollaborationContent,
   Navigation,
   Pricing,
+  Roadmap,
   ServiceIcon,
 } from "./types";
 
@@ -303,5 +308,44 @@ export const pricing: Pricing[] = [
       "Optional credit top ups",
       "Priority generation queue",
     ],
+  },
+];
+
+/**
+ * Roadmap items for the landing page, used in the roadmap component
+ */
+export const roadmap: Roadmap[] = [
+  {
+    id: "0",
+    title: "Storytelling Support",
+    text: "Enhance the AI to write stories with consistent characters and settings, providing richer and more engaging narratives.",
+    date: "June 2024",
+    status: "progress",
+    imageUrl: StorytellingSupport,
+    colorful: true,
+  },
+  {
+    id: "1",
+    title: "Enhanced Cover Generation",
+    text: "Improve the AI model to generate book covers that perfectly match the topic and aesthetic of the book.",
+    date: "May 2024",
+    status: "done",
+    imageUrl: EnhancedCoverGeneration,
+  },
+  {
+    id: "2",
+    title: "Instant Book Generation",
+    text: "Develop an AI model that generates high-quality books within seconds, ensuring a high level of proficiency.",
+    date: "April 2024",
+    status: "done",
+    imageUrl: InstantBookGeneration,
+  },
+  {
+    id: "3",
+    title: "Enhanced Security",
+    text: "Implement secure payment providers and authentication modules, including two-factor authentication (2FA), to ensure the security of accounts and transactions.",
+    date: "March 2024",
+    status: "done",
+    imageUrl: EnhancedSecurity,
   },
 ];

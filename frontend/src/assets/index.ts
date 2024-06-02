@@ -20,8 +20,6 @@ import curve from "./hero/curve.png";
 import robot from "./hero/robot.jpg";
 import heroBackground from "./hero/hero-background.jpg";
 
-import curve1 from "./collaboration/curve-1.svg";
-import curve2 from "./collaboration/curve-2.svg";
 import discord from "./collaboration/discord.png";
 import figma from "./collaboration/figma.png";
 import framer from "./collaboration/framer.png";
@@ -83,8 +81,6 @@ export {
   curve,
   robot,
   heroBackground,
-  curve1,
-  curve2,
   discord,
   figma,
   framer,

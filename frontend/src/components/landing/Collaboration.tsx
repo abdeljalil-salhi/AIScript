@@ -2,7 +2,8 @@
 import { FC } from "react";
 
 // Assets
-import { AIScriptNoText, check } from "@/assets";
+import { AIScriptNoText } from "@/assets";
+import { CheckIcon } from "@/assets/landing";
 // Constants
 import {
   collaborationApps,
@@ -44,7 +45,7 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
               <li key={content.id} className="mb-3 py-3">
                 <div className="flex items-center">
                   <img
-                    src={check}
+                    src={CheckIcon}
                     width={24}
                     height={24}
                     alt="Check icon"
@@ -94,9 +95,9 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
                     <img
                       src={app.icon}
                       width={app.width}
-                      height={app.height}
                       className="m-auto"
                       alt={app.title}
+                      draggable={false}
                     />
                   </div>
                 </li>

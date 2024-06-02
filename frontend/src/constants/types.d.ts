@@ -29,7 +29,6 @@ export interface CollaborationApp {
   title: string;
   icon: string;
   width: number;
-  height: number;
 }
 
 /**

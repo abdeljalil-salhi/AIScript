@@ -40,6 +40,21 @@ import BenefitIconConvert from "./benefits/icon-convert.svg";
 import BenefitIconImage from "./benefits/icon-image.svg";
 import BenefitBackground from "./benefits/benefit-background.png";
 
+/**
+ * Assets for the collaboration section.
+ */
+import CheckIcon from "./collaboration/check.svg";
+import WordLogo from "./collaboration/word.png";
+import NotionLogo from "./collaboration/notion.png";
+import GoogleDocsLogo from "./collaboration/google-docs.png";
+import OpenAILogo from "./collaboration/openai.png";
+import PhotoshopLogo from "./collaboration/photoshop.png";
+import PdfLogo from "./collaboration/pdf.png";
+import GoogleAuthenticatorLogo from "./collaboration/google-authenticator.png";
+import AsposeLogo from "./collaboration/aspose.png";
+import CurveOne from "./collaboration/curve-1.svg";
+import CurveTwo from "./collaboration/curve-2.svg";
+
 export {
   // AIScript Logo
   AIScriptLogo,
@@ -71,4 +86,16 @@ export {
   BenefitIconConvert,
   BenefitIconImage,
   BenefitBackground,
+  // Collaboration Section
+  CheckIcon,
+  WordLogo,
+  NotionLogo,
+  GoogleDocsLogo,
+  OpenAILogo,
+  PhotoshopLogo,
+  PdfLogo,
+  GoogleAuthenticatorLogo,
+  AsposeLogo,
+  CurveOne,
+  CurveTwo,
 };

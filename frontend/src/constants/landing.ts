@@ -33,6 +33,11 @@ import {
   EnhancedCoverGeneration,
   InstantBookGeneration,
   EnhancedSecurity,
+  Discord,
+  Twitter,
+  Instagram,
+  Telegram,
+  Facebook,
 } from "@/assets/landing";
 import { notification2, notification3 } from "@/assets";
 // Interfaces
@@ -44,6 +49,7 @@ import {
   Pricing,
   Roadmap,
   ServiceIcon,
+  Social,
 } from "./types";
 
 /**
@@ -347,5 +353,42 @@ export const roadmap: Roadmap[] = [
     date: "March 2024",
     status: "done",
     imageUrl: EnhancedSecurity,
+  },
+];
+
+/**
+ * Social media links for the footer component
+ * @type {Social[]}
+ */
+export const socials: Social[] = [
+  {
+    id: "0",
+    title: "Discord",
+    iconUrl: Discord,
+    url: "#",
+  },
+  {
+    id: "1",
+    title: "Twitter",
+    iconUrl: Twitter,
+    url: "#",
+  },
+  {
+    id: "2",
+    title: "Instagram",
+    iconUrl: Instagram,
+    url: "#",
+  },
+  {
+    id: "3",
+    title: "Telegram",
+    iconUrl: Telegram,
+    url: "#",
+  },
+  {
+    id: "4",
+    title: "Facebook",
+    iconUrl: Facebook,
+    url: "#",
   },
 ];

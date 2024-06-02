@@ -47,12 +47,6 @@ import notification2 from "./notification/image-2.png";
 import notification3 from "./notification/image-3.png";
 import notification4 from "./notification/image-4.png";
 
-import discordBlack from "./socials/discord.svg";
-import facebook from "./socials/facebook.svg";
-import instagram from "./socials/instagram.svg";
-import telegram from "./socials/telegram.svg";
-import twitter from "./socials/twitter.svg";
-
 import { AIScriptLogo, AIScriptNoText } from "./landing";
 
 export {
@@ -100,9 +94,4 @@ export {
   notification2,
   notification3,
   notification4,
-  discordBlack,
-  facebook,
-  instagram,
-  telegram,
-  twitter,
 };

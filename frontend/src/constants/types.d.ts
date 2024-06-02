@@ -51,6 +51,12 @@ export interface Roadmap {
   imageUrl: string;
   colorful?: boolean;
 }
+export interface Social {
+  id: string;
+  title: string;
+  iconUrl: string;
+  url: string;
+}
 
 /**
  * Authentication Interfaces

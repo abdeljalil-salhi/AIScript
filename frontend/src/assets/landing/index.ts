@@ -93,6 +93,15 @@ import EnhancedSecurity from "./roadmap/enhanced-security.webp";
 import Loading from "./roadmap/loading.svg";
 import CheckLined from "./roadmap/check-lined.svg";
 
+/**
+ * Assets for the footer section.
+ */
+import Discord from "./footer/discord.svg";
+import Twitter from "./footer/twitter.svg";
+import Instagram from "./footer/instagram.svg";
+import Telegram from "./footer/telegram.svg";
+import Facebook from "./footer/facebook.svg";
+
 export {
   // AIScript Logo
   AIScriptLogo,
@@ -162,4 +171,10 @@ export {
   EnhancedSecurity,
   Loading,
   CheckLined,
+  // Footer Section
+  Discord,
+  Twitter,
+  Instagram,
+  Telegram,
+  Facebook,
 };

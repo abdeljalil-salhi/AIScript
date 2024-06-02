@@ -3,6 +3,8 @@
  */
 import AIScriptLogo from "./aiscript-logo.png";
 import AIScriptNoText from "./aiscript-no-text.png";
+import AIScriptBorderized from "./aiscript-borderized.webp";
+import AIScriptDesaturated from "./aiscript-desaturated.webp";
 
 /**
  * Assets for the hero section.
@@ -60,11 +62,19 @@ import CurveTwo from "./collaboration/curve-2.svg";
  */
 import ServiceOne from "./services/service-1.webp";
 import ServiceTwo from "./services/service-2.webp";
+import ServiceThree from "./services/service-3.webp";
+import ServiceIconOne from "./services/icon-1.svg";
+import ServiceIconTwo from "./services/icon-2.svg";
+import ServiceIconThree from "./services/icon-3.svg";
+import ServiceIconFour from "./services/icon-4.svg";
+import ServiceIconFive from "./services/icon-5.svg";
 
 export {
   // AIScript Logo
   AIScriptLogo,
   AIScriptNoText,
+  AIScriptBorderized,
+  AIScriptDesaturated,
   // Hero Section
   Curve,
   Hero,
@@ -107,4 +117,10 @@ export {
   // Services Section
   ServiceOne,
   ServiceTwo,
+  ServiceThree,
+  ServiceIconOne,
+  ServiceIconTwo,
+  ServiceIconThree,
+  ServiceIconFour,
+  ServiceIconFive,
 };

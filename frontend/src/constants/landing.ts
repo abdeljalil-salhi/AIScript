@@ -24,6 +24,11 @@ import {
   PdfLogo,
   GoogleAuthenticatorLogo,
   AsposeLogo,
+  ServiceIconOne,
+  ServiceIconTwo,
+  ServiceIconThree,
+  ServiceIconFour,
+  ServiceIconFive,
 } from "@/assets/landing";
 import { notification2, notification3 } from "@/assets";
 // Interfaces
@@ -32,6 +37,7 @@ import {
   CollaborationApp,
   CollaborationContent,
   Navigation,
+  ServiceIcon,
 } from "./types";
 
 /**
@@ -215,11 +221,43 @@ export const collaborationApps: CollaborationApp[] = [
 ];
 
 /**
- * Services for the landing page, used in the services component
+ * Services for the landing page, used in the first service card
  * @type {string[]}
  */
 export const services: string[] = [
   "AI-Powered Book Generation",
   "Automated Cover Design",
   "Instant Results",
+];
+
+/**
+ * Service icons for the landing page, used in the third service card
+ * @type {ServiceIcon[]}
+ */
+export const serviceIcons: ServiceIcon[] = [
+  {
+    id: "0",
+    icon: ServiceIconOne,
+    width: 24,
+  },
+  {
+    id: "1",
+    icon: ServiceIconTwo,
+    width: 32,
+  },
+  {
+    id: "2",
+    icon: ServiceIconThree,
+    width: 36,
+  },
+  {
+    id: "3",
+    icon: ServiceIconFour,
+    width: 33,
+  },
+  {
+    id: "4",
+    icon: ServiceIconFive,
+    width: 24,
+  },
 ];

@@ -2,15 +2,15 @@
 import { FC } from "react";
 
 // Assets
-import { brainwaveWhiteSymbol, gradient, play } from "@/assets";
+import { AIScriptDesaturated } from "@/assets/landing";
+import { gradient } from "@/assets";
 // SVGs
 import { ChatBubbleWing } from "@/assets/svg/ChatBubbleWing";
 
 // Interfaces
 interface GradientProps {}
-interface PhotoChatMessageProps {}
-interface VideoChatMessageProps {}
-interface VideoBarProps {}
+interface BookChatMessageProps {}
+interface CoverChatMessageProps {}
 
 /**
  * Gradient Component
@@ -34,16 +34,17 @@ export const Gradient: FC<GradientProps> = (): JSX.Element => {
 };
 
 /**
- * PhotoChatMessage Component
+ * BookChatMessage Component;
+ * Displays a chat bubble message for generating a book.
  *
- * @interface PhotoChatMessageProps
- * @returns {JSX.Element} - PhotoChatMessage Component
- * @exports PhotoChatMessage
+ * @interface BookChatMessageProps
+ * @returns {JSX.Element} - BookChatMessage Component
+ * @exports BookChatMessage
  */
-export const PhotoChatMessage: FC<PhotoChatMessageProps> = (): JSX.Element => {
+export const BookChatMessage: FC<BookChatMessageProps> = (): JSX.Element => {
   return (
     <div className="absolute top-8 left-[4rem] max-w-[17.5rem] py-6 px-8 bg-gray-900 rounded-t-xl rounded-br-xl font-code text-base lg:top-16 lg:right-[8.75rem] lg:max-w-[17.5rem]">
-      Hey AIScript, generate a book for me!
+      Hey AIScript, generate a book for me.
       <ChatBubbleWing
         className="absolute right-full bottom-0 -scale-x-100"
         pathClassName="fill-gray-900"
@@ -53,22 +54,24 @@ export const PhotoChatMessage: FC<PhotoChatMessageProps> = (): JSX.Element => {
 };
 
 /**
- * VideoChatMessage Component
+ * CoverChatMessage Component;
+ * Displays a chat bubble message for generating a cover.
  *
- * @interface VideoChatMessageProps
- * @returns {JSX.Element} - VideoChatMessage Component
- * @exports VideoChatMessage
+ * @interface CoverChatMessageProps
+ * @returns {JSX.Element} - CoverChatMessage Component
+ * @exports CoverChatMessage
  */
-export const VideoChatMessage: FC<VideoChatMessageProps> = (): JSX.Element => {
+export const CoverChatMessage: FC<CoverChatMessageProps> = (): JSX.Element => {
   return (
     <div className="absolute top-8 left-[3.125rem] w-full max-w-[14rem] pt-2.5 pr-2.5 pb-7 pl-5 bg-n-6 rounded-t-xl rounded-br-xl font-code text-base md:max-w-[17.5rem]">
-      Video generated!
+      Cover generated!
       <div className="absolute left-5 -bottom-[1.125rem] flex items-center justify-center w-[2.25rem] h-[2.25rem] bg-color-1 rounded-[0.75rem]">
         <img
-          src={brainwaveWhiteSymbol}
-          width={26}
-          height={26}
+          src={AIScriptDesaturated}
+          width={27}
+          height={27}
           alt="Brainwave"
+          draggable={false}
         />
       </div>
       <p className="tagline absolute right-2.5 bottom-1 text-[0.625rem] text-n-3 uppercase">
@@ -78,31 +81,6 @@ export const VideoChatMessage: FC<VideoChatMessageProps> = (): JSX.Element => {
         className="absolute right-full bottom-0 -scale-x-100"
         pathClassName="fill-n-6"
       />
-    </div>
-  );
-};
-
-/**
- * VideoBar Component
- *
- * @interface VideoBarProps
- * @returns {JSX.Element} - VideoBar Component
- * @exports VideoBar
- */
-export const VideoBar: FC<VideoBarProps> = (): JSX.Element => {
-  return (
-    <div className="absolute left-0 bottom-0 w-full flex items-center p-6">
-      <img
-        src={play}
-        width={24}
-        height={24}
-        alt="Play"
-        className="object-contain mr-3"
-      />
-
-      <div className="flex-1 bg-[#D9D9D9]">
-        <div className="w-1/2 h-0.5 bg-color-1"></div>
-      </div>
     </div>
   );
 };

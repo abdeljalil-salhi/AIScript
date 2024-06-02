@@ -30,6 +30,11 @@ export interface CollaborationApp {
   icon: string;
   width: number;
 }
+export interface ServiceIcon {
+  id: string;
+  icon: string;
+  width: number;
+}
 
 /**
  * Authentication Interfaces

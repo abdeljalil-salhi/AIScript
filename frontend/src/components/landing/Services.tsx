@@ -2,17 +2,17 @@
 import { FC } from "react";
 
 // Assets
-import { CheckIcon, ServiceOne, ServiceTwo } from "@/assets/landing";
-import { service3 } from "@/assets";
-// Constants
-import { brainwaveServicesIcons, services } from "@/constants";
-// Components
 import {
-  Gradient,
-  PhotoChatMessage,
-  VideoBar,
-  VideoChatMessage,
-} from "./design/Services";
+  CheckIcon,
+  ServiceOne,
+  ServiceTwo,
+  ServiceThree,
+} from "@/assets/landing";
+// Constants
+import { serviceIcons, services } from "@/constants";
+import { ServiceIcon } from "@/constants/types";
+// Components
+import { BookChatMessage, CoverChatMessage, Gradient } from "./design/Services";
 import { Generating } from "./Generating";
 import { Heading } from "./Heading";
 import { Section } from "./Section";
@@ -50,7 +50,7 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
             <div className="relative z-1 max-w-[17rem] ml-auto font-['Poppins']">
               <h4 className="h4 mb-4">Next-Gen AI</h4>
               <p className="body-2 mb-[3rem] text-n-3">
-                AIScript Unleashes the Power of AI to Craft Stunning Books.
+                AIScript unleashes the power of AI to craft stunning books.
               </p>
               <ul className="body-2">
                 {services.map((service: string, index: number) => (
@@ -92,37 +92,36 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
                   Try it now!
                 </p>
               </div>
-              <PhotoChatMessage />
+              <BookChatMessage />
             </div>
             <div className="p-4 bg-n-7 rounded-3xl overflow-hidden lg:min-h-[46rem]">
-              <div className="py-12 px-4 xl:px-8">
-                <h4 className="h4 mb-4">Cover generation</h4>
+              <div className="py-12 px-4 xl:px-8 font-['Poppins']">
+                <h4 className="h4 mb-4">Cover Generation</h4>
                 <p className="body-2 mb-[2rem] text-n-3">
                   The world&apos;s first AI-powered book cover generator. Create
                   an artistic book cover in seconds. What will you create?
                 </p>
                 <ul className="flex items-center justify-between">
-                  {brainwaveServicesIcons.map((service, index: number) => (
+                  {serviceIcons.map((service: ServiceIcon) => (
                     <li
-                      key={index}
+                      key={service.id}
                       className={`flex items-center justify-center rounded-2xl ${
-                        index === 2
-                          ? "w-[3rem] h-[3rem] p-0.25 bg-conic-gradient md:w-[4.5rem] md:h-[4.5rem]"
+                        service.id === "2"
+                          ? "w-[3rem] h-[3rem] p-0.5 bg-conic-gradient md:w-[4.5rem] md:h-[4.5rem]"
                           : "flex w-10 h-10 bg-n-6 md:w-15 md:h-15"
                       }`}
                     >
                       <div
                         className={
-                          index === 2
+                          service.id === "2"
                             ? "flex items-center justify-center w-full h-full bg-n-7 rounded-[1rem]"
                             : ""
                         }
                       >
                         <img
-                          src={service}
-                          width={24}
-                          height={24}
-                          alt="Service icon"
+                          src={service.icon}
+                          width={service.width}
+                          alt="Service Icon"
                           draggable={false}
                         />
                       </div>
@@ -132,15 +131,14 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
               </div>
               <div className="relative h-[20rem] bg-n-8 rounded-xl overflow-hidden md:h-[25rem]">
                 <img
-                  src={service3}
+                  src={ServiceThree}
                   width={520}
                   height={400}
                   className="w-full h-full object-cover"
-                  alt="Futuristic robot"
+                  alt="Futuristic AI"
                   draggable={false}
                 />
-                <VideoChatMessage />
-                <VideoBar />
+                <CoverChatMessage />
               </div>
             </div>
           </div>

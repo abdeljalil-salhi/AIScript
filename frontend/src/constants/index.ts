@@ -22,12 +22,6 @@ export * from "./landing";
 
 export const defaultProfilePicture: string = "/default.png";
 
-export const brainwaveServices = [
-  "Photo generating",
-  "Photo enhance",
-  "Seamless Integration",
-];
-
 export const brainwaveServicesIcons = [
   recording03,
   recording01,

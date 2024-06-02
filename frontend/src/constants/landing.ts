@@ -159,6 +159,10 @@ export const collaborationContent: CollaborationContent[] = [
   },
 ];
 
+/**
+ * Collaboration apps for the landing page, used in the collaboration circle component
+ * @type {CollaborationApp[]}
+ */
 export const collaborationApps: CollaborationApp[] = [
   {
     id: "0",
@@ -208,4 +212,14 @@ export const collaborationApps: CollaborationApp[] = [
     icon: AsposeLogo,
     width: 38,
   },
+];
+
+/**
+ * Services for the landing page, used in the services component
+ * @type {string[]}
+ */
+export const services: string[] = [
+  "AI-Powered Book Generation",
+  "Automated Cover Design",
+  "Instant Results",
 ];

@@ -74,6 +74,14 @@ import ServiceIconThree from "./services/icon-3.svg";
 import ServiceIconFour from "./services/icon-4.svg";
 import ServiceIconFive from "./services/icon-5.svg";
 
+/**
+ * Assets for the pricing section.
+ */
+import Sphere from "./pricing/sphere.webp";
+import Stars from "./pricing/stars.svg";
+import Lines from "./pricing/lines.svg";
+import CheckSimpleIcon from "./pricing/check-simple.svg";
+
 export {
   // AIScript Logo
   AIScriptLogo,
@@ -130,4 +138,9 @@ export {
   ServiceIconThree,
   ServiceIconFour,
   ServiceIconFive,
+  // Pricing Section
+  Sphere,
+  Stars,
+  Lines,
+  CheckSimpleIcon,
 };

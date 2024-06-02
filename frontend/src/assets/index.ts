@@ -3,8 +3,6 @@ import check from "./check.svg";
 import brainwaveSymbol from "./brainwave-symbol.svg";
 import brainwaveWhiteSymbol from "./brainwave-symbol-white.svg";
 import play from "./play.svg";
-import gradient from "./gradient.png";
-import smallSphere from "./4-small.png";
 import grid from "./grid.png";
 import check2 from "./check-02.svg";
 import loading1 from "./loading-01.svg";
@@ -34,7 +32,6 @@ import service2 from "./services/service-2.png";
 import service3 from "./services/service-3.png";
 
 import lines from "./pricing/lines.svg";
-import stars from "./pricing/stars.svg";
 
 import coins from "./roadmap/coins.png";
 import done from "./roadmap/done.svg";
@@ -68,8 +65,6 @@ export {
   brainwaveSymbol,
   brainwaveWhiteSymbol,
   play,
-  gradient,
-  smallSphere,
   grid,
   recording03,
   recording01,
@@ -93,7 +88,6 @@ export {
   service2,
   service3,
   lines,
-  stars,
   coins,
   done,
   hero,

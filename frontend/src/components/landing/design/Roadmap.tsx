@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { gradient } from "@/assets";
+import { Gradient as GradientBackground } from "@/assets/landing";
 
 // Interfaces
 interface GradientProps {}
@@ -20,7 +20,7 @@ export const Gradient: FC<GradientProps> = (): JSX.Element => {
       <div className="absolute top-1/2 left-1/2 w-[58.85rem] h-[58.85rem] -translate-x-3/4 -translate-y-1/2">
         <img
           className="w-full"
-          src={gradient}
+          src={GradientBackground}
           width={942}
           height={942}
           alt="Gradient"

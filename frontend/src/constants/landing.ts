@@ -37,6 +37,7 @@ import {
   CollaborationApp,
   CollaborationContent,
   Navigation,
+  Pricing,
   ServiceIcon,
 } from "./types";
 
@@ -259,5 +260,48 @@ export const serviceIcons: ServiceIcon[] = [
     id: "4",
     icon: ServiceIconFive,
     width: 24,
+  },
+];
+
+/**
+ * Pricing plans for the landing page, used in the pricing component
+ * @type {Pricing[]}
+ */
+export const pricing: Pricing[] = [
+  {
+    id: "0",
+    title: "Basic Plan",
+    description: "For testing purposes and exploring the app",
+    price: "0",
+    features: [
+      "Free 50 credits",
+      "Non-commercial terms",
+      "No credit top ups",
+      "Free shared generation queue",
+    ],
+  },
+  {
+    id: "1",
+    title: "Pro Plan",
+    description: "For small projects and commercial use",
+    price: import.meta.env.VITE_API_PROPLAN_MONTHLY,
+    features: [
+      "500 credits renewable monthly",
+      "General commercial terms",
+      "Optional credit top ups",
+      "Priority generation queue",
+    ],
+  },
+  {
+    id: "2",
+    title: "Premier Plan",
+    description: "For large projects and commercial use",
+    price: import.meta.env.VITE_API_PREMIERPLAN_MONTHLY,
+    features: [
+      "1000 credits renewable monthly",
+      "General commercial terms",
+      "Optional credit top ups",
+      "Priority generation queue",
+    ],
   },
 ];

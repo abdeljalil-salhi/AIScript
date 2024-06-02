@@ -35,6 +35,13 @@ export interface ServiceIcon {
   icon: string;
   width: number;
 }
+export interface Pricing {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  features: string[];
+}
 
 /**
  * Authentication Interfaces

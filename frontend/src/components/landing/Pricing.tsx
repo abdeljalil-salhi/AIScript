@@ -3,9 +3,9 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 
 // Assets
-import { smallSphere, stars } from "@/assets";
+import { Sphere, Stars } from "@/assets/landing";
 // Components
-import { LeftLine, RightLine } from "./design/Pricing";
+import { Gradient, LeftLine, RightLine } from "./design/Pricing";
 import { Heading } from "./Heading";
 import { PricingList } from "./PricingList";
 import { Section } from "./Section";
@@ -26,7 +26,7 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
       <div className="container relative z-2">
         <div className="hidden relative justify-center mb-[6.5rem] lg:flex">
           <img
-            src={smallSphere}
+            src={Sphere}
             width={255}
             height={255}
             className="relative z-1"
@@ -35,7 +35,7 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
           />
           <div className="absolute top-1/2 left-1/2 w-[60rem] -translate-x-1/2 -translate-y-1/2 pointer-events-none">
             <img
-              src={stars}
+              src={Stars}
               width={950}
               height={400}
               className="w-full"
@@ -43,16 +43,20 @@ export const Pricing: FC<PricingProps> = (): JSX.Element => {
             />
           </div>
         </div>
-        <Heading tag="Get started with AIScript" title="Pay as you go" />
+        <Heading
+          tag="Get started with AIScript"
+          title="Simple Pricing, No Surprises"
+        />
         <div className="relative">
           <PricingList />
           <LeftLine />
           <RightLine />
+          <Gradient />
         </div>
         <div className="flex justify-center mt-10">
           <Link
             to="/pricing"
-            className="text-xs font-code font-bold tracking-wider uppercase border-b"
+            className="text-xs font-grotesk font-bold tracking-widest uppercase text-n-1/85 hover:text-n-1/70 active:text-n-1/60"
             draggable={false}
           >
             See the full details

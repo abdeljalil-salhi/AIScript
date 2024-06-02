@@ -7,6 +7,11 @@ import AIScriptBorderized from "./aiscript-borderized.webp";
 import AIScriptDesaturated from "./aiscript-desaturated.webp";
 
 /**
+ * General assets for the landing page.
+ */
+import Gradient from "./gradient.webp";
+
+/**
  * Assets for the hero section.
  */
 import Curve from "./hero/curve.png";
@@ -75,6 +80,8 @@ export {
   AIScriptNoText,
   AIScriptBorderized,
   AIScriptDesaturated,
+  // General Assets
+  Gradient,
   // Hero Section
   Curve,
   Hero,

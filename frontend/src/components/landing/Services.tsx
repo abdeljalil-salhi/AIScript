@@ -2,8 +2,8 @@
 import { FC } from "react";
 
 // Assets
-import { CheckIcon, ServiceOne } from "@/assets/landing";
-import { service2, service3 } from "@/assets";
+import { CheckIcon, ServiceOne, ServiceTwo } from "@/assets/landing";
+import { service3 } from "@/assets";
 // Constants
 import { brainwaveServicesIcons, services } from "@/constants";
 // Components
@@ -76,19 +76,20 @@ export const Services: FC<ServicesProps> = (): JSX.Element => {
             <div className="relative min-h-[39rem] border border-n-1/10 rounded-3xl overflow-hidden">
               <div className="absolute inset-0">
                 <img
-                  src={service2}
+                  src={ServiceTwo}
                   width={630}
                   height={750}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover brightness-75 grayscale-[25%]"
                   alt="Robot"
                   draggable={false}
                 />
               </div>
-              <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
-                <h4 className="h4 mb-4">E-book generation</h4>
+              <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15 font-['Poppins']">
+                <h4 className="h4 mb-4">Book Generation</h4>
                 <p className="body-2 mb-[3rem] text-n-3">
-                  Automatically generate e-books using our AI technology. Try it
-                  now!
+                  Effortlessly create books with our advanced AI technology.{" "}
+                  <br className="hidden sm:block" />
+                  Try it now!
                 </p>
               </div>
               <PhotoChatMessage />

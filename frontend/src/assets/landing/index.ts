@@ -59,6 +59,7 @@ import CurveTwo from "./collaboration/curve-2.svg";
  * Assets for the services section.
  */
 import ServiceOne from "./services/service-1.webp";
+import ServiceTwo from "./services/service-2.webp";
 
 export {
   // AIScript Logo
@@ -105,4 +106,5 @@ export {
   CurveTwo,
   // Services Section
   ServiceOne,
+  ServiceTwo,
 };

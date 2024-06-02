@@ -42,9 +42,12 @@ export const Gradient: FC<GradientProps> = (): JSX.Element => {
  */
 export const PhotoChatMessage: FC<PhotoChatMessageProps> = (): JSX.Element => {
   return (
-    <div className="absolute top-8 right-8 max-w-[17.5rem] py-6 px-8 bg-black rounded-t-xl rounded-bl-xl font-code text-base lg:top-16 lg:right-[8.75rem] lg:max-w-[17.5rem]">
-      Hey AIScript, generate an e-book for me.
-      <ChatBubbleWing className="absolute left-full bottom-0" />
+    <div className="absolute top-8 left-[4rem] max-w-[17.5rem] py-6 px-8 bg-gray-900 rounded-t-xl rounded-br-xl font-code text-base lg:top-16 lg:right-[8.75rem] lg:max-w-[17.5rem]">
+      Hey AIScript, generate a book for me!
+      <ChatBubbleWing
+        className="absolute right-full bottom-0 -scale-x-100"
+        pathClassName="fill-gray-900"
+      />
     </div>
   );
 };

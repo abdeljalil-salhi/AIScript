@@ -1,9 +1,10 @@
 // Dependencies
+import useResizeObserver from "use-resize-observer";
 import { FC, useEffect, useMemo, useState } from "react";
 import { Spin } from "antd";
-import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Document, Page, pdfjs } from "react-pdf";
-import useResizeObserver from "use-resize-observer";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -15,6 +16,7 @@ import {
   PrinterFilled,
 } from "@ant-design/icons";
 import { useCustom, useCustomMutation } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Dependency Styles
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
@@ -238,162 +240,197 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
     isDeleteError,
   ]);
 
-  return isBookLoading || !book || !book.data.getBookById ? (
-    <LoadingPage />
-  ) : (
-    <div
-      ref={ref}
-      className="w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden"
-    >
-      <div className="w-full bg-n-7 flex flex-col font-['Poppins']">
-        <div className="w-full border-n-6/90 border border-l-0">
-          <h3 className="text-white text-start text-2xl font-medium px-2 pt-2">
-            {book.data.getBookById.title}
-          </h3>
+  useDocumentTitle(
+    `AIScript - ${
+      isBookLoading || !book || !book.data.getBookById
+        ? "View Book"
+        : book.data.getBookById.title
+    }`
+  );
 
-          <p
-            className="text-xs text-n-1/85 font-light p-2 pt-0 text-justify"
-            title={
-              book.data.getBookById.topic.length >
-              (width < 625 ? 200 : width < 1024 ? 400 : 600)
-                ? book.data.getBookById.topic
-                : ""
-            }
-          >
-            {book.data.getBookById.topic.slice(
-              0,
-              width < 625 ? 200 : width < 1024 ? 400 : 600
-            )}
-            {book.data.getBookById.topic.length >
-              (width < 625 ? 200 : width < 1024 ? 400 : 600) && "..."}
-          </p>
-        </div>
+  return (
+    <>
+      <Helmet>
+        <title>
+          AIScript -{" "}
+          {isBookLoading || !book || !book.data.getBookById
+            ? "View Book"
+            : book.data.getBookById.title}
+        </title>
+        <meta
+          name="description"
+          content={
+            isBookLoading || !book || !book.data.getBookById
+              ? "View a book on AIScript"
+              : book.data.getBookById.topic.length > 200
+              ? book.data.getBookById.topic.slice(0, 200) + "..."
+              : book.data.getBookById.topic
+          }
+        />
+      </Helmet>
 
-        <div className="w-full flex flex-col sm:flex-row">
-          <div className="w-full sm:w-1/2 flex flex-row h-8 justify-center items-center">
-            <button
-              type="button"
-              className="w-1/4 h-full border-n-6/90 border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 cursor-pointer"
-              onClick={onPrevPage}
-            >
-              <ArrowLeftOutlined />
-            </button>
+      {isBookLoading || !book || !book.data.getBookById ? (
+        <LoadingPage />
+      ) : (
+        <div
+          ref={ref}
+          className="w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden"
+        >
+          <div className="w-full bg-n-7 flex flex-col font-['Poppins']">
+            <div className="w-full border-n-6/90 border border-l-0">
+              <h3 className="text-white text-start text-2xl font-medium px-2 pt-2">
+                {book.data.getBookById.title}
+              </h3>
 
-            <button
-              type="button"
-              className="w-2/4 h-full border-n-6/90 border-b text-sm font-medium bg-n-7/90 text-white px-4 cursor-default"
-            >
-              {pageNumber} / {numPages}
-            </button>
+              <p
+                className="text-xs text-n-1/85 font-light p-2 pt-0 text-justify"
+                title={
+                  book.data.getBookById.topic.length >
+                  (width < 625 ? 200 : width < 1024 ? 400 : 600)
+                    ? book.data.getBookById.topic
+                    : ""
+                }
+              >
+                {book.data.getBookById.topic.slice(
+                  0,
+                  width < 625 ? 200 : width < 1024 ? 400 : 600
+                )}
+                {book.data.getBookById.topic.length >
+                  (width < 625 ? 200 : width < 1024 ? 400 : 600) && "..."}
+              </p>
+            </div>
 
-            <button
-              type="button"
-              className="w-1/4 h-full border-n-6/90 border-l border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 cursor-pointer"
-              onClick={onNextPage}
-            >
-              <ArrowRightOutlined />
-            </button>
-          </div>
-
-          <div className="w-full sm:w-1/2 flex flex-row border-r border-b border-n-6/90 h-8 justify-center items-center">
-            <button
-              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
-              title="Download the book in PDF format"
-              onClick={() => downloadFile(book.data.getBookById!.pdf)}
-            >
-              <FilePdfFilled className="text-lg -mt-0.5" />
-              Get PDF
-            </button>
-
-            <button
-              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
-              title="Download the book in DOCX format"
-              onClick={() => downloadFile(book.data.getBookById!.document)}
-            >
-              <FileWordFilled className="text-lg -mt-0.5" />
-              Get DOCX
-            </button>
-
-            <button
-              className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
-              onClick={() => window.print()}
-            >
-              <PrinterFilled className="text-lg" />
-              Print
-            </button>
-
-            <div className="flex h-full flex-row items-center justify-center flex-grow">
-              {isConfirmDelete ? (
-                <>
-                  <button
-                    className="flex-grow h-full flex items-center justify-center hover:bg-green-500/20 transition-all ease-in-out duration-300"
-                    onClick={deleteFile}
-                  >
-                    <CheckOutlined className="text-green-500" />
-                  </button>
-                  <button
-                    className="flex-grow h-full flex items-center justify-center hover:bg-red-500/20 transition-all ease-in-out duration-300 border-l border-n-6/90"
-                    onClick={() => setIsConfirmDelete(false)}
-                  >
-                    <CloseOutlined className="text-red-500" />
-                  </button>
-                </>
-              ) : (
+            <div className="w-full flex flex-col sm:flex-row">
+              <div className="w-full sm:w-1/2 flex flex-row h-8 justify-center items-center">
                 <button
-                  className="w-full h-full flex items-center justify-center hover:bg-n-6/60 transition-all ease-in-out duration-300"
-                  onClick={() => setIsConfirmDelete(true)}
+                  type="button"
+                  className="w-1/4 h-full border-n-6/90 border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 cursor-pointer"
+                  onClick={onPrevPage}
                 >
-                  <DeleteFilled className="text-lg" />
+                  <ArrowLeftOutlined />
                 </button>
-              )}
+
+                <button
+                  type="button"
+                  className="w-2/4 h-full border-n-6/90 border-b text-sm font-medium bg-n-7/90 text-white px-4 cursor-default"
+                >
+                  {pageNumber} / {numPages}
+                </button>
+
+                <button
+                  type="button"
+                  className="w-1/4 h-full border-n-6/90 border-l border-b border-r text-base bg-n-7/90 hover:bg-n-6/60 transition-all ease-in-out duration-300 text-white px-4 cursor-pointer"
+                  onClick={onNextPage}
+                >
+                  <ArrowRightOutlined />
+                </button>
+              </div>
+
+              <div className="w-full sm:w-1/2 flex flex-row border-r border-b border-n-6/90 h-8 justify-center items-center">
+                <button
+                  className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                  title="Download the book in PDF format"
+                  onClick={() => downloadFile(book.data.getBookById!.pdf)}
+                >
+                  <FilePdfFilled className="text-lg -mt-0.5" />
+                  Get PDF
+                </button>
+
+                <button
+                  className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                  title="Download the book in DOCX format"
+                  onClick={() => downloadFile(book.data.getBookById!.document)}
+                >
+                  <FileWordFilled className="text-lg -mt-0.5" />
+                  Get DOCX
+                </button>
+
+                <button
+                  className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                  onClick={() => window.print()}
+                >
+                  <PrinterFilled className="text-lg" />
+                  Print
+                </button>
+
+                <div className="flex h-full flex-row items-center justify-center flex-grow">
+                  {isConfirmDelete ? (
+                    <>
+                      <button
+                        className="flex-grow h-full flex items-center justify-center hover:bg-green-500/20 transition-all ease-in-out duration-300"
+                        onClick={deleteFile}
+                      >
+                        <CheckOutlined className="text-green-500" />
+                      </button>
+                      <button
+                        className="flex-grow h-full flex items-center justify-center hover:bg-red-500/20 transition-all ease-in-out duration-300 border-l border-n-6/90"
+                        onClick={() => setIsConfirmDelete(false)}
+                      >
+                        <CloseOutlined className="text-red-500" />
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="w-full h-full flex items-center justify-center hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                      onClick={() => setIsConfirmDelete(true)}
+                    >
+                      <DeleteFilled className="text-lg" />
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
+
+          <Document
+            loading={<Spin />}
+            noData={<Spin />}
+            file={memoizedFile}
+            onLoadSuccess={onDocumentLoadSuccess}
+            className="relative"
+          >
+            <Page
+              loading={<Spin />}
+              pageNumber={pageNumber}
+              height={width >= 625 ? height : undefined}
+              width={
+                width < 625
+                  ? width > 600
+                    ? width - 120
+                    : width
+                  : undefined || 600
+              }
+              renderAnnotationLayer={true}
+            />
+            <div className="hidden sm:flex absolute z-[10] bottom-3.5 left-0 right-0 justify-center items-center text-n-1/85 text-xs font-light p-1">
+              <div className="w-3/5 flex flex-row">
+                <button
+                  type="button"
+                  className="w-full border-n-6/90 border-l border-t border-b text-base rounded-l-md bg-n-7/90 text-white px-4 py-1 cursor-pointer"
+                  onClick={onPrevPage}
+                >
+                  <ArrowLeftOutlined />
+                </button>
+
+                <button
+                  type="button"
+                  className="w-full border-n-6/90 border text-sm font-medium bg-n-7/90 flex-grow text-white px-4 py-1"
+                >
+                  {pageNumber} / {numPages}
+                </button>
+
+                <button
+                  type="button"
+                  className="w-full border-n-6/90 border-t border-b border-r text-base rounded-r-md bg-n-7/90 text-white px-4 py-1 cursor-pointer"
+                  onClick={onNextPage}
+                >
+                  <ArrowRightOutlined />
+                </button>
+              </div>
+            </div>
+          </Document>
         </div>
-      </div>
-
-      <Document
-        loading={<Spin />}
-        noData={<Spin />}
-        file={memoizedFile}
-        onLoadSuccess={onDocumentLoadSuccess}
-        className="relative"
-      >
-        <Page
-          loading={<Spin />}
-          pageNumber={pageNumber}
-          height={width >= 625 ? height : undefined}
-          width={
-            width < 625 ? (width > 600 ? width - 120 : width) : undefined || 600
-          }
-          renderAnnotationLayer={true}
-        />
-        <div className="hidden sm:flex absolute z-[10] bottom-3.5 left-0 right-0 justify-center items-center text-n-1/85 text-xs font-light p-1">
-          <div className="w-3/5 flex flex-row">
-            <button
-              type="button"
-              className="w-full border-n-6/90 border-l border-t border-b text-base rounded-l-md bg-n-7/90 text-white px-4 py-1 cursor-pointer"
-              onClick={onPrevPage}
-            >
-              <ArrowLeftOutlined />
-            </button>
-
-            <button
-              type="button"
-              className="w-full border-n-6/90 border text-sm font-medium bg-n-7/90 flex-grow text-white px-4 py-1"
-            >
-              {pageNumber} / {numPages}
-            </button>
-
-            <button
-              type="button"
-              className="w-full border-n-6/90 border-t border-b border-r text-base rounded-r-md bg-n-7/90 text-white px-4 py-1 cursor-pointer"
-              onClick={onNextPage}
-            >
-              <ArrowRightOutlined />
-            </button>
-          </div>
-        </div>
-      </Document>
-    </div>
+      )}
+    </>
   );
 };

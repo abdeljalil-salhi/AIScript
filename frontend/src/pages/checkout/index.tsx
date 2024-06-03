@@ -1,7 +1,9 @@
 // Dependencies
 import { FC, useEffect, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useGetIdentity } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Constants
 import { checkoutPlans } from "@/constants/checkout";
@@ -107,21 +109,35 @@ export const CheckoutPage: FC<CheckoutPageProps> = (): JSX.Element => {
     planId,
   ]);
 
-  return isLoading ? (
-    <LoadingPage />
-  ) : (
-    <div className="w-full min-h-screen bg-gray-50 py-5 font-['Poppins'] flex flex-col items-center">
-      <Header plan={plan} />
+  useDocumentTitle(`AIScript - Subscribe${plan ? ` to ${plan.name}` : ""}`);
 
-      <div className="w-full bg-white border-t border-b xl:border xl:rounded-md border-gray-200 px-5 py-10 text-gray-800 flex items-center justify-center max-w-7xl mx-auto">
-        <div className="w-full max-w-7xl">
-          <div className="-mx-3 md:flex items-start">
-            <CheckoutSummary plan={plan} pricingPlan={pricingPlan} />
+  return (
+    <>
+      <Helmet>
+        <title>AIScript - Subscribe{plan ? ` to ${plan.name}` : ""}</title>
+        <meta
+          name="description"
+          content="Complete your purchase and start your journey with AIScript."
+        />
+      </Helmet>
 
-            <CheckoutPayment plan={plan} pricingPlan={pricingPlan} />
+      {isLoading ? (
+        <LoadingPage />
+      ) : (
+        <div className="w-full min-h-screen bg-gray-50 py-5 font-['Poppins'] flex flex-col items-center">
+          <Header plan={plan} />
+
+          <div className="w-full bg-white border-t border-b xl:border xl:rounded-md border-gray-200 px-5 py-10 text-gray-800 flex items-center justify-center max-w-7xl mx-auto">
+            <div className="w-full max-w-7xl">
+              <div className="-mx-3 md:flex items-start">
+                <CheckoutSummary plan={plan} pricingPlan={pricingPlan} />
+
+                <CheckoutPayment plan={plan} pricingPlan={pricingPlan} />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };

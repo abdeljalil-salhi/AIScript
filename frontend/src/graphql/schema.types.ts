@@ -364,6 +364,8 @@ export type NewBookInput = {
   numSubsections: Scalars["Float"]["input"];
   /** ID of the book owner */
   ownerId: Scalars["String"]["input"];
+  /** PDF URL of the book */
+  pdf: Scalars["String"]["input"];
   /** Target audience of the book */
   targetAudience?: InputMaybe<Scalars["String"]["input"]>;
   /** Title of the book */

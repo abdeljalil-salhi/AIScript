@@ -190,6 +190,17 @@ export type RequestEmailVerificationMutation = {
   >;
 };
 
+export type RequestForgotPasswordMutationVariables = Types.Exact<{
+  requestForgotPasswordInput: Types.RequestForgotPasswordInput;
+}>;
+
+export type RequestForgotPasswordMutation = {
+  requestForgotPassword: Pick<
+    Types.ForgotPassword,
+    "id" | "email" | "expiresAt" | "createdAt" | "updatedAt"
+  >;
+};
+
 export type SubscribeMutationVariables = Types.Exact<{
   subscribeInput: Types.SubscribeInput;
 }>;

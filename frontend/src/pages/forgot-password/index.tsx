@@ -1,8 +1,8 @@
 // Dependencies
 import { FC, FormEvent, MouseEvent, useEffect } from "react";
 import { Spin } from "antd";
+import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
-import { Helmet, HelmetProvider } from "react-helmet-async";
 import {
   HttpError,
   useCustomMutation,
@@ -120,89 +120,92 @@ export const ForgotPasswordPage: FC<
     return <Navigate to="/home" />;
   }
 
-  return isLoading ? (
-    <LoadingPage />
-  ) : (
-    <HelmetProvider>
+  return (
+    <>
       <Helmet>
-        <title>AIScript | Forgot Password</title>
+        <title>Forgot Password - Recover Your AIScript Account</title>
         <meta
           name="description"
-          content="Forgot your password? No worries! Reset your password here."
+          content="Forgot your AIScript password? Recover your account quickly and securely to continue creating high-quality books with our AI-powered tools."
         />
       </Helmet>
-      <div className="overflow-hidden flex items-center justify-center min-h-screen font-['Poppins']">
-        <Gradient />
-        <div className="relative flex justify-end flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0 w-[80%] max-w-2xl h-96">
-          <div
-            className="absolute hidden md:flex w-full h-[95%] left-0 p-6 ml-5"
-            style={{
-              backgroundImage: `url(${RobotForgotPassword})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundBlendMode: "lighten",
-            }}
-          ></div>
 
-          <div className="w-full md:w-2/3 z-2 h-full flex flex-col items-center justify-center gap-3 p-6 md:p-0 md:pr-6">
-            <div className="w-full">
-              <h1 className="text-3xl text-n-1">Forgot your password?</h1>
-              <p className="body-2">No worries! Reset your password here.</p>
-            </div>
+      {isLoading ? (
+        <LoadingPage />
+      ) : (
+        <div className="overflow-hidden flex items-center justify-center min-h-screen font-['Poppins']">
+          <Gradient />
+          <div className="relative flex justify-end flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0 w-[80%] max-w-2xl h-96">
+            <div
+              className="absolute hidden md:flex w-full h-[95%] left-0 p-6 ml-5"
+              style={{
+                backgroundImage: `url(${RobotForgotPassword})`,
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundBlendMode: "lighten",
+              }}
+            ></div>
 
-            <Spin
-              spinning={isRequestingForgotPassword}
-              wrapperClassName="w-full"
-            >
-              <form
-                onSubmit={handleSubmit}
-                className="w-full flex flex-col gap-3"
+            <div className="w-full md:w-2/3 z-2 h-full flex flex-col items-center justify-center gap-3 p-6 md:p-0 md:pr-6">
+              <div className="w-full">
+                <h1 className="text-3xl text-n-1">Forgot your password?</h1>
+                <p className="body-2">No worries! Reset your password here.</p>
+              </div>
+
+              <Spin
+                spinning={isRequestingForgotPassword}
+                wrapperClassName="w-full"
               >
-                <div className="flex flex-col w-full">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    className="input bg-n-6 border-2 border-n-6 focus:border-n-3 outline-none transition-all rounded-lg px-3 py-2 text-sm w-full"
-                    id="email"
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email address"
-                    required
+                <form
+                  onSubmit={handleSubmit}
+                  className="w-full flex flex-col gap-3"
+                >
+                  <div className="flex flex-col w-full">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      className="input bg-n-6 border-2 border-n-6 focus:border-n-3 outline-none transition-all rounded-lg px-3 py-2 text-sm w-full"
+                      id="email"
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email address"
+                      required
+                      disabled={isRequestingForgotPassword}
+                    />
+                  </div>
+
+                  <Button
+                    white
+                    type="submit"
+                    className="mt-2"
                     disabled={isRequestingForgotPassword}
-                  />
-                </div>
+                  >
+                    {isRequestingForgotPassword
+                      ? "Resetting Password..."
+                      : "Reset Password"}
+                  </Button>
+                </form>
+              </Spin>
 
-                <Button
-                  white
-                  type="submit"
-                  className="mt-2"
-                  disabled={isRequestingForgotPassword}
-                >
-                  {isRequestingForgotPassword
-                    ? "Resetting Password..."
-                    : "Reset Password"}
-                </Button>
-              </form>
-            </Spin>
-
-            <div className="w-full flex items-center justify-center -mt-2">
-              <p className="text-n-1 text-sm">
-                Give it a second thought?{" "}
-                <Link
-                  to="/login"
-                  className="text-n-3 hover:text-n-1 transition-all underline hover:underline"
-                  onClick={
-                    isRequestingForgotPassword
-                      ? (e: MouseEvent) => e.preventDefault()
-                      : undefined
-                  }
-                >
-                  Log in
-                </Link>
-              </p>
+              <div className="w-full flex items-center justify-center -mt-2">
+                <p className="text-n-1 text-sm">
+                  Give it a second thought?{" "}
+                  <Link
+                    to="/login"
+                    className="text-n-3 hover:text-n-1 transition-all underline hover:underline"
+                    onClick={
+                      isRequestingForgotPassword
+                        ? (e: MouseEvent) => e.preventDefault()
+                        : undefined
+                    }
+                  >
+                    Log in
+                  </Link>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </HelmetProvider>
+      )}
+    </>
   );
 };

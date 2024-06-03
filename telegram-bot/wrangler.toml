@@ -1,0 +1,7 @@
+name = "aiscript-bot"
+main = "src/worker.js"
+compatibility_date = "2024-06-03"
+workers_dev = true
+
+[vars]
+CONTACT_URL = "https://aiscript.vercel.app/contact"

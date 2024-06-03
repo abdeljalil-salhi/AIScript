@@ -9,6 +9,7 @@ import { ButtonGradient } from "@/assets/svg/ButtonGradient";
 // Components
 import { LeftSide } from "@/components/auth/LeftSide";
 import { RightSide } from "@/components/auth/RightSide";
+import { Gradient } from "@/components/landing/Gradient";
 // Pages
 import { LoadingPage } from "../loading";
 
@@ -45,6 +46,7 @@ export const LoginPage: FC<LoginPageProps> = (): JSX.Element => {
         <LoadingPage />
       ) : (
         <div className="overflow-hidden flex items-center justify-center min-h-screen font-['Poppins']">
+          <Gradient />
           <div className="relative flex flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0">
             <LeftSide page="login" />
             <RightSide page="login" />

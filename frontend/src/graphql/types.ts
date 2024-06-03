@@ -90,6 +90,14 @@ export type EnableTwoFactorAuthenticationMutation = {
   };
 };
 
+export type ForgotPasswordMutationVariables = Types.Exact<{
+  verifyForgotPasswordInput: Types.VerifyForgotPasswordInput;
+}>;
+
+export type ForgotPasswordMutation = {
+  forgotPassword: { user: Pick<Types.User, "id"> };
+};
+
 export type GenerateTwoFactorAuthenticationSecretMutationVariables =
   Types.Exact<{
     userId: Types.Scalars["String"]["input"];
@@ -186,6 +194,17 @@ export type RequestEmailVerificationMutationVariables = Types.Exact<{
 export type RequestEmailVerificationMutation = {
   requestEmailVerification: Pick<
     Types.EmailVerification,
+    "id" | "email" | "expiresAt" | "createdAt" | "updatedAt"
+  >;
+};
+
+export type RequestForgotPasswordMutationVariables = Types.Exact<{
+  requestForgotPasswordInput: Types.RequestForgotPasswordInput;
+}>;
+
+export type RequestForgotPasswordMutation = {
+  requestForgotPassword: Pick<
+    Types.ForgotPassword,
     "id" | "email" | "expiresAt" | "createdAt" | "updatedAt"
   >;
 };

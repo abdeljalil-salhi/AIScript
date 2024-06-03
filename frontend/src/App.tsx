@@ -49,6 +49,8 @@ import { Verify2FAPage } from "./pages/verify-2fa";
 import { SocketContextProvider } from "./contexts/socket";
 import { QueueModal } from "./pages/QueueModal";
 import { ViewPage } from "./pages/view";
+import { ForgotPasswordPage } from "./pages/forgot-password";
+import { VerifyResetToken } from "./pages/forgot-password/VerifyResetToken";
 
 // Interfaces
 interface AppProps {}
@@ -89,6 +91,10 @@ export const App: FC<AppProps> = (): JSX.Element => {
                       <Route path="/register" element={<RegisterPage />} />
                       <Route path="/login" element={<LoginPage />} />
                       <Route path="/2fa" element={<Verify2FAPage />} />
+                      <Route path="/forgot-password">
+                        <Route index element={<ForgotPasswordPage />} />
+                        <Route path=":token" element={<VerifyResetToken />} />
+                      </Route>
                       <Route
                         element={
                           <Authenticated

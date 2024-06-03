@@ -59,7 +59,7 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
               </li>
             ))}
           </ul>
-          <Button className="mb-8">Try it now</Button>
+          <Button className="mb-8" href="/register">Try it now</Button>
         </div>
         <div className="lg:ml-auto xl:w-[38rem]">
           <p className="body-2 mb-10 text-n-4 md:mb-16 lg:mb-32 lg:w-[22rem] lg:mx-auto">

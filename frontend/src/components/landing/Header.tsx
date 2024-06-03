@@ -1,22 +1,18 @@
 // Dependencies
 import { FC, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Location, useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
 // Assets
-import { brainwave } from "@/assets";
-
+import { AIScriptLogo } from "@/assets/landing";
 // Constants
 import { navigations } from "@/constants";
 import { Navigation } from "@/constants/types";
-
 // SVGs
 import { MenuSvg } from "@/assets/svg/MenuSvg";
-
 // Components
 import { Button } from "./Button";
 import { HamburgerMenu } from "./design/Header";
-
 // Interfaces
 interface HeaderProps {}
 
@@ -28,8 +24,18 @@ interface HeaderProps {}
  * @exports Header
  */
 export const Header: FC<HeaderProps> = (): JSX.Element => {
-  const pathname = useLocation();
+  /**
+   * State to toggle the navigation menu
+   * @type {boolean}
+   * @default false
+   */
   const [openNavigation, setOpenNavigation] = useState<boolean>(false);
+
+  /**
+   * Get the current pathname
+   * @type {Location<any>}
+   */
+  const pathname: Location = useLocation();
 
   /**
    * Toggle the navigation menu when the hamburger menu is clicked
@@ -62,9 +68,19 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
       }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
-        <Link to="/" className="block w-[12rem] xl:mr-8">
-          <img src={brainwave} width={190} height={40} alt="AIScript" />
-        </Link>
+        <a
+          href="/#hero"
+          onClick={handleClick}
+          className="block w-[12rem] xl:mr-8"
+          draggable={false}
+        >
+          <img
+            src={AIScriptLogo}
+            height={40}
+            alt="AIScript"
+            draggable={false}
+          />
+        </a>
         <nav
           className={`${
             openNavigation ? "flex" : "hidden"
@@ -76,13 +92,14 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
                 href={item.url}
                 key={item.id}
                 onClick={handleClick}
-                className={`block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-color-1 ${
+                className={`block relative font-grotesk text-2xl uppercase text-n-1 transition-colors hover:text-purple-300 ${
                   item.onlyMobile ? "lg:hidden" : ""
                 } px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-xs lg:font-semibold ${
                   item.url === pathname.hash
                     ? "z-2 lg:text-n-1"
                     : "lg:text-n-1/50"
-                } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
+                } lg:leading-5 lg:hover:text-n-1 xl:px-12 active:text-n-1/75 lg:tracking-wider`}
+                draggable={false}
               >
                 {item.title}
               </a>
@@ -92,11 +109,15 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
         </nav>
         <Link
           to="/register"
-          className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
+          className="button font-grotesk hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block active:text-n-1/75 lg:tracking-wider"
+          draggable={false}
         >
-          New account
+          Sign up
         </Link>
-        <Button className="hidden lg:flex" href="/login">
+        <Button
+          className="hidden font-grotesk lg:flex"
+          href="/login"
+        >
           Log in
         </Button>
         <Button

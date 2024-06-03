@@ -2,9 +2,15 @@
 import { FC } from "react";
 
 // Assets
-import { brainwaveSymbol, check } from "@/assets";
+import { AIScriptNoText } from "@/assets";
+import { CheckIcon } from "@/assets/landing";
 // Constants
-import { collabApps, collabContent, collabText } from "@/constants";
+import {
+  collaborationApps,
+  collaborationContent,
+  collaborationText,
+} from "@/constants";
+import { CollaborationApp, CollaborationContent } from "@/constants/types";
 // Components
 import { LeftCurve, RightCurve } from "./design/Collaboration";
 import { Button } from "./Button";
@@ -23,17 +29,23 @@ interface CollaborationProps {}
 export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
   return (
     <Section crosses>
-      <div className="container lg:flex">
+      <div className="container lg:flex font-['Poppins']">
         <div className="max-w-[25rem]">
           <h2 className="h2 mb-4 md:mb-8">
-            AI&nbsp;Writing Assistant for&nbsp;Authors
+            The Ultimate AI&nbsp;Tool{" "}
+            <span className="text-nowrap">
+              for{" "}
+              <span className="text-transparent bg-gradient-to-r from-purple-600 to-blue-500 webkit-bg-clip-text inline-block">
+                Authors
+              </span>
+            </span>
           </h2>
           <ul className="max-w-[22rem] mb-10 md:mb-14">
-            {collabContent.map((content) => (
+            {collaborationContent.map((content: CollaborationContent) => (
               <li key={content.id} className="mb-3 py-3">
                 <div className="flex items-center">
                   <img
-                    src={check}
+                    src={CheckIcon}
                     width={24}
                     height={24}
                     alt="Check icon"
@@ -51,23 +63,24 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
         </div>
         <div className="lg:ml-auto xl:w-[38rem]">
           <p className="body-2 mb-10 text-n-4 md:mb-16 lg:mb-32 lg:w-[22rem] lg:mx-auto">
-            {collabText}
+            {collaborationText}
           </p>
           <div className="relative left-1/2 flex w-[22rem] aspect-square border border-n-6 rounded-full -translate-x-1/2 scale:75 md:scale-100">
             <div className="flex w-60 aspect-square m-auto border border-n-6 rounded-full">
               <div className="w-[6rem] aspect-square m-auto p-[0.2rem] bg-conic-gradient rounded-full">
                 <div className="flex items-center justify-center w-full h-full bg-n-8 rounded-full">
                   <img
-                    src={brainwaveSymbol}
-                    width={48}
-                    height={48}
+                    src={AIScriptNoText}
+                    width={50}
+                    height={50}
                     alt="AIScript"
+                    draggable={false}
                   />
                 </div>
               </div>
             </div>
             <ul>
-              {collabApps.map((app) => (
+              {collaborationApps.map((app: CollaborationApp) => (
                 <li
                   key={app.id}
                   className={`absolute top-0 left-1/2 h-1/2 -ml-[1.6rem] origin-bottom rotate-${
@@ -82,9 +95,9 @@ export const Collaboration: FC<CollaborationProps> = (): JSX.Element => {
                     <img
                       src={app.icon}
                       width={app.width}
-                      height={app.height}
                       className="m-auto"
                       alt={app.title}
+                      draggable={false}
                     />
                   </div>
                 </li>

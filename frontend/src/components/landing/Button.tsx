@@ -34,9 +34,13 @@ export const Button: FC<ButtonProps> = ({
   type,
   disabled = false,
 }: ButtonProps): JSX.Element => {
-  const classes = `button relative inline-flex items-center justify-center h-11 transition-colors hover:text-color-1 ${
+  const classes = `button relative font-grotesk tracking-widest inline-flex items-center justify-center h-11 transition-colors ${
     px || "px-7"
-  } ${white ? "text-n-8" : "text-n-1"} ${className || ""}`;
+  } ${
+    white
+      ? "text-n-8 hover:text-violet-500 active:text-violet-600"
+      : "text-n-1 hover:text-blue-200 active:text-blue-300"
+  } ${className || ""}`;
 
   const spanClasses = `relative z-10`;
 

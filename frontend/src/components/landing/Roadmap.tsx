@@ -1,13 +1,13 @@
 // Dependencies
 import { FC } from "react";
 
+// Assets
+import { CheckLined, Grid, Loading } from "@/assets/landing";
 // Constants
 import { roadmap } from "@/constants";
-// Assets
-import { check2, grid, loading1 } from "@/assets";
+import { Roadmap as RoadmapType } from "@/constants/types";
 // Components
 import { Gradient } from "./design/Roadmap";
-import { Button } from "./Button";
 import { Heading } from "./Heading";
 import { Section } from "./Section";
 import { Tagline } from "./Tagline";
@@ -26,23 +26,23 @@ export const Roadmap: FC<RoadmapProps> = (): JSX.Element => {
   return (
     <Section id="roadmap" className="overflow-hidden">
       <div className="container md:pb-10">
-        <Heading tag="Ready to get started?" title="What we're working on" />
+        <Heading tag="Join the Journey" title="Our Future Vision" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
-          {roadmap.map((item) => {
+          {roadmap.map((item: RoadmapType) => {
             const status: string =
               item.status === "done" ? "Done" : "In Progress";
 
             return (
               <div
                 key={item.id}
-                className={`md:flex even:md:translate-y-[7rem] p-0.25 rounded-[2.5rem] ${
+                className={`md:flex even:md:translate-y-[7rem] p-0.5 rounded-[2.5rem] ${
                   item.colorful ? "bg-conic-gradient" : "bg-n-6"
                 }`}
               >
                 <div className="relative p-8 bg-n-8 rounded-[2.4375rem] overflow-hidden xl:p-15">
                   <div className="absolute top-0 left-0 max-w-full">
                     <img
-                      src={grid}
+                      src={Grid}
                       width={550}
                       height={550}
                       className="w-full"
@@ -50,12 +50,12 @@ export const Roadmap: FC<RoadmapProps> = (): JSX.Element => {
                       draggable={false}
                     />
                   </div>
-                  <div className="relative z-1">
+                  <div className="relative z-1 font-['Poppins']">
                     <div className="flex items-center justify-between max-w-[27rem] mb-8 md:mb-20">
                       <Tagline>{item.date}</Tagline>
                       <div className="flex items-center px-4 py-1 bg-n-1 rounded text-n-8">
                         <img
-                          src={item.status === "done" ? check2 : loading1}
+                          src={item.status === "done" ? CheckLined : Loading}
                           width={16}
                           height={16}
                           className="mr-2.5"
@@ -83,9 +83,6 @@ export const Roadmap: FC<RoadmapProps> = (): JSX.Element => {
             );
           })}
           <Gradient />
-        </div>
-        <div className="flex justify-center mt-12 md:mt-15 xl:mt-20">
-          <Button href="/roadmap">Our roadmap</Button>
         </div>
       </div>
     </Section>

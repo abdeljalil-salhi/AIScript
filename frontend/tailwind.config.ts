@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import { fontFamily } from "tailwindcss/defaultTheme";
 import plugin from "tailwindcss/plugin";
+import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 
 export default {
   content: [
@@ -73,17 +74,23 @@ export default {
       backgroundImage: {
         "radial-gradient": "radial-gradient(var(--tw-gradient-stops))",
         "conic-gradient":
-          "conic-gradient(from 225deg, #FFC876, #79FFF7, #9F53FF, #FF98E2, #FFC876)",
-        "benefit-card-1": "url(assets/benefits/card-1.svg)",
-        "benefit-card-2": "url(assets/benefits/card-2.svg)",
-        "benefit-card-3": "url(assets/benefits/card-3.svg)",
-        "benefit-card-4": "url(assets/benefits/card-4.svg)",
-        "benefit-card-5": "url(assets/benefits/card-5.svg)",
-        "benefit-card-6": "url(assets/benefits/card-6.svg)",
+          "conic-gradient(from 225deg, #3b82f6, #9333ea, #6d28d9, #4338ca, #3b82f6)",
+      },
+      animation: {
+        scroll:
+          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+      },
+      keyframes: {
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
       },
     },
   },
   plugins: [
+    addVariablesForColors,
     plugin(function ({ addBase, addComponents, addUtilities }) {
       addBase({});
       addComponents({
@@ -140,3 +147,14 @@ export default {
     }),
   ],
 };
+
+function addVariablesForColors({ addBase, theme }) {
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

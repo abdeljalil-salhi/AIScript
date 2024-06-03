@@ -2,13 +2,60 @@
 import { FC } from "react";
 
 /**
- * General Interfaces
+ * Landing Interfaces
  */
 export interface Navigation {
   id: string;
   title: string;
   url: string;
   onlyMobile?: boolean;
+}
+export interface Benefit {
+  id: string;
+  title: string;
+  text: string;
+  backgroundUrl: string;
+  iconUrl: string;
+  imageUrl?: string;
+  light?: boolean;
+}
+export interface CollaborationContent {
+  id: string;
+  title: string;
+  text?: string;
+}
+export interface CollaborationApp {
+  id: string;
+  title: string;
+  icon: string;
+  width: number;
+}
+export interface ServiceIcon {
+  id: string;
+  icon: string;
+  width: number;
+}
+export interface Pricing {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  features: string[];
+}
+export interface Roadmap {
+  id: string;
+  title: string;
+  text: string;
+  date: string;
+  status: "done" | "progress";
+  imageUrl: string;
+  colorful?: boolean;
+}
+export interface Social {
+  id: string;
+  title: string;
+  iconUrl: string;
+  url: string;
 }
 
 /**

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 // Constants
 import { socials } from "@/constants";
+import { Social } from "@/constants/types";
 // Components
 import { Section } from "./Section";
 
@@ -21,11 +22,11 @@ export const Footer: FC<FooterProps> = (): JSX.Element => {
   return (
     <Section crosses className="!px-0 !py-10">
       <div className="container flex sm:justify-between justify-center items-center gap-10 max-sm:flex-col">
-        <p className="caption text-n-4 lg:block">
-          &copy; {new Date().getFullYear()}. All rights reserved.
+        <p className="caption text-n-4 lg:block font-['Poppins']">
+          &copy; AIScript {new Date().getFullYear()}. All rights reserved.
         </p>
         <ul className="flex gap-5 flex-wrap">
-          {socials.map((social) => (
+          {socials.map((social: Social) => (
             <Link
               to={social.url}
               key={social.id}
@@ -38,6 +39,7 @@ export const Footer: FC<FooterProps> = (): JSX.Element => {
                 width={16}
                 height={16}
                 alt={social.title}
+                draggable={false}
               />
             </Link>
           ))}

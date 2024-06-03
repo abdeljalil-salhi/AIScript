@@ -6,7 +6,7 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useGetIdentity, useLogout, useWarnAboutChange } from "@refinedev/core";
 
 // Assets
-import Logo from "@/assets/logo.webp";
+import { AIScriptLogo, AIScriptNoText } from "@/assets";
 // Components
 import { DropdownModal } from "./DropdownModal";
 // Constants
@@ -107,9 +107,15 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
         <div className="w-full flex flex-row md:flex-col justify-between items-center">
           <Link to="/home" draggable={false}>
             <img
-              src={Logo}
-              className="max-h-10 mb-0 md:mb-4"
-              alt="AIScript logo"
+              src={AIScriptLogo}
+              className="max-h-10 mb-4 hidden md:block"
+              alt="AIScript Logo"
+              draggable={false}
+            />
+            <img
+              src={AIScriptNoText}
+              className="max-h-9 aspect-square block md:hidden"
+              alt="AIScript Logo"
               draggable={false}
             />
           </Link>

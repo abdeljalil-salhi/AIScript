@@ -21,9 +21,14 @@ export const Generating: FC<GeneratingProps> = ({ className }): JSX.Element => {
     <div
       className={`flex items-center h-[3.5rem] px-6 bg-n-8/80 rounded-[1.7rem] ${
         className || ""
-      } text-base`}
+      } text-base font-['Poppins']`}
     >
-      <img className="w-5 h-5 mr-4" src={loading} alt="Loading..." />
+      <img
+        className="w-5 h-5 mr-4 animate-spin"
+        src={loading}
+        alt="Loading..."
+        draggable={false}
+      />
       AI is generating...
     </div>
   );

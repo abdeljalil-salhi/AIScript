@@ -8,6 +8,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   HttpError,
   useCustomMutation,
@@ -185,65 +186,75 @@ export const VerifyResetToken: FC<VerifyResetTokenProps> = (): JSX.Element => {
     return <Navigate to="/home" />;
   }
 
-  return !isTokenValidated || isLoading ? (
-    <LoadingPage />
-  ) : (
+  return (
     <>
-      <div className="overflow-hidden flex items-center justify-center min-h-screen font-['Poppins']">
-        <Gradient />
-        <div className="relative flex justify-end flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0 w-[80%] max-w-2xl h-96">
-          <div
-            className="absolute hidden md:flex w-full h-[95%] left-0 p-6 ml-5"
-            style={{
-              backgroundImage: `url(${RobotForgotPassword})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundBlendMode: "lighten",
-            }}
-          ></div>
+      <Helmet>
+        <title>Verify and Change Password - Secure Your AIScript Account</title>
+        <meta
+          name="description"
+          content="Verify your reset token and change your password to secure your AIScript account. Take control of your account security and continue creating high-quality books with confidence."
+        />
+      </Helmet>
 
-          <div className="w-full md:w-2/3 z-2 h-full flex flex-col items-center justify-center gap-3 p-6 md:p-0 md:pr-6">
-            <div className="w-full">
-              <h1 className="text-3xl text-n-1">Change your password</h1>
-              <p className="body-2">
-                Enter your new password to reset your account.
-              </p>
-            </div>
+      {!isTokenValidated || isLoading ? (
+        <LoadingPage />
+      ) : (
+        <div className="overflow-hidden flex items-center justify-center min-h-screen font-['Poppins']">
+          <Gradient />
+          <div className="relative flex justify-end flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0 w-[80%] max-w-2xl h-96">
+            <div
+              className="absolute hidden md:flex w-full h-[95%] left-0 p-6 ml-5"
+              style={{
+                backgroundImage: `url(${RobotForgotPassword})`,
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundBlendMode: "lighten",
+              }}
+            ></div>
 
-            <Spin spinning={isForgotPassword} wrapperClassName="w-full">
-              <form
-                onSubmit={handleSubmit}
-                className="w-full flex flex-col gap-3"
-              >
-                {formInputs.map((input: FormInput) => (
-                  <div className="flex flex-col w-full">
-                    <input
-                      className="input bg-n-6 border-2 border-n-6 focus:border-n-3 outline-none transition-all rounded-lg px-3 py-2 text-sm w-full"
-                      id={input.id}
-                      type={input.type}
-                      name={input.id}
-                      placeholder={input.placeholder}
-                      required
-                      disabled={isForgotPassword}
-                    />
-                  </div>
-                ))}
+            <div className="w-full md:w-2/3 z-2 h-full flex flex-col items-center justify-center gap-3 p-6 md:p-0 md:pr-6">
+              <div className="w-full">
+                <h1 className="text-3xl text-n-1">Change your password</h1>
+                <p className="body-2">
+                  Enter your new password to reset your account.
+                </p>
+              </div>
 
-                <Button
-                  white
-                  type="submit"
-                  className="mt-2"
-                  disabled={isForgotPassword}
+              <Spin spinning={isForgotPassword} wrapperClassName="w-full">
+                <form
+                  onSubmit={handleSubmit}
+                  className="w-full flex flex-col gap-3"
                 >
-                  {isForgotPassword
-                    ? "Resetting Password..."
-                    : "Reset Password"}
-                </Button>
-              </form>
-            </Spin>
+                  {formInputs.map((input: FormInput) => (
+                    <div className="flex flex-col w-full">
+                      <input
+                        className="input bg-n-6 border-2 border-n-6 focus:border-n-3 outline-none transition-all rounded-lg px-3 py-2 text-sm w-full"
+                        id={input.id}
+                        type={input.type}
+                        name={input.id}
+                        placeholder={input.placeholder}
+                        required
+                        disabled={isForgotPassword}
+                      />
+                    </div>
+                  ))}
+
+                  <Button
+                    white
+                    type="submit"
+                    className="mt-2"
+                    disabled={isForgotPassword}
+                  >
+                    {isForgotPassword
+                      ? "Resetting Password..."
+                      : "Reset Password"}
+                  </Button>
+                </form>
+              </Spin>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

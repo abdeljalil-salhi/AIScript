@@ -1,8 +1,8 @@
 /**
  * Assets for the AIScript logo.
  */
-import AIScriptLogo from "./aiscript-logo.png";
-import AIScriptNoText from "./aiscript-no-text.png";
+import AIScriptLogo from "./aiscript-logo.webp";
+import AIScriptNoText from "./aiscript-no-text.webp";
 import AIScriptBorderized from "./aiscript-borderized.webp";
 import AIScriptDesaturated from "./aiscript-desaturated.webp";
 
@@ -10,27 +10,29 @@ import AIScriptDesaturated from "./aiscript-desaturated.webp";
  * General assets for the landing page.
  */
 import Gradient from "./gradient.webp";
+import LoadingSpin from "./loading.webp";
+import Background from "./background.webp";
 
 /**
  * Assets for the hero section.
  */
-import Curve from "./hero/curve.png";
-import Hero from "./hero/hero.png";
+import Curve from "./hero/curve.webp";
+import Hero from "./hero/hero.webp";
 import HeroBackground from "./hero/hero-background.png";
 import IconHome from "./hero/icon-home.svg";
 import IconFile from "./hero/icon-file.svg";
 import IconSearch from "./hero/icon-search.svg";
 import IconPlus from "./hero/icon-plus.svg";
-import AIScriptNotification from "./hero/aiscript-notification.png";
-import PeopleOne from "./hero/people-1.png";
+import AIScriptNotification from "./hero/aiscript-notification.webp";
+import PeopleOne from "./hero/people-1.webp";
 
 /**
  * Assets for the company logos section.
  */
-import LogoWattpad from "./company-logos/logo-wattpad.png";
-import LogoKindle from "./company-logos/logo-kindle.png";
-import LogoGoodreads from "./company-logos/logo-goodreads.png";
-import LogoDeviantArt from "./company-logos/logo-deviantart.png";
+import LogoWattpad from "./company-logos/logo-wattpad.webp";
+import LogoKindle from "./company-logos/logo-kindle.webp";
+import LogoGoodreads from "./company-logos/logo-goodreads.webp";
+import LogoDeviantArt from "./company-logos/logo-deviantart.webp";
 import YourLogo from "./company-logos/your-logo.svg";
 
 /**
@@ -45,20 +47,20 @@ import BenefitCardSix from "./benefits/card-6.svg";
 import BenefitIconBook from "./benefits/icon-book.svg";
 import BenefitIconConvert from "./benefits/icon-convert.svg";
 import BenefitIconImage from "./benefits/icon-image.svg";
-import BenefitBackground from "./benefits/benefit-background.png";
+import BenefitBackground from "./benefits/benefit-background.webp";
 
 /**
  * Assets for the collaboration section.
  */
 import CheckIcon from "./collaboration/check.svg";
-import WordLogo from "./collaboration/word.png";
-import NotionLogo from "./collaboration/notion.png";
-import GoogleDocsLogo from "./collaboration/google-docs.png";
-import OpenAILogo from "./collaboration/openai.png";
-import PhotoshopLogo from "./collaboration/photoshop.png";
-import PdfLogo from "./collaboration/pdf.png";
-import GoogleAuthenticatorLogo from "./collaboration/google-authenticator.png";
-import AsposeLogo from "./collaboration/aspose.png";
+import WordLogo from "./collaboration/word.webp";
+import NotionLogo from "./collaboration/notion.webp";
+import GoogleDocsLogo from "./collaboration/google-docs.webp";
+import OpenAILogo from "./collaboration/openai.webp";
+import PhotoshopLogo from "./collaboration/photoshop.webp";
+import PdfLogo from "./collaboration/pdf.webp";
+import GoogleAuthenticatorLogo from "./collaboration/google-authenticator.webp";
+import AsposeLogo from "./collaboration/aspose.webp";
 import CurveOne from "./collaboration/curve-1.svg";
 import CurveTwo from "./collaboration/curve-2.svg";
 
@@ -110,6 +112,8 @@ export {
   AIScriptDesaturated,
   // General Assets
   Gradient,
+  LoadingSpin,
+  Background,
   // Hero Section
   Curve,
   Hero,

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useGetIdentity, useNotification } from "@refinedev/core";
 
 // Assets
-import LoadingBook from "@/assets/create/loading-book.png";
+import { LoadingBook } from "@/assets/create";
 // Components
 import { ChaptersAndSections } from "@/components/create/ChaptersAndSections";
 import { Cover } from "@/components/create/Cover";

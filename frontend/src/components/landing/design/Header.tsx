@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { background } from "@/assets";
+import { Hero } from "@/assets/landing";
 
 /**
  * Rings component
@@ -62,7 +62,7 @@ export const HamburgerMenu: FC = (): JSX.Element => {
       <div className="absolute inset-0 opacity-[.03]">
         <img
           className="w-full h-full object-cover"
-          src={background}
+          src={Hero}
           width={688}
           height={953}
           alt="Background"

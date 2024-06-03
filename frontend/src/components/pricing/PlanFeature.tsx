@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { check } from "@/assets";
+import { CheckSimpleIcon } from "@/assets/landing";
 
 // Interfaces
 interface PlanFeatureProps {
@@ -21,7 +21,7 @@ export const PlanFeature: FC<PlanFeatureProps> = ({ feature }): JSX.Element => {
     <li className="flex flex-row gap-2 items-center justify-start">
       <span className="text-n-1 text-sm">
         <img
-          src={check}
+          src={CheckSimpleIcon}
           width={16}
           height={16}
           className="brightness-[.8]"

@@ -1,15 +1,22 @@
 // Dependencies
 import { FC, FormEvent, MouseEvent, useEffect } from "react";
 import { Spin } from "antd";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { HttpError, useCustomMutation, useNotification } from "@refinedev/core";
+import {
+  HttpError,
+  useCustomMutation,
+  useIsAuthenticated,
+  useNotification,
+} from "@refinedev/core";
 
 // Assets
 import { RobotForgotPassword } from "@/assets/forgot-password";
 // Components
 import { Button } from "@/components/landing/Button";
 import { Gradient } from "@/components/landing/Gradient";
+// Pages
+import { LoadingPage } from "../loading";
 // GraphQL Mutations
 import { MUTATION_REQUEST_FORGOT_PASSWORD } from "@/graphql/mutations/requestForgotPassword";
 // GraphQL Types
@@ -34,6 +41,9 @@ export const ForgotPasswordPage: FC<
    * Notification hook to show notifications to the user
    */
   const { open } = useNotification();
+
+  // Check if the user is authenticated
+  const { data: auth, isLoading } = useIsAuthenticated();
 
   /**
    * Mutation for requesting a forgot password token for the specified email.
@@ -84,7 +94,7 @@ export const ForgotPasswordPage: FC<
             data?.message ||
             "We could not send you a reset password email due to a technical issue on our end. Please try again.",
           type: "error",
-          key: "forgot-password-error",
+          key: "request-forgot-password-error",
         };
       },
     });
@@ -100,12 +110,19 @@ export const ForgotPasswordPage: FC<
         message:
           "We have sent you an email with instructions to reset your password.",
         type: "success",
-        key: "forgot-password-success",
+        key: "request-forgot-password-success",
       });
     }
   }, [isRequestForgotPasswordError, open, requestForgotPasswordData]);
 
-  return (
+  // If the user is authenticated and the page is not loading, redirect the user to the home page.
+  if (auth?.authenticated && !isLoading) {
+    return <Navigate to="/home" />;
+  }
+
+  return isLoading ? (
+    <LoadingPage />
+  ) : (
     <HelmetProvider>
       <Helmet>
         <title>AIScript | Forgot Password</title>
@@ -116,7 +133,7 @@ export const ForgotPasswordPage: FC<
       </Helmet>
       <div className="overflow-hidden flex items-center justify-center min-h-screen font-['Poppins']">
         <Gradient />
-        <div className="relative flex justify-end flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0 w-[80%] max-w-xl h-96">
+        <div className="relative flex justify-end flex-col m-6 space-y-8 bg-n-7 shadow-2xl rounded-2xl p-1.5 md:flex-row md:space-y-0 w-[80%] max-w-2xl h-96">
           <div
             className="absolute hidden md:flex w-full h-[95%] left-0 p-6 ml-5"
             style={{

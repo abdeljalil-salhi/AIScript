@@ -90,6 +90,14 @@ export type EnableTwoFactorAuthenticationMutation = {
   };
 };
 
+export type ForgotPasswordMutationVariables = Types.Exact<{
+  verifyForgotPasswordInput: Types.VerifyForgotPasswordInput;
+}>;
+
+export type ForgotPasswordMutation = {
+  forgotPassword: { user: Pick<Types.User, "id"> };
+};
+
 export type GenerateTwoFactorAuthenticationSecretMutationVariables =
   Types.Exact<{
     userId: Types.Scalars["String"]["input"];

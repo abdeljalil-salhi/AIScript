@@ -5,7 +5,8 @@ import { Spin } from "antd";
 import { useLogin } from "@refinedev/core";
 
 // Assets
-import { AIScriptLogo, heroBackground } from "@/assets";
+import { AIScriptLogo } from "@/assets";
+import { Background } from "@/assets/auth";
 // Constants
 import { OAuthProviders } from "@/constants";
 import { OAuthProvider } from "@/constants/types";
@@ -56,12 +57,12 @@ export const LeftSide: FC<LeftSideProps> = ({ page }): JSX.Element => {
   return page === "register" ? (
     <div className="relative">
       <img
-        src={heroBackground}
+        src={Background}
         className="hidden min-w-[30rem] max-h-[90vh] rounded-xl object-cover lg:block"
         alt="Authentication background"
         draggable={false}
       />
-      <div className="absolute top-0 left-0 right-0 bottom-0 hidden min-w-[30rem] max-h-[90vh] items-start justify-between flex-col p-10 lg:flex">
+      <div className="absolute top-0 left-0 right-0 bottom-0 hidden min-w-[30rem] max-h-[90vh] items-start justify-between flex-col p-10 lg:flex font-['Poppins']">
         <img
           src={AIScriptLogo}
           className="h-12 lg:h-15 aspect-auto"
@@ -69,7 +70,7 @@ export const LeftSide: FC<LeftSideProps> = ({ page }): JSX.Element => {
           draggable={false}
         />
         <div className="flex flex-col items-start justify-center h-full gap-7 text-n-1">
-          <h4 className="h4 font-bold">Write e-books in seconds</h4>
+          <h4 className="h4 font-semibold">Write Books in Seconds</h4>
           <Button>Watch Demo</Button>
         </div>
         <Link to="/" className="body-2 hover:text-n-1">

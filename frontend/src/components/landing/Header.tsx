@@ -98,7 +98,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
                   item.url === pathname.hash
                     ? "z-2 lg:text-n-1"
                     : "lg:text-n-1/50"
-                } lg:leading-5 lg:hover:text-n-1 xl:px-12 active:text-n-1/75`}
+                } lg:leading-5 lg:hover:text-n-1 xl:px-12 active:text-n-1/75 lg:tracking-wider`}
                 draggable={false}
               >
                 {item.title}
@@ -109,7 +109,7 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
         </nav>
         <Link
           to="/register"
-          className="button font-grotesk hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block active:text-n-1/75"
+          className="button font-grotesk hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block active:text-n-1/75 lg:tracking-wider"
           draggable={false}
         >
           Sign up

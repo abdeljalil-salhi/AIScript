@@ -29,6 +29,7 @@ import { MUTATION_FORGOT_PASSWORD } from "@/graphql/mutations/forgotPassword";
 import { ForgotPasswordMutation } from "@/graphql/types";
 // Providers
 import { API_URL } from "@/providers";
+import { Helmet } from "react-helmet-async";
 
 // Interfaces
 interface VerifyResetTokenProps {}

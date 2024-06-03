@@ -13,6 +13,7 @@ import { Spin } from "antd";
 import { Helmet } from "react-helmet-async";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { HttpError, useCustomMutation } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // GraphQL Mutations
 import { MUTATION_LOGIN_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/loginTwoFactorAuthentication";
@@ -34,6 +35,10 @@ let currentPINIndex: number = 0;
  * @exports Verify2FAPage
  */
 export const Verify2FAPage: FC<Verify2FAPageProps> = (): JSX.Element => {
+  useDocumentTitle(
+    "Verify Two-Factor Authentication - Secure Your AIScript Account"
+  );
+
   /**
    * State to store the user's input 6-digit PIN code
    * @type {Array<string>}

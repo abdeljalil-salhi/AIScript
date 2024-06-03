@@ -3,6 +3,7 @@ import { FC } from "react";
 import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useIsAuthenticated } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // SVGs
 import { ButtonGradient } from "@/assets/svg/ButtonGradient";
@@ -29,6 +30,8 @@ interface LandingPageProps {}
  * @exports LandingPage
  */
 export const LandingPage: FC<LandingPageProps> = (): JSX.Element => {
+  useDocumentTitle("AIScript - The Ultimate AI Tool for Authors");
+
   // The `useIsAuthenticated` hook is used to check if the user is authenticated or not.
   const { data: auth, isLoading } = useIsAuthenticated();
 

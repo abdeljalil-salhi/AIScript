@@ -15,6 +15,7 @@ import {
   useIsAuthenticated,
   useNotification,
 } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Assets
 import { RobotForgotPassword } from "@/assets/forgot-password";
@@ -52,6 +53,8 @@ interface FormInput {
  * @exports VerifyResetToken
  */
 export const VerifyResetToken: FC<VerifyResetTokenProps> = (): JSX.Element => {
+  useDocumentTitle("Verify and Change Password - Secure Your AIScript Account");
+
   /**
    * State to check if the token has been validated
    * @type {boolean}

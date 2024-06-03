@@ -9,6 +9,7 @@ import {
   useIsAuthenticated,
   useNotification,
 } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Assets
 import { RobotForgotPassword } from "@/assets/forgot-password";
@@ -37,6 +38,8 @@ interface ForgotPasswordPageProps {}
 export const ForgotPasswordPage: FC<
   ForgotPasswordPageProps
 > = (): JSX.Element => {
+    useDocumentTitle("Forgot Password - Recover Your AIScript Account");
+
   /**
    * Notification hook to show notifications to the user
    */

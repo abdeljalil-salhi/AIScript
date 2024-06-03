@@ -2,7 +2,9 @@
 import { FC, useEffect, useState } from "react";
 import { Spin } from "antd";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { HttpError, useCustomMutation, useGetIdentity } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Assets
 import MailError from "@/assets/verify-email/mail-error.svg";
@@ -32,6 +34,8 @@ interface VerifyEmailPageParams {
  * @exports VerifyEmailPage
  */
 export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
+  useDocumentTitle("AIScript - Verifying Your Email...");
+
   /**
    * State to check if the verification request has been sent
    * @type {boolean}
@@ -75,6 +79,9 @@ export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
   const { data: identity, isLoading: isIdentityLoading } =
     useGetIdentity<MeResponse>();
 
+  /**
+   * Hook to handle the verification process
+   */
   useEffect(() => {
     if (!isIdentityLoading && !identity) navigate("/login");
 
@@ -142,38 +149,50 @@ export const VerifyEmailPage: FC<VerifyEmailPageProps> = (): JSX.Element => {
     verifyEmailError,
   ]);
 
-  return !isVerifyEmailError ? (
-    <div className="w-screen h-screen flex items-center justify-center">
-      <Spin />
-    </div>
-  ) : (
-    <div className="w-screen h-screen flex items-center justify-center flex-col gap-4">
-      <img
-        src={MailError}
-        className="w-[80%] md:w-1/2 h-1/2"
-        alt="An error occurred while verifying your email."
-        draggable={false}
-      />
-      <div className="flex flex-col items-center justify-center font-['Poppins']">
-        <h1 className="text-lg md:text-2xl font-bold text-n-2 text-center">
-          An error occurred while verifying your email.
-        </h1>
-        <p className="text-sm md:text-base text-n-2">
-          {verifyEmailError?.message ||
-            "An error occurred while verifying your email. Please try again."}
-        </p>
-        <p className="text-xs text-gray-500 mt-3">
-          Redirecting you to the profile page in {timer} second
-          {timer > 1 ? "s" : ""}...
-        </p>
+  return (
+    <>
+      <Helmet>
+        <title>AIScript - Verifying Your Email...</title>
+        <meta
+          name="description"
+          content="We are working on verifying your email. Please wait..."
+        />
+      </Helmet>
 
-        <button
-          className="text-xs text-gray-500 underline mt-3"
-          onClick={() => navigate("/profile")}
-        >
-          Click here if you are not redirected
-        </button>
-      </div>
-    </div>
+      {!isVerifyEmailError ? (
+        <div className="w-screen h-screen flex items-center justify-center">
+          <Spin />
+        </div>
+      ) : (
+        <div className="w-screen h-screen flex items-center justify-center flex-col gap-4">
+          <img
+            src={MailError}
+            className="w-[80%] md:w-1/2 h-1/2"
+            alt="An error occurred while verifying your email."
+            draggable={false}
+          />
+          <div className="flex flex-col items-center justify-center font-['Poppins']">
+            <h1 className="text-lg md:text-2xl font-bold text-n-2 text-center">
+              An error occurred while verifying your email.
+            </h1>
+            <p className="text-sm md:text-base text-n-2">
+              {verifyEmailError?.message ||
+                "An error occurred while verifying your email. Please try again."}
+            </p>
+            <p className="text-xs text-gray-500 mt-3">
+              Redirecting you to the profile page in {timer} second
+              {timer > 1 ? "s" : ""}...
+            </p>
+
+            <button
+              className="text-xs text-gray-500 underline mt-3"
+              onClick={() => navigate("/profile")}
+            >
+              Click here if you are not redirected
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

@@ -10,8 +10,10 @@ import {
   useState,
 } from "react";
 import { Spin } from "antd";
+import { Helmet } from "react-helmet-async";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { HttpError, useCustomMutation } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // GraphQL Mutations
 import { MUTATION_LOGIN_TWO_FACTOR_AUTHENTICATION } from "@/graphql/mutations/loginTwoFactorAuthentication";
@@ -33,6 +35,10 @@ let currentPINIndex: number = 0;
  * @exports Verify2FAPage
  */
 export const Verify2FAPage: FC<Verify2FAPageProps> = (): JSX.Element => {
+  useDocumentTitle(
+    "Verify Two-Factor Authentication - Secure Your AIScript Account"
+  );
+
   /**
    * State to store the user's input 6-digit PIN code
    * @type {Array<string>}
@@ -198,52 +204,64 @@ export const Verify2FAPage: FC<Verify2FAPageProps> = (): JSX.Element => {
   }, [isLoginError, loginData, navigate]);
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
-      {isLoading ? (
-        <Spin />
-      ) : (
-        <form
-          onSubmit={handleOneTimePassword}
-          className="w-full max-w-full sm:max-w-lg shadow-lg font-['Poppins']"
-        >
-          <div className="w-full text-n-1/75 px-2 sm:px-6 pt-8 pb-10 sm:pt-5 sm:pb-7 bg-n-7 rounded-none sm:rounded-md border border-n-6/70 flex flex-col gap-2">
-            <h2 className="text-xl font-semibold text-n-1/85">
-              Enter your code
-            </h2>
+    <>
+      <Helmet>
+        <title>
+          Verify Two-Factor Authentication - Secure Your AIScript Account
+        </title>
+        <meta
+          name="description"
+          content="Verify your two-factor authentication (2FA) to secure your AIScript account. Enhance your security and access advanced AI book creation tools."
+        />
+      </Helmet>
 
-            <p className="text-n-1/75 text-justify font-['Poppins']">
-              Enter the 6-digit security code from your authenticator app.
-            </p>
+      <div className="w-screen h-screen flex items-center justify-center">
+        {isLoading ? (
+          <Spin />
+        ) : (
+          <form
+            onSubmit={handleOneTimePassword}
+            className="w-full max-w-full sm:max-w-lg shadow-lg font-['Poppins']"
+          >
+            <div className="w-full text-n-1/75 px-2 sm:px-6 pt-8 pb-10 sm:pt-5 sm:pb-7 bg-n-7 rounded-none sm:rounded-md border border-n-6/70 flex flex-col gap-2">
+              <h2 className="text-xl font-semibold text-n-1/85">
+                Enter your code
+              </h2>
 
-            <div className="flex space-x-2 sm:space-x-3">
-              {PIN.map((_, index: number) => (
-                <input
-                  key={index}
-                  type="number"
-                  name={`pin-${index}`}
-                  ref={activePINIndex === index ? inputRef : null}
-                  className="block w-[32px] sm:w-[38px] aspect-square text-center bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light text-sm disabled:opacity-50 disabled:pointer-events-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  onChange={handleOnChange}
-                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
-                    handleOnKeyDown(e, index)
-                  }
-                  value={PIN[index]}
-                  maxLength={1}
-                  required
-                />
-              ))}
+              <p className="text-n-1/75 text-justify font-['Poppins']">
+                Enter the 6-digit security code from your authenticator app.
+              </p>
+
+              <div className="flex space-x-2 sm:space-x-3">
+                {PIN.map((_, index: number) => (
+                  <input
+                    key={index}
+                    type="number"
+                    name={`pin-${index}`}
+                    ref={activePINIndex === index ? inputRef : null}
+                    className="block w-[32px] sm:w-[38px] aspect-square text-center bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light text-sm disabled:opacity-50 disabled:pointer-events-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    onChange={handleOnChange}
+                    onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
+                      handleOnKeyDown(e, index)
+                    }
+                    value={PIN[index]}
+                    maxLength={1}
+                    required
+                  />
+                ))}
+              </div>
+
+              <button
+                type="submit"
+                className="mt-4 bg-gradient-to-br from-purple-600 to-blue-500 text-white font-medium text-lg hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full disabled:opacity-80 disabled:pointer-events-none"
+                disabled={isLoggingIn}
+              >
+                Continue
+              </button>
             </div>
-
-            <button
-              type="submit"
-              className="mt-4 bg-gradient-to-br from-purple-600 to-blue-500 text-white font-medium text-lg hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full disabled:opacity-80 disabled:pointer-events-none"
-              disabled={isLoggingIn}
-            >
-              Continue
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
+          </form>
+        )}
+      </div>
+    </>
   );
 };

@@ -5,6 +5,7 @@ import routerBindings, {
 } from "@refinedev/react-router-v6";
 import { FC } from "react";
 import { App as AntdApp } from "antd";
+import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
@@ -63,10 +64,12 @@ export const App: FC<AppProps> = (): JSX.Element => {
                     liveMode: "auto",
                   }}
                 >
-                  <SocketContextProvider>
-                    <Routes />
-                    <QueueModal />
-                  </SocketContextProvider>
+                  <HelmetProvider>
+                    <SocketContextProvider>
+                      <Routes />
+                      <QueueModal />
+                    </SocketContextProvider>
+                  </HelmetProvider>
                   <RefineKbar />
                   <UnsavedChangesNotifier />
                   <DocumentTitleHandler />

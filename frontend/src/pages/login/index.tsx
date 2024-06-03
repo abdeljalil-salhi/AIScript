@@ -1,8 +1,9 @@
 // Dependencies
 import { FC } from "react";
 import { Navigate } from "react-router-dom";
-import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
 import { useIsAuthenticated } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // SVGs
 import { ButtonGradient } from "@/assets/svg/ButtonGradient";
@@ -24,6 +25,8 @@ interface LoginPageProps {}
  * @exports LoginPage
  */
 export const LoginPage: FC<LoginPageProps> = (): JSX.Element => {
+  useDocumentTitle("Login to AIScript - Access Your AI Book Creation Hub");
+
   // The `useIsAuthenticated` hook is used to check if the user is authenticated or not.
   const { data: auth, isLoading } = useIsAuthenticated();
 
@@ -33,14 +36,15 @@ export const LoginPage: FC<LoginPageProps> = (): JSX.Element => {
   }
 
   return (
-    <HelmetProvider>
+    <>
       <Helmet>
-        <title>AIScript | Log in</title>
+        <title>Login to AIScript - Access Your AI Book Creation Hub</title>
         <meta
           name="description"
-          content="Login to your account on AIScript to access your e-books and more."
+          content="Login to your AIScript account to access your AI-powered book creation hub. Start generating high-quality books and custom covers effortlessly."
         />
       </Helmet>
+
       {/* The `isLoading` state is used to show a loading page while we are checking if the user is authenticated or not. */}
       {isLoading ? (
         <LoadingPage />
@@ -54,6 +58,6 @@ export const LoginPage: FC<LoginPageProps> = (): JSX.Element => {
         </div>
       )}
       <ButtonGradient />
-    </HelmetProvider>
+    </>
   );
 };

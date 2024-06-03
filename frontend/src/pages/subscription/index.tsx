@@ -1,6 +1,8 @@
 // Dependencies
 import { FC } from "react";
+import { Helmet } from "react-helmet-async";
 import { useCustom, useGetIdentity } from "@refinedev/core";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Components
 import { Header } from "@/components/subscription/Header";
@@ -24,6 +26,8 @@ interface SubscriptionPageProps {}
  * @exports SubscriptionPage
  */
 export const SubscriptionPage: FC<SubscriptionPageProps> = (): JSX.Element => {
+  useDocumentTitle("AIScript - Your Subscriptions History");
+
   /**
    * Get the user's identity
    * @type {MeResponse}
@@ -51,22 +55,32 @@ export const SubscriptionPage: FC<SubscriptionPageProps> = (): JSX.Element => {
   });
 
   return (
-    <div className="p-4 md:p-6 w-full md:h-screen flex flex-col items-center gap-6 overflow-y-auto font-['Poppins']">
-      <Header />
+    <>
+      <Helmet>
+        <title>AIScript - Your Subscriptions History</title>
+        <meta
+          name="description"
+          content="View your subscriptions history and manage your subscription plans."
+        />
+      </Helmet>
 
-      {!isSubscriptionsLoading ? (
-        isSubscriptionsError ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <p className="text-n-6">{subscriptionsError?.message}</p>
-          </div>
+      <div className="p-4 md:p-6 w-full md:h-screen flex flex-col items-center gap-6 overflow-y-auto font-['Poppins']">
+        <Header />
+
+        {!isSubscriptionsLoading ? (
+          isSubscriptionsError ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <p className="text-n-6">{subscriptionsError?.message}</p>
+            </div>
+          ) : (
+            <SubscriptionsHistory subscriptions={subscriptions} />
+          )
         ) : (
-          <SubscriptionsHistory subscriptions={subscriptions} />
-        )
-      ) : (
-        <div className="w-full h-full flex items-center justify-center">
-          <p className="text-n-6">Fetching subscriptions...</p>
-        </div>
-      )}
-    </div>
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="text-n-6">Fetching subscriptions...</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 };

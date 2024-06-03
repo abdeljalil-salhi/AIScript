@@ -33,13 +33,8 @@ import {
   EnhancedCoverGeneration,
   InstantBookGeneration,
   EnhancedSecurity,
-  Discord,
-  Twitter,
-  Instagram,
   Telegram,
-  Facebook,
 } from "@/assets/landing";
-import { notification2, notification3 } from "@/assets";
 // Interfaces
 import {
   Benefit,
@@ -101,11 +96,7 @@ export const heroIcons: string[] = [IconHome, IconFile, IconSearch, IconPlus];
  * Notification images for the notification component
  * @type {string[]}
  */
-export const notificationImages: string[] = [
-  PeopleOne,
-  notification3,
-  notification2,
-];
+export const notificationImages: string[] = [PeopleOne, PeopleOne, PeopleOne];
 
 /**
  * Company logos for the landing page, used in the hero component
@@ -363,32 +354,8 @@ export const roadmap: Roadmap[] = [
 export const socials: Social[] = [
   {
     id: "0",
-    title: "Discord",
-    iconUrl: Discord,
-    url: "#",
-  },
-  {
-    id: "1",
-    title: "Twitter",
-    iconUrl: Twitter,
-    url: "#",
-  },
-  {
-    id: "2",
-    title: "Instagram",
-    iconUrl: Instagram,
-    url: "#",
-  },
-  {
-    id: "3",
     title: "Telegram",
     iconUrl: Telegram,
-    url: "#",
-  },
-  {
-    id: "4",
-    title: "Facebook",
-    iconUrl: Facebook,
-    url: "#",
+    url: "https://t.me/aiscript_bot",
   },
 ];

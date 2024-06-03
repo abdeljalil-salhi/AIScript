@@ -49,13 +49,57 @@ export class ForgotPasswordService {
   public async createForgotPassword(
     requestForgotPasswordInput: RequestForgotPasswordInput,
   ): Promise<ForgotPassword> {
+    // Check if the forgot password request already exists
+    const checkForgotPassword: ForgotPassword =
+      await this.prismaService.forgotPassword.findFirst({
+        where: {
+          email: requestForgotPasswordInput.email,
+        },
+      });
+
+    if (checkForgotPassword) {
+      // Check if the forgot password request was sent more than an hour ago
+      if (
+        checkForgotPassword.lastSentAt.getTime() + 1000 * 60 * 60 * 1 <
+        Date.now()
+      ) {
+        // Update the forgot password request
+        const updatedForgotPassword: ForgotPassword =
+          await this.prismaService.forgotPassword.update({
+            where: {
+              id: checkForgotPassword.id,
+            },
+            data: {
+              lastSentAt: new Date(),
+            },
+          });
+
+        // Send a verification email to the user
+        await this.mailService.sendMail(
+          requestForgotPasswordInput.email,
+          'Forgot Password',
+          'Click the following link to reset your password; the link will expire in 12 hours.',
+          `${process.env.FRONTEND_URL}/forgot-password/${checkForgotPassword.token}`,
+        );
+
+        return updatedForgotPassword;
+      }
+
+      return checkForgotPassword;
+    }
+
+    // Find the connection by the email
     const connection: Connection =
       await this.connectionService.findConnectionByEmail(
         requestForgotPasswordInput.email,
       );
 
-    if (!connection) throw new NotFoundException('Connection not found');
+    if (!connection)
+      throw new NotFoundException(
+        'This email is not associated with any account.',
+      );
 
+    // Create a forgot password request
     const forgotPassword: ForgotPassword =
       await this.prismaService.forgotPassword.create({
         data: {
@@ -66,7 +110,7 @@ export class ForgotPasswordService {
           },
           email: requestForgotPasswordInput.email,
           token: randomUUID(), // Generate a random token.
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 12 hours
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 12), // 12 hours
         },
       });
 
@@ -74,7 +118,7 @@ export class ForgotPasswordService {
     await this.mailService.sendMail(
       requestForgotPasswordInput.email,
       'Forgot Password',
-      'Click the following link to reset your password; the link will expire in 24 hours.',
+      'Click the following link to reset your password; the link will expire in 12 hours.',
       `${process.env.FRONTEND_URL}/forgot-password/${forgotPassword.token}`,
     );
 

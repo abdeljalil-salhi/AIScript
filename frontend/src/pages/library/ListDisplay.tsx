@@ -5,7 +5,7 @@ import { EyeFilled } from "@ant-design/icons";
 import { useCustom, useGetIdentity } from "@refinedev/core";
 
 // Assets
-import EmptyBox from "@/assets/create/empty-box.png";
+import { EmptyBox } from "@/assets/create";
 // GraphQL Queries
 import { QUERY_GET_BOOKS_BY_USER_ID } from "@/graphql/queries/getBooksByUserId";
 // GraphQL Types

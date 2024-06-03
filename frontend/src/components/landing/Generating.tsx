@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Assets
-import { loading } from "@/assets";
+import { LoadingSpin } from "@/assets/landing";
 
 // Interfaces
 interface GeneratingProps {
@@ -25,7 +25,7 @@ export const Generating: FC<GeneratingProps> = ({ className }): JSX.Element => {
     >
       <img
         className="w-5 h-5 mr-4 animate-spin"
-        src={loading}
+        src={LoadingSpin}
         alt="Loading..."
         draggable={false}
       />

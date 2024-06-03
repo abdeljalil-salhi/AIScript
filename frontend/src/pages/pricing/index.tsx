@@ -1,6 +1,8 @@
 // Dependencies
 import { FC, useEffect, useState } from "react";
 import { useGetIdentity } from "@refinedev/core";
+import { Helmet } from "react-helmet-async";
+import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Constants
 import { MONTHLY_BILLING, pricingPlans } from "@/constants/pricing";
@@ -24,6 +26,8 @@ interface PricingPageProps {}
  * @exports PricingPage
  */
 export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
+  useDocumentTitle("AIScript - Subscription Plans");
+
   /**
    * Billing Period State
    * @type {0 | 1}
@@ -62,27 +66,37 @@ export const PricingPage: FC<PricingPageProps> = (): JSX.Element => {
   }, [identity, isIdentityLoading]);
 
   return (
-    <div className="p-4 md:p-6 w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col gap-6 overflow-y-auto">
-      <Header />
+    <>
+      <Helmet>
+        <title>AIScript - Subscription Plans</title>
+        <meta
+          name="description"
+          content="Choose the best subscription plan for you. Get access to all the features of AIScript with ease."
+        />
+      </Helmet>
 
-      <BillingPeriodSwitch
-        billingPeriod={billingPeriod}
-        setBillingPeriod={setBillingPeriod}
-      />
+      <div className="p-4 md:p-6 w-full h-[calc(100vh-3.5rem)] md:h-screen flex flex-col gap-6 overflow-y-auto">
+        <Header />
 
-      <div className="max-w-6xl md:mx-auto grid gap-6 lg:grid-cols-3 items-start lg:max-w-none">
-        {pricingPlans.map((plan: TPricingPlan) => (
-          <PricingPlan
-            key={plan.id}
-            plan={plan}
-            currentPlan={currentPlan}
-            billingPeriod={billingPeriod}
-            setBillingPeriod={setBillingPeriod}
-          />
-        ))}
+        <BillingPeriodSwitch
+          billingPeriod={billingPeriod}
+          setBillingPeriod={setBillingPeriod}
+        />
+
+        <div className="max-w-6xl md:mx-auto grid gap-6 lg:grid-cols-3 items-start lg:max-w-none">
+          {pricingPlans.map((plan: TPricingPlan) => (
+            <PricingPlan
+              key={plan.id}
+              plan={plan}
+              currentPlan={currentPlan}
+              billingPeriod={billingPeriod}
+              setBillingPeriod={setBillingPeriod}
+            />
+          ))}
+        </div>
+
+        <div className="w-full"></div>
       </div>
-
-      <div className="w-full"></div>
-    </div>
+    </>
   );
 };

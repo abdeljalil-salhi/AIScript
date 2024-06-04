@@ -164,7 +164,11 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
     let updatedEmail: string | null = email;
 
     if (username === identity?.user.username) updatedUsername = null;
-    if (email === identity?.user.connection?.email) updatedEmail = null;
+    if (
+      email === identity?.user.connection?.email ||
+      identity?.user.connection?.provider !== "local"
+    )
+      updatedEmail = null;
 
     updateUser({
       url: API_URL,
@@ -264,13 +268,14 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           <input
             type="email"
             id="email"
-            className="w-full max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+            className="w-full max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light disabled:bg-n-6/70"
             placeholder="Your email address"
             value={email}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setEmail(e.target.value)
             }
             maxLength={50}
+            disabled={identity?.user.connection?.provider !== "local"}
           />
           {!isIdentityLoading ? (
             identity?.user.connection?.isEmailVerified ? (
@@ -331,17 +336,21 @@ export const SettingsForm: FC<SettingsFormProps> = (): JSX.Element => {
           </>
         )}
 
-        <button
-          className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
-          onClick={() => setShowChangePasswordModal(true)}
-        >
-          Change your password
-        </button>
-        <ChangePasswordModal
-          identity={identity!}
-          open={showChangePasswordModal}
-          onClose={() => setShowChangePasswordModal(false)}
-        />
+        {identity?.user.connection?.provider === "local" && (
+          <>
+            <button
+              className="w-full max-w-full px-4 py-2 text-center bg-n-6 hover:bg-n-6/70 text-n-1 rounded-md shadow-md cursor-pointer transition-all ease-in-out"
+              onClick={() => setShowChangePasswordModal(true)}
+            >
+              Change your password
+            </button>
+            <ChangePasswordModal
+              identity={identity!}
+              open={showChangePasswordModal}
+              onClose={() => setShowChangePasswordModal(false)}
+            />
+          </>
+        )}
 
         {!isIdentityLoading ? (
           !identity?.user.connection?.is2faEnabled ? (

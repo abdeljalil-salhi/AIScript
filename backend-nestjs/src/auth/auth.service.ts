@@ -1,6 +1,8 @@
 // Dependencies
 import * as argon from 'argon2';
+import { randomBytes } from 'crypto';
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -24,9 +26,24 @@ import { RegisterInput } from './dtos/register.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { ChangePasswordInput } from './dtos/change-password.input';
 import { ShortLivedTokenResponse } from './dtos/short-lived-token.response';
+// Interfaces
+import { GoogleUser } from './interfaces/google-user.interface';
 
 /**
  * The authentication service that encapsulates all authentication-related features and functionalities.
+ *
+ * @method register - Registers a new user with the specified details.
+ * @method login - Logs in the user with the specified details.
+ * @method loginWithGoogle - Logs in the user with the specified Google profile.
+ * @method logout - Logs out the user with the specified ID.
+ * @method me - Returns the currently authenticated user.
+ * @method verifyPassword - Verifies the password of the user with the specified ID.
+ * @method changePassword - Changes the password for the user with the specified ID.
+ * @method forgotPassword - Resets the password for the user with the specified email.
+ * @method createShortLivedToken - Creates a new short-lived token for the user to perform two-factor authentication or other sensitive operations.
+ * @method createTokens - Creates new access and refresh tokens for the user.
+ * @method updateRefreshToken - Updates the refresh token for the user in the database.
+ * @method getNewTokens - Refreshes the access token and refresh token for the user.
  *
  * @export
  * @class AuthService
@@ -39,6 +56,7 @@ export class AuthService {
    *
    * @param {JwtService} jwtService - The service for creating and verifying JSON Web Tokens (JWTs).
    * @param {UserService} userService - The user service for user-related operations.
+   * @param {EmailVerificationService} emailVerificationService - The email verification service for email verification-related operations.
    */
   constructor(
     private readonly jwtService: JwtService,
@@ -54,7 +72,10 @@ export class AuthService {
    * @throws {ConflictException} - Thrown if the username already exists.
    * @throws {NotFoundException} - Thrown if the email verification is not created.
    */
-  public async register(registerInput: RegisterInput): Promise<AuthResponse> {
+  public async register(
+    registerInput: RegisterInput,
+    provider: string = 'local',
+  ): Promise<AuthResponse> {
     /**
      * Check if the username already exists.
      * If it does, throw a ConflictException.
@@ -88,7 +109,7 @@ export class AuthService {
       connection: {
         email: registerInput.email,
         password: hashedPassword,
-        provider: 'local',
+        provider,
       },
     });
 
@@ -99,19 +120,21 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.createTokens(user);
     await this.updateRefreshToken(user.id, refreshToken);
 
-    /**
-     * Create an email verification for the user.
-     * Send an email to the user to verify their email address.
-     * This is done to ensure that the user owns the email address.
-     */
-    const emailVerification: EmailVerification =
-      await this.emailVerificationService.createEmailVerification(
-        user.connection.id,
-        user.connection.email,
-      );
+    if (provider === 'local') {
+      /**
+       * Create an email verification for the user.
+       * Send an email to the user to verify their email address.
+       * This is done to ensure that the user owns the email address.
+       */
+      const emailVerification: EmailVerification =
+        await this.emailVerificationService.createEmailVerification(
+          user.connection.id,
+          user.connection.email,
+        );
 
-    if (!emailVerification)
-      throw new NotFoundException('Email verification not created');
+      if (!emailVerification)
+        throw new NotFoundException('Email verification not created');
+    }
 
     // Return the authentication response with the access token and refresh token
     return {
@@ -154,6 +177,112 @@ export class AuthService {
         if (!isPasswordValid)
           throw new ForbiddenException('Invalid credentials');
       });
+
+    /**
+     * If the user has two-factor authentication enabled, create a short-lived token for the user.
+     * This is done to ensure that the user is authenticated and authorized to access the two-factor
+     * authentication (2FA) verification page.
+     */
+    if (user.connection.is2faEnabled) {
+      // Create a short-lived token for the user
+      const { shortLivedToken } = await this.createShortLivedToken(user);
+
+      // Return the short-lived token for the user to perform 2FA verification
+      return {
+        shortLivedToken,
+        accessToken: '',
+        refreshToken: '',
+        user,
+        is2faEnabled: user.connection.is2faEnabled,
+      };
+    }
+
+    /**
+     * Create tokens and update refresh token in the database.
+     * This is done to ensure that the user is authenticated and authorized.
+     */
+    const { accessToken, refreshToken } = await this.createTokens(user);
+    await this.updateRefreshToken(user.id, refreshToken);
+
+    // Return the authentication response with the access token and refresh token
+    return {
+      accessToken,
+      refreshToken,
+      user,
+      is2faEnabled: user.connection.is2faEnabled,
+    };
+  }
+
+  /**
+   * Logs in the user with the specified Google profile.
+   *
+   * @param {GoogleUser} profile - The Google profile details for the user to login.
+   * @returns {Promise<AuthResponse>} - The result of the login operation.
+   * @throws {BadRequestException} - Thrown if the Google profile is invalid.
+   * @throws {ForbiddenException} - Thrown if the user has already registered with a different provider.
+   */
+  public async loginWithGoogle(profile: GoogleUser): Promise<AuthResponse> {
+    if (!profile)
+      throw new BadRequestException(
+        'You must provide a valid Google profile to proceed with the login process. Please try again.',
+        { cause: new Error(), description: '1' },
+      );
+
+    // Extract the provider, email, name, and avatar from the Google profile
+    const { provider, email, name, avatar } = profile;
+
+    // Check if the Google profile is valid
+    if (!provider || !email || !name || !avatar)
+      throw new BadRequestException(
+        'The Google profile provided is invalid. Please try again.',
+        { cause: new Error(), description: '1' },
+      );
+
+    /**
+     * Find the user by the email provided in the Google profile.
+     * If the user is not found, create a new user with the Google profile details and authenticate the user.
+     * If the user is found, continue with the login process.
+     */
+    const user: User = await this.userService
+      .findByUsernameOrEmail(email)
+      .catch(() => {
+        return null;
+      });
+
+    if (!user) {
+      /**
+       * Generate a random username by appending random numbers to the Google given name.
+       */
+      let username: string = name.toLowerCase() + '_';
+
+      const randomizedBytes: Buffer = randomBytes(6);
+      const randomNumbers: string[] = Array.from(randomizedBytes).map(
+        (byte: number) => byte.toString(),
+      );
+
+      username += randomNumbers.join('');
+      if (username.length > 20) username = username.slice(0, 20);
+
+      // After preparing the register input data, call the normal register method.
+      return this.register(
+        {
+          username,
+          email,
+          filename: avatar,
+          password: '',
+        },
+        provider,
+      );
+    }
+
+    /**
+     * Check if the user has already registered with a different provider.
+     */
+    if (user.connection.provider !== provider)
+      throw new ForbiddenException(
+        'You have already registered with a different provider. Please login using your email and password.',
+        { cause: new Error(), description: '2' },
+      );
 
     /**
      * If the user has two-factor authentication enabled, create a short-lived token for the user.

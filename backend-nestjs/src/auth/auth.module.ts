@@ -16,6 +16,9 @@ import { AuthResolver } from './auth.resolver';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 import { ShortLivedTokenStrategy } from './strategies/short-lived-token.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
+// Controllers
+import { AuthController } from './auth.controller';
 
 /**
  * The authentication module that encapsulates all authentication-related features
@@ -42,6 +45,8 @@ import { ShortLivedTokenStrategy } from './strategies/short-lived-token.strategy
     AccessTokenStrategy,
     RefreshTokenStrategy,
     ShortLivedTokenStrategy,
+    GoogleStrategy,
   ],
+  controllers: [AuthController],
 })
 export class AuthModule {}

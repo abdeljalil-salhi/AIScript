@@ -151,6 +151,7 @@ export class AuthService {
    * @param {LoginInput} loginInput - The input details for the user to login.
    * @returns {Promise<AuthResponse>} - The result of the login operation.
    * @throws {NotFoundException} - Thrown if the user is not found.
+   * @throws {ForbiddenException} - Thrown if the user has registered using a different provider.
    * @throws {ForbiddenException} - Thrown if the password is invalid.
    */
   public async login(loginInput: LoginInput): Promise<AuthResponse> {
@@ -163,6 +164,16 @@ export class AuthService {
       .findByUsernameOrEmail(loginInput.usernameOrEmail)
       .then((user: User) => {
         if (!user) throw new NotFoundException('User not found');
+
+        // Check if the user is registered using a different provider
+        if (user.connection.provider !== 'local')
+          throw new ForbiddenException(
+            `You are registered using the ${
+              user.connection.provider.charAt(0).toUpperCase() +
+              user.connection.provider.slice(1)
+            } provider. Please select the appropriate provider to login.`,
+          );
+
         return user;
       });
 

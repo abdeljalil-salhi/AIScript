@@ -123,13 +123,14 @@ export class UserService {
         isAdmin: false,
         avatar: {
           create: {
-            defaultFilename: newUserInput.avatar.filename,
+            defaultFilename: '/default.png',
             filename: newUserInput.avatar.filename,
           },
         },
         connection: {
           create: {
             ...newUserInput.connection,
+            isEmailVerified: newUserInput.connection.provider === 'google',
           },
         },
         wallet: {

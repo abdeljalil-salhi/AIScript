@@ -135,6 +135,8 @@ export const VerifyXTwitterPage: FC<
 
             // Redirect the user to the 2FA page with the short-lived token
             navigate("/2fa", { replace: true });
+
+            return;
           } else {
             // Show an error notification in case the short-lived token is not found
             open?.({
@@ -163,6 +165,8 @@ export const VerifyXTwitterPage: FC<
 
           // Redirect the user to the home page with the access token
           navigate("/home", { replace: true });
+
+          return;
         } else {
           // Show an error notification in case the access token is not found
           open?.({

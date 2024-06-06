@@ -76,6 +76,13 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
    * @default false
    */
   const [next, setNext] = useState<boolean>(false);
+  /**
+   * State to determine if the user is ready to move to the next step
+   * used in case the user is not using a local account
+   * @type {boolean}
+   * @default false
+   */
+  const [goToNext, setGoToNext] = useState<boolean>(false);
 
   /**
    * Reference to the input field
@@ -173,7 +180,11 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
   const handlePasswordProtection = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (isVerifyingPassword) return;
+    if (isVerifyingPassword || !identity?.user.connection?.isEmailVerified)
+      return;
+
+    // If the user is not using a local account, move to the next step
+    if (identity.user.connection.provider !== "local") return setGoToNext(true);
 
     // Get the form data
     const formData: FormData = new FormData(e.currentTarget);
@@ -197,6 +208,7 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
             data?.message ||
             "An error occurred while verifying your password. Please try again.",
           type: "error",
+          key: "verify_password_error",
         };
       },
     });
@@ -217,9 +229,14 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
           type: "error",
           description: "Password verification failed",
           message: "The password you entered is incorrect. Please try again.",
+          key: "verify_password_error",
         });
     }
+
+    // If the user is not using a local account, move to the next step
+    if (goToNext) setNext(true);
   }, [
+    goToNext,
     identity,
     isIdentityLoading,
     isVerifyingPassword,
@@ -261,6 +278,7 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
             data?.message ||
             "An error occurred while disabling two-factor authentication. Please try again.",
           type: "error",
+          key: "disable_2fa_error",
         };
       },
     });
@@ -276,6 +294,7 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
         type: "success",
         description: "Success!",
         message: "Two-factor authentication has been successfully disabled.",
+        key: "disable_2fa_success",
       });
 
       // Set the 2FA disabled state to true
@@ -287,7 +306,14 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
       // Close the modal
       onClose();
     }
-  }, [disable2FAData, disable2FAError, isDisabled, onClose, openNotification, refetchIdentity]);
+  }, [
+    disable2FAData,
+    disable2FAError,
+    isDisabled,
+    onClose,
+    openNotification,
+    refetchIdentity,
+  ]);
 
   // If the modal is not open, return an empty fragment
   if (!open) return <></>;
@@ -308,15 +334,20 @@ export const Disable2FAModal: FC<Disable2FAModalProps> = ({
               <p className="w-full text-n-1/75 text-justify">
                 Two-factor authentication (2FA) adds an extra layer of security
                 to your account. If you are sure you want to disable it, please
-                enter your password below.
+                {identity?.user.connection?.provider === "local"
+                  ? "enter your password below"
+                  : "click the button below"}
+                .
               </p>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your account password"
-                className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
-                required
-              />
+              {identity?.user.connection?.provider === "local" && (
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Enter your account password"
+                  className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+                  required
+                />
+              )}
               <button
                 type="submit"
                 className="mt-2 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl px-4 py-2 rounded-md shadow-md cursor-pointer transition-all ease-in-out w-full mx-4"

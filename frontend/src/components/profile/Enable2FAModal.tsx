@@ -84,6 +84,13 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
    * @default false
    */
   const [next, setNext] = useState<boolean>(false);
+  /**
+   * State to determine if the user is ready to move to the next step
+   * used in case the user is not using a local account
+   * @type {boolean}
+   * @default false
+   */
+  const [goToNext, setGoToNext] = useState<boolean>(false);
 
   /**
    * Reference to the input field
@@ -191,7 +198,11 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   const handlePasswordProtection = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    if (isVerifyingPassword) return;
+    if (isVerifyingPassword || !identity?.user.connection?.isEmailVerified)
+      return;
+
+    // If the user is not using a local account, move to the next step
+    if (identity.user.connection.provider !== "local") return setGoToNext(true);
 
     // Get the form data
     const formData: FormData = new FormData(e.currentTarget);
@@ -215,6 +226,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
             data?.message ||
             "An error occurred while verifying your password. Please try again.",
           type: "error",
+          key: "verify_password_error",
         };
       },
     });
@@ -253,6 +265,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                 data?.message ||
                 "An error occurred while enabling two-factor authentication. Please try again.",
               type: "error",
+              key: "generate_2fa_secret_error",
             };
           },
         });
@@ -266,7 +279,37 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
           type: "error",
           description: "Unable to verify password",
           message: "The password you entered is incorrect. Please try again.",
+          key: "verify_password_error",
         });
+    }
+
+    // If the account is not using the local provider, move to the next step
+    if (goToNext && !isMutationSent && identity) {
+      generate2FASecret({
+        url: API_URL,
+        method: "post",
+        meta: {
+          gqlMutation: MUTATION_GENERATE_TWO_FACTOR_AUTHENTICATION_SECRET,
+          variables: {
+            userId: identity.user.id,
+            username: identity.user.username,
+          },
+        },
+        values: {},
+        errorNotification: (data: HttpError | undefined) => {
+          return {
+            description: "Unable to enable two-factor authentication",
+            message:
+              data?.message ||
+              "An error occurred while enabling two-factor authentication. Please try again.",
+            type: "error",
+            key: "generate_2fa_secret_error",
+          };
+        },
+      });
+
+      // Set the mutation sent state to true to prevent multiple requests
+      setIsMutationSent(true);
     }
 
     // If the 2FA secret is generated and the mutation is sent, move to the next step
@@ -275,6 +318,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
   }, [
     generate2FASecret,
     generate2FASecretData,
+    goToNext,
     identity,
     isGenerating2FASecret,
     isIdentityLoading,
@@ -318,6 +362,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
             data?.message ||
             "An error occurred while enabling two-factor authentication. Please try again.",
           type: "error",
+          key: "enable_2fa_error",
         };
       },
     });
@@ -333,6 +378,7 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
         type: "success",
         description: "Success!",
         message: "Two-factor authentication has been successfully enabled.",
+        key: "enable_2fa_success",
       });
 
       // Set the 2FA enabled state to true
@@ -379,13 +425,15 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
                   authentication.
                 </p>
               ) : (
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter your account password"
-                  className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
-                  required
-                />
+                identity.user.connection.provider === "local" && (
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter your account password"
+                    className="w-full placeholder-n-10 text-n-3 max-w-96 lg:max-w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
+                    required
+                  />
+                )
               )}
               <button
                 type="submit"

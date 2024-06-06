@@ -13,6 +13,7 @@ import { LoginTwoFactorAuthenticationInput } from './dtos/login-2fa.input';
 import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
 // Guards
 import { ShortLivedTokenGuard } from 'src/auth/guards/short-lived-token.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 /**
  * The two-factor authentication resolver that encapsulates all two-factor authentication-related GraphQL queries,
@@ -37,12 +38,14 @@ export class TwoFactorAuthenticationResolver {
    * Logs in a user with two-factor authentication.
    *
    * @mutation
+   * @public - Disables the authentication guard for this route.
    * @useGuards ShortLivedTokenGuard
    * @param {string} id - The ID of the current user.
    * @param {LoginTwoFactorAuthenticationInput} loginTwoFactorAuthenticationInput - The login two-factor authentication input.
    * @returns {Promise<AuthResponse>} - The authentication response.
    * @throws {ForbiddenException} - If the current user is not authorized to perform this action.
    */
+  @Public()
   @UseGuards(ShortLivedTokenGuard)
   @Mutation(() => AuthResponse, {
     name: 'loginTwoFactorAuthentication',

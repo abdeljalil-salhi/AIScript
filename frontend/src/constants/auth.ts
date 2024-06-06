@@ -1,5 +1,5 @@
 // Assets
-import { Apple } from "@/assets/svg/Apple";
+import { XTwitter } from "@/assets/svg/XTwitter";
 import { Google } from "@/assets/svg/Google";
 // Interfaces
 import { OAuthProvider } from "./types";
@@ -15,8 +15,8 @@ export const OAuthProviders: OAuthProvider[] = [
   },
   {
     id: "1",
-    title: "Apple",
-    href: "#",
-    icon: Apple,
+    title: "X",
+    href: `${BASE_URL}/auth/twitter`,
+    icon: XTwitter,
   },
 ];

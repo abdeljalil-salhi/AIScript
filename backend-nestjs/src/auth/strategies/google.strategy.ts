@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
 
 // Interfaces
-import { GoogleUser } from '../interfaces/google-user.interface';
+import { OAuthUser } from '../interfaces/oauth-user.interface';
 
 /**
  * The strategy that handles the validation of Google accounts.
@@ -40,7 +40,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
    * @param {string} _refreshToken - The refresh token of the Google account.
    * @param {*} profile - The profile of the Google account.
    * @param {VerifyCallback} done - The callback function.
-   * @returns {Promise<any>} - The validated user.
+   * @returns {Promise<void>} - The validated user.
    */
   public async validate(
     _accessToken: string,
@@ -51,13 +51,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     // Extract the required information from the Google profile
     const { name, emails, photos } = profile;
 
-    const user: GoogleUser = {
+    // Prepare the OAuth user object
+    const user: OAuthUser = {
       provider: 'google',
       email: emails[0].value,
       name: name.givenName,
       avatar: photos[0].value,
     };
 
+    // Return the validated user
     done(null, user);
   }
 }

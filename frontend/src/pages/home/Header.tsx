@@ -1,5 +1,6 @@
 // Dependencies
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Col, Row } from "antd";
 import { ArrowDownOutlined } from "@ant-design/icons";
 
@@ -18,7 +19,33 @@ interface HeaderProps {}
  * @exports Header
  */
 export const Header: FC<HeaderProps> = (): JSX.Element => {
+  /**
+   * State to store the topic
+   * @type {string}
+   */
   const [topic, setTopic] = useState<string>("");
+
+  /**
+   * Navigate function for redirecting to other pages
+   * @type {NavigateFunction}
+   */
+  const navigate: NavigateFunction = useNavigate();
+
+  /**
+   * Redirect to the create page with the topic stored in the state.
+   *
+   * @function
+   * @param {FormEvent<HTMLFormElement>} e - Event
+   */
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    navigate("/create", {
+      state: {
+        topic,
+      },
+    });
+  };
 
   return (
     <header className="w-full">
@@ -46,7 +73,10 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
       </Row>
       <Row gutter={[32, 0]} className="">
         <Col xs={24} sm={24} xl={24} className="py-4">
-          <div className="flex flex-row gap-3 items-center justify-between bg-n-7 rounded-lg w-full h-full p-2 shadow-md">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-row gap-3 items-center justify-between bg-n-7 rounded-lg w-full h-full p-2 shadow-md"
+          >
             <input
               type="text"
               placeholder={suggestions[0].content}
@@ -57,12 +87,12 @@ export const Header: FC<HeaderProps> = (): JSX.Element => {
               }
             />
             <button
-              type="button"
+              type="submit"
               className="text-base bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center transition-all duration-300 ease-in-out transform"
             >
               Create
             </button>
-          </div>
+          </form>
         </Col>
       </Row>
     </header>

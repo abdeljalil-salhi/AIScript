@@ -1,5 +1,6 @@
 // Dependencies
 import { FC, FormEvent, useContext, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Spin } from "antd";
 import { v4 as uuidv4 } from "uuid";
 import { useGetIdentity, useNotification } from "@refinedev/core";
@@ -63,6 +64,12 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
    * @type {File | null}
    */
   const [file, setFile] = useState<File | null>(null);
+
+  /**
+   * Get the location state from the URL
+   * @type {{ topic: string }}
+   */
+  const { state } = useLocation();
 
   /**
    * State to store the loading state of the form.
@@ -297,6 +304,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           placeholder={
             suggestions[secureRandomIndexes(suggestions, 1)[0]].content
           }
+          defaultValue={state?.topic || ""}
           required
         />
       </div>

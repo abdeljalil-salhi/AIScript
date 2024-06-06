@@ -146,6 +146,7 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
                   src={identity?.user.avatar?.filename}
                   alt={`${identity?.user.username}'s profile`}
                   className="w-8 aspect-square cursor-pointer object-cover rounded-full"
+                  referrerPolicy="no-referrer"
                 />
               )}
             </button>
@@ -190,6 +191,7 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
                     src={identity?.user.avatar?.filename}
                     alt={`${identity?.user.username}'s profile`}
                     className="w-8 aspect-square cursor-pointer object-cover rounded-full"
+                    referrerPolicy="no-referrer"
                   />
                 )}
               </Link>

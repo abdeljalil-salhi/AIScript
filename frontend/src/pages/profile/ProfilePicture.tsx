@@ -181,6 +181,7 @@ export const ProfilePicture: FC<ProfilePictureProps> = (): JSX.Element => {
             className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-n-5 cursor-pointer"
             src={previewAvatar || avatar}
             draggable={false}
+            referrerPolicy="no-referrer"
           />
         )}
       </label>

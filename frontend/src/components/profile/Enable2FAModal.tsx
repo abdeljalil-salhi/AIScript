@@ -344,7 +344,14 @@ export const Enable2FAModal: FC<Enable2FAModalProps> = ({
       // Close the modal
       onClose();
     }
-  }, [enable2FAData, enable2FAError, isEnabled, onClose, openNotification, refetchIdentity]);
+  }, [
+    enable2FAData,
+    enable2FAError,
+    isEnabled,
+    onClose,
+    openNotification,
+    refetchIdentity,
+  ]);
 
   // If the modal is not open, return an empty fragment
   if (!open) return <></>;

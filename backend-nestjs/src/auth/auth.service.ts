@@ -27,14 +27,14 @@ import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { ChangePasswordInput } from './dtos/change-password.input';
 import { ShortLivedTokenResponse } from './dtos/short-lived-token.response';
 // Interfaces
-import { GoogleUser } from './interfaces/google-user.interface';
+import { OAuthUser } from './interfaces/oauth-user.interface';
 
 /**
  * The authentication service that encapsulates all authentication-related features and functionalities.
  *
  * @method register - Registers a new user with the specified details.
  * @method login - Logs in the user with the specified details.
- * @method loginWithGoogle - Logs in the user with the specified Google profile.
+ * @method loginWithOAuth - Logs in the user with the specified OAuth profile.
  * @method logout - Logs out the user with the specified ID.
  * @method me - Returns the currently authenticated user.
  * @method verifyPassword - Verifies the password of the user with the specified ID.
@@ -225,33 +225,33 @@ export class AuthService {
   }
 
   /**
-   * Logs in the user with the specified Google profile.
+   * Logs in the user with the specified OAuth profile.
    *
-   * @param {GoogleUser} profile - The Google profile details for the user to login.
+   * @param {OAuthUser} profile - The OAuth profile details for the user to login.
    * @returns {Promise<AuthResponse>} - The result of the login operation.
-   * @throws {BadRequestException} - Thrown if the Google profile is invalid.
+   * @throws {BadRequestException} - Thrown if the OAuth profile is invalid.
    * @throws {ForbiddenException} - Thrown if the user has already registered with a different provider.
    */
-  public async loginWithGoogle(profile: GoogleUser): Promise<AuthResponse> {
+  public async loginWithOAuth(profile: OAuthUser): Promise<AuthResponse> {
     if (!profile)
       throw new BadRequestException(
-        'You must provide a valid Google profile to proceed with the login process. Please try again.',
+        'You must provide a valid OAuth profile to proceed with the login process. Please try again.',
         { cause: new Error(), description: '1' },
       );
 
-    // Extract the provider, email, name, and avatar from the Google profile
+    // Extract the provider, email, name, and avatar from the OAuth profile
     const { provider, email, name, avatar } = profile;
 
-    // Check if the Google profile is valid
+    // Check if the OAuth profile is valid
     if (!provider || !email || !name || !avatar)
       throw new BadRequestException(
-        'The Google profile provided is invalid. Please try again.',
+        'The OAuth profile provided is invalid. Please try again.',
         { cause: new Error(), description: '1' },
       );
 
     /**
-     * Find the user by the email provided in the Google profile.
-     * If the user is not found, create a new user with the Google profile details and authenticate the user.
+     * Find the user by the email provided in the OAuth profile.
+     * If the user is not found, create a new user with the OAuth profile details and authenticate the user.
      * If the user is found, continue with the login process.
      */
     const user: User = await this.userService
@@ -262,7 +262,7 @@ export class AuthService {
 
     if (!user) {
       /**
-       * Generate a random username by appending random numbers to the Google given name.
+       * Generate a random username by appending random numbers to the OAuth given name.
        */
       let username: string = name.toLowerCase() + '_';
 
@@ -291,7 +291,7 @@ export class AuthService {
      */
     if (user.connection.provider !== provider)
       throw new ForbiddenException(
-        'You have already registered with a different provider. Please login using your email and password.',
+        'You have already registered with a different provider. Please try logging in using your email and password.',
         { cause: new Error(), description: '2' },
       );
 

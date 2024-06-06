@@ -36,6 +36,7 @@ import { mailerConfig } from 'src/config/mailer.config';
 import { graphQLErrorFormatter } from './utils/graphql-error-formatter';
 import { SocketGateway } from 'src/socket/socket.gateway';
 import { SocketService } from 'src/socket/socket.service';
+import { SessionModule } from 'nestjs-session';
 
 /**
  * The root module of the application.
@@ -65,6 +66,18 @@ import { SocketService } from 'src/socket/socket.service';
 
     // Enable the scheduling module
     ScheduleModule.forRoot(),
+
+    // Configure the session module
+    SessionModule.forRoot({
+      session: {
+        secret: process.env.SESSION_SECRET, // Use the session secret from the environment variables
+        resave: false, // Do not save the session if it has not been modified
+        saveUninitialized: true, // Save the session even if it is new
+        cookie: {
+          secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        },
+      },
+    }),
 
     AuthModule,
     UserModule,

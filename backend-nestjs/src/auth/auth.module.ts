@@ -17,6 +17,7 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 import { ShortLivedTokenStrategy } from './strategies/short-lived-token.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { XTwitterStrategy } from './strategies/xtwitter.strategy';
 // Controllers
 import { AuthController } from './auth.controller';
 
@@ -46,6 +47,7 @@ import { AuthController } from './auth.controller';
     RefreshTokenStrategy,
     ShortLivedTokenStrategy,
     GoogleStrategy,
+    XTwitterStrategy,
   ],
   controllers: [AuthController],
 })

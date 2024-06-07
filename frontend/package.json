@@ -19,7 +19,7 @@
     "@paypal/react-paypal-js": "^8.3.0",
     "@react-pdf/renderer": "^3.4.4",
     "@refinedev/antd": "^5.37.5",
-    "@refinedev/cli": "^2.16.29",
+    "@refinedev/cli": "^2.16.33",
     "@refinedev/core": "^4.49.2",
     "@refinedev/devtools": "^1.2.1",
     "@refinedev/inferencer": "^4.6.2",

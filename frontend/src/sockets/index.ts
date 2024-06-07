@@ -29,6 +29,8 @@ export const ws: Socket<ServerToClientEvents, ClientToServerEvents> = io(
     timestampRequests: true,
     // Connect automatically after initialization
     autoConnect: false,
+    // Secure connection
+    secure: process.env.NODE_ENV === "production",
   }
 );
 

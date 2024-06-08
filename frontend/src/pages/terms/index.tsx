@@ -1,8 +1,10 @@
 // Dependencies
-import { AIScriptLogo } from "@/assets";
-import { LeftOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { Link } from "react-router-dom";
+import { LeftOutlined } from "@ant-design/icons";
+
+// Assets
+import { AIScriptLogo } from "@/assets";
 
 // Interfaces
 interface TermsPageProps {}

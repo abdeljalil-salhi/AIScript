@@ -2,45 +2,33 @@
  * Secure Random Indexes
  * Generates secure random unique indexes for an array of objects
  *
- * @param {object[]} array - Array of Objects
+ * @param {number} arrayLength - Length of the Array
  * @param {number} indexes - Number of Random Indexes
  * @returns {number[]} - Secure Random Indexes
  * @exports secureRandomIndexes
  * @example
- * secureRandomIndexes({ array: [1, 2, 3, 4, 5], indexes: 3 });
+ * secureRandomIndexes({ arrayLength: 5, indexes: 3 });
  * // Returns: [2, 4, 0]
  */
 export const secureRandomIndexes = (
-  array: object[],
+  arrayLength: number,
   indexes: number
 ): number[] => {
   // If the number of indexes is greater than or equal the length of the array, return all indexes
-  if (indexes >= array.length) return array.map((_, i) => i);
+  if (indexes >= arrayLength)
+    return Array.from({ length: arrayLength }, (_, i: number) => i);
 
-  // Create a buffer to hold the concatenated bytes of the array
-  const buffer: Uint8Array = new Uint8Array(array.length * indexes);
+  // A set to store unique indexes
+  const uniqueIndexes: Set<number> = new Set();
 
-  // Fill the buffer with cryptographically secure random values
-  crypto.getRandomValues(buffer);
-
-  // Initialize an array to store the unique random indexes
-  const uniqueIndexes: number[] = [];
-
-  // Iterate over the required number of indexes
-  for (let j = 0; j < indexes; j++) {
-    let sum: number = 0;
-
-    // Sum up the random values for each index
-    for (let i = 0; i < array.length; i++) sum += buffer[j * array.length + i];
-
-    // Take modulo to get a random index within the length of the array
-    const randomIndex: number = sum % array.length;
-
-    // Ensure the index is unique
-    if (!uniqueIndexes.includes(randomIndex)) uniqueIndexes.push(randomIndex);
-    // If index is not unique, decrement the outer loop to try again
-    else j--;
+  while (uniqueIndexes.size < indexes) {
+    // Generate a random index
+    const randomIndex: number =
+      crypto.getRandomValues(new Uint32Array(1))[0] % arrayLength;
+    // Add the random index to the set, if it is unique
+    uniqueIndexes.add(randomIndex);
   }
 
-  return uniqueIndexes;
+  // Return the unique indexes as an array
+  return Array.from(uniqueIndexes);
 };

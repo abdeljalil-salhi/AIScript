@@ -29,6 +29,7 @@ import { ForgotPasswordPage } from "./pages/forgot-password";
 import { VerifyResetToken } from "./pages/forgot-password/VerifyResetToken";
 import { VerifyGooglePage } from "./pages/verify-google";
 import { VerifyXTwitterPage } from "./pages/verify-x";
+import { TermsPage } from "./pages/terms";
 
 // Interfaces
 interface RoutesProps {}
@@ -54,6 +55,7 @@ export const Routes: FC<RoutesProps> = (): JSX.Element => {
         <Route index element={<ForgotPasswordPage />} />
         <Route path=":token" element={<VerifyResetToken />} />
       </Route>
+      <Route path="/terms" element={<TermsPage />} />
       <Route
         element={
           <Authenticated

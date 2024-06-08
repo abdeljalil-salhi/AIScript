@@ -104,13 +104,16 @@ export const authProvider: AuthProvider = {
     } catch (e) {
       const error = e as Error;
 
+      console.log(error);
+
       return {
         success: false,
         error: {
           message: "Something went wrong",
-          name: error.message.includes("Unique constraint failed on the fields")
-            ? "Email or username already exists"
-            : "User registration failed",
+          name:
+            "message" in error
+              ? error.message
+              : "An error occurred while registering. Please try again.",
         },
       };
     }
@@ -177,7 +180,10 @@ export const authProvider: AuthProvider = {
         success: false,
         error: {
           message: "Something went wrong",
-          name: "message" in error ? error.message : "Login Error",
+          name:
+            "message" in error
+              ? error.message
+              : "An error occurred while logging in. Please try again.",
         },
       };
     }

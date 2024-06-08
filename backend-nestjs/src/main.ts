@@ -35,8 +35,9 @@ const bootstrap = async (): Promise<void> => {
 
   // Enable CORS for the application
   app.enableCors({
-    origin: '*',
+    origin: [process.env.FRONTEND_URL, process.env.DJANGO_URL],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
   });
 
   // Start listening on the specified port

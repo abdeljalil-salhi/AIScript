@@ -27,13 +27,12 @@ const extractErrorMessage = (errorMessage: string): string => {
     const endParenIndex: number = errorMessage.indexOf('`)', startParenIndex);
 
     if (startParenIndex !== -1 && endParenIndex !== -1) {
-      const field = errorMessage
+      const field: string = errorMessage
         .substring(startParenIndex + 2, endParenIndex)
         .trim();
       return `${field.charAt(0).toUpperCase() + field.slice(1)} already taken`;
     }
   }
 
-  if (process.env.NODE_ENV === 'development') return errorMessage;
-  return 'An error occurred. Please try again.';
+  return errorMessage;
 };

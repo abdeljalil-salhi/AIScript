@@ -64,7 +64,7 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
   public async googleAuthCallback(
-    @Req() req: Request,
+    @Req() req: Request & { user: OAuthUser },
     @Res() res: Response,
   ): Promise<void> {
     try {
@@ -78,7 +78,7 @@ export class AuthController {
       // Set the access token cookie
       res.cookie('access_token', response.accessToken, {
         maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days
-        sameSite: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : true,
         secure: process.env.NODE_ENV === 'production',
       });
 
@@ -86,7 +86,7 @@ export class AuthController {
         // Set the short-lived token cookie
         res.cookie('short_lived_token', response.shortLivedToken, {
           maxAge: 60 * 30 * 1000, // 30 minutes
-          sameSite: true,
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : true,
           secure: process.env.NODE_ENV === 'production',
         });
 
@@ -137,7 +137,7 @@ export class AuthController {
   @Get('twitter/callback')
   @UseGuards(XTwitterOAuthGuard)
   public async twitterAuthCallback(
-    @Req() req: Request,
+    @Req() req: Request & { user: OAuthUser },
     @Res() res: Response,
   ): Promise<void> {
     try {
@@ -151,7 +151,7 @@ export class AuthController {
       // Set the access token cookie
       res.cookie('access_token', response.accessToken, {
         maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days
-        sameSite: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : true,
         secure: process.env.NODE_ENV === 'production',
       });
 
@@ -159,7 +159,7 @@ export class AuthController {
         // Set the short-lived token cookie
         res.cookie('short_lived_token', response.shortLivedToken, {
           maxAge: 60 * 30 * 1000, // 30 minutes
-          sameSite: true,
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : true,
           secure: process.env.NODE_ENV === 'production',
         });
 

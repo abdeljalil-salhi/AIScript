@@ -302,7 +302,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           name="topic"
           className="w-full min-h-16 p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder={
-            suggestions[secureRandomIndexes(suggestions, 1)[0]].content
+            suggestions[secureRandomIndexes(suggestions.length, 1)[0]].content
           }
           defaultValue={state?.topic || ""}
           required

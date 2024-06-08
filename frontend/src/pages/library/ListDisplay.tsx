@@ -78,7 +78,7 @@ export const ListDisplay: FC<ListDisplayProps> = (): JSX.Element => {
           <Link
             key={book.id}
             to={`/view/${book.id}`}
-            className="w-full flex flex-row items-center justify-start gap-3 bg-n-8 hover:bg-n-7 transition-all duration-200 p-2 cursor-pointer"
+            className="w-full flex flex-row items-center justify-start gap-3 bg-n-8 hover:bg-n-7 transition-all duration-200 p-3 cursor-pointer"
             draggable={false}
           >
             <div className="w-[70px] min-w-[70px] aspect-square rounded-lg overflow-hidden shadow-md bg-n-9/35">

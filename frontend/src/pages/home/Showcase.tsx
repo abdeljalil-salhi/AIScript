@@ -20,7 +20,7 @@ interface ShowcaseProps {}
 export const Showcase: FC<ShowcaseProps> = (): JSX.Element => {
   return (
     <section className="w-full">
-      <h2 className="font-semibold text-2xl mb-5">AIScript Showcase</h2>
+      <h2 className="font-semibold text-2xl mb-5 font-['Poppins']">AIScript Showcase</h2>
       <Row gutter={[32, 0]}>
         {showcaseItems.map((showcaseItem: ShowcaseItem) => (
           <Col
@@ -39,9 +39,9 @@ export const Showcase: FC<ShowcaseProps> = (): JSX.Element => {
                   draggable={false}
                 />
               </div>
-              <div className="w-2/3">
+              <div className="w-2/3 font-['Poppins']">
                 <h3
-                  className="font-semibold text-base text-ellipsis whitespace-nowrap overflow-hidden"
+                  className="font-normal text-base text-ellipsis whitespace-nowrap overflow-hidden"
                   title={showcaseItem.title}
                 >
                   {showcaseItem.title}

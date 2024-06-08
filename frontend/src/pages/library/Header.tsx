@@ -14,7 +14,7 @@ interface HeaderProps {}
 export const Header: FC<HeaderProps> = (): JSX.Element => {
   return (
     <header className="p-4 md:p-6 w-full">
-      <h2 className="font-semibold text-4xl">Library</h2>
+      <h2 className="font-semibold text-4xl font-['Poppins']">Library</h2>
     </header>
   );
 };

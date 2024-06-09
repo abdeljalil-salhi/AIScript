@@ -22,9 +22,19 @@ export const Footer: FC<FooterProps> = (): JSX.Element => {
   return (
     <Section crosses className="!px-0 !py-10">
       <div className="container flex sm:justify-between justify-center items-center gap-10 max-sm:flex-col">
-        <p className="caption text-n-4 lg:block font-['Poppins']">
-          &copy; AIScript {new Date().getFullYear()}. All rights reserved.
-        </p>
+        <div className="flex flex-col items-start gap-3">
+          <Link
+            to="/FAQs"
+            className="cursor-pointer hover:underline duration-300 ease-in-out text-n-4 hover:text-n-4/80 font-['Poppins']"
+          >
+            Help / FAQs
+          </Link>
+
+          <p className="caption text-n-4 lg:block font-['Poppins']">
+            &copy; AIScript {new Date().getFullYear()}. All rights reserved.
+          </p>
+        </div>
+
         <ul className="flex gap-5 flex-wrap">
           {socials.map((social: Social) => (
             <Link

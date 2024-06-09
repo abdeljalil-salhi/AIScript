@@ -23,7 +23,7 @@ interface PricingProps {}
 export const Pricing: FC<PricingProps> = (): JSX.Element => {
   return (
     <Section id="pricing" className="overflow-hidden">
-      <div className="container relative z-2">
+      <div className="container relative z-2 mt-5">
         <div className="hidden relative justify-center mb-[6.5rem] lg:flex">
           <img
             src={Sphere}

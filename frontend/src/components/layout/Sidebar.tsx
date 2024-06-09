@@ -181,7 +181,7 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
               Contact Us
             </Link>
             <Link
-              to="/faqs"
+              to="/FAQs"
               className="font-grotesk text-n-1 hover:text-n-1 active:text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer"
               draggable={false}
             >

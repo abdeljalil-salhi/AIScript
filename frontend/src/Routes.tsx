@@ -32,6 +32,7 @@ import { VerifyXTwitterPage } from "./pages/verify-x";
 import { TermsPage } from "./pages/terms";
 import { PrivacyPage } from "./pages/privacy";
 import { ContactPage } from "./pages/contact";
+import { FAQsPage } from "./pages/faqs";
 
 // Interfaces
 interface RoutesProps {}
@@ -59,6 +60,7 @@ export const Routes: FC<RoutesProps> = (): JSX.Element => {
       </Route>
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/FAQs" element={<FAQsPage />} />
       <Route path="/404" element={<Error404Page />} />
       <Route path="*" element={<CatchAllNavigate to="/404" />} />
       <Route

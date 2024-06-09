@@ -31,6 +31,7 @@ import { VerifyGooglePage } from "./pages/verify-google";
 import { VerifyXTwitterPage } from "./pages/verify-x";
 import { TermsPage } from "./pages/terms";
 import { PrivacyPage } from "./pages/privacy";
+import { ContactPage } from "./pages/contact";
 
 // Interfaces
 interface RoutesProps {}
@@ -78,6 +79,7 @@ export const Routes: FC<RoutesProps> = (): JSX.Element => {
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/subscription">
           <Route index element={<SubscriptionPage />} />
         </Route>

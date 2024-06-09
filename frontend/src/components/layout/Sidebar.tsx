@@ -173,13 +173,21 @@ export const Sidebar: FC<SidebarProps> = (): JSX.Element => {
             </Link>
           </div>
           <div className="flex flex-col w-full gap-2">
-            <div className="font-grotesk text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer">
-              What's new?
-            </div>
-            <div className="font-grotesk text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer">
+            <Link
+              to="/contact"
+              className="font-grotesk text-n-1 hover:text-n-1 active:text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer"
+              draggable={false}
+            >
+              Contact Us
+            </Link>
+            <Link
+              to="/faqs"
+              className="font-grotesk text-n-1 hover:text-n-1 active:text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer"
+              draggable={false}
+            >
               Help / FAQs
-            </div>
-            <div className="font-grotesk text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer">
+            </Link>
+            <div className="font-grotesk text-n-1 hover:text-n-1 active:text-n-1 text-xs uppercase tracking-widest hover:underline cursor-pointer">
               Community
             </div>
             <div className="flex flex-row items-center justify-between mt-2 w-full gap-2">

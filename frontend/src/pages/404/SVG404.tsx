@@ -14,7 +14,7 @@ interface SVG404Props {}
 export const SVG404: FC<SVG404Props> = (): JSX.Element => {
   return (
     <svg
-      className="w-1/2 md:1/3 lg:w-1/4 text-purple-400/70"
+      className="min-w-80 w-1/2 md:1/3 lg:w-1/4 text-purple-400/70"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 860.13137 571.14799"
       xmlnsXlink="http://www.w3.org/1999/xlink"

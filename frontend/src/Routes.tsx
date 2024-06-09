@@ -58,6 +58,8 @@ export const Routes: FC<RoutesProps> = (): JSX.Element => {
       </Route>
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/404" element={<Error404Page />} />
+      <Route path="*" element={<CatchAllNavigate to="/404" />} />
       <Route
         element={
           <Authenticated

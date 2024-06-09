@@ -29,8 +29,8 @@ interface ServicesProps {}
  */
 export const Services: FC<ServicesProps> = (): JSX.Element => {
   return (
-    <Section id="how-to-use">
-      <div className="container">
+    <Section id="services">
+      <div className="container mt-5">
         <Heading
           title="Generative AI Made for Writers"
           text="Experience the Magic of AI in Crafting Your Next Bestseller."

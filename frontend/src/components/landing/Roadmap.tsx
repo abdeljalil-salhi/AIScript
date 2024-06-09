@@ -25,7 +25,7 @@ interface RoadmapProps {}
 export const Roadmap: FC<RoadmapProps> = (): JSX.Element => {
   return (
     <Section id="roadmap" className="overflow-hidden">
-      <div className="container md:pb-10">
+      <div className="container md:pb-10 mt-5">
         <Heading tag="Join the Journey" title="Our Future Vision" />
         <div className="relative grid gap-6 md:grid-cols-2 md:gap-4 md:pb-[7rem]">
           {roadmap.map((item: RoadmapType) => {

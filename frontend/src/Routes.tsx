@@ -31,6 +31,8 @@ import { VerifyGooglePage } from "./pages/verify-google";
 import { VerifyXTwitterPage } from "./pages/verify-x";
 import { TermsPage } from "./pages/terms";
 import { PrivacyPage } from "./pages/privacy";
+import { ContactPage } from "./pages/contact";
+import { FAQsPage } from "./pages/faqs";
 
 // Interfaces
 interface RoutesProps {}
@@ -58,6 +60,9 @@ export const Routes: FC<RoutesProps> = (): JSX.Element => {
       </Route>
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/FAQs" element={<FAQsPage />} />
+      <Route path="/404" element={<Error404Page />} />
+      <Route path="*" element={<CatchAllNavigate to="/404" />} />
       <Route
         element={
           <Authenticated
@@ -76,6 +81,7 @@ export const Routes: FC<RoutesProps> = (): JSX.Element => {
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/subscription">
           <Route index element={<SubscriptionPage />} />
         </Route>

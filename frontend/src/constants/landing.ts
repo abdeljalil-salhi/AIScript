@@ -59,8 +59,8 @@ export const navigations: Navigation[] = [
   },
   {
     id: "1",
-    title: "How to use",
-    url: "#how-to-use",
+    title: "Services",
+    url: "#services",
   },
   {
     id: "2",

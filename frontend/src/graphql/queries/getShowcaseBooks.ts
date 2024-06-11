@@ -1,18 +1,18 @@
 import gql from "graphql-tag";
 
-// Query to retrieve a book entity by ID.
-export const QUERY_GET_BOOK_BY_ID = gql`
-  query GetBookById($bookId: String!) {
-    getBookById(bookId: $bookId) {
+// Query to retrieve all showcase books.
+export const QUERY_GET_SHOWCASE_BOOKS = gql`
+  query GetShowcaseBooks {
+    getShowcaseBooks {
       id
+      ownerId
       owner {
-        id
         username
-        createdAt
       }
       author
       title
       topic
+      cover
       targetAudience
       numChapters
       numSubsections

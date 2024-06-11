@@ -88,7 +88,7 @@ export class UserService implements OnModuleInit {
         connection: {
           email: founderUser.connection.email,
           password: await this.hashPassword(founderUser.connection.password),
-          provider: 'google',
+          provider: 'local',
         },
       });
     }

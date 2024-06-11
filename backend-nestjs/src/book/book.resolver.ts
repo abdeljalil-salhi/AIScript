@@ -7,6 +7,8 @@ import { BookService } from './book.service';
 import { Book } from './entities/book.entity';
 // DTOs
 import { NewBookInput } from './dtos/new-book.input';
+import { CurrentUserId } from 'src/auth/decorators/current-userid.decorator';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 /**
  * The book resolver that encapsulates all book-related GraphQL queries and mutations.
@@ -109,18 +111,28 @@ export class BookResolver {
    * Mutation to delete a book entity by ID.
    *
    * @mutation
+   * @param {string} userId - The ID of the user deleting the book entity.
    * @param {string} bookId - The ID of the book entity to delete.
    * @returns {Promise<Book>} - The deleted book entity.
-   * @nullable
+   * @throws {NotFoundException} - If the book entity with the specified ID is not found.
+   * @throws {UnauthorizedException} - If the user is not authorized to delete the book entity.
    */
   @Mutation(() => Book, {
     name: 'deleteBookById',
     description: 'Deletes a book entity by ID.',
-    nullable: true,
   })
   public async deleteBookById(
+    @CurrentUserId() userId: string,
     @Args('bookId', { type: () => String }) bookId: string,
   ): Promise<Book> {
+    const book: Book = await this.bookService.getBookById(bookId);
+    if (!book) throw new NotFoundException(`Book with ID ${bookId} not found.`);
+
+    if (book.ownerId !== userId)
+      throw new UnauthorizedException(
+        'You are not authorized to delete this book.',
+      );
+
     return this.bookService.deleteBookById(bookId);
   }
 }

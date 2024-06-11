@@ -252,7 +252,7 @@ type Mutation {
   deleteAllPlans: [Plan!]!
 
   """Deletes a book entity by ID."""
-  deleteBookById(bookId: String!): Book
+  deleteBookById(bookId: String!): Book!
 
   """Deletes a plan by its ID."""
   deletePlan(planId: String!): Plan!

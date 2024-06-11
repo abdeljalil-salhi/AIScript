@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 
 // Services
@@ -18,16 +19,25 @@ import { NewUserInput } from './dtos/new-user.input';
 import { UpdateUserInput } from './dtos/update-user.input';
 // Includes
 import { userIncludes } from './includes/user.includes';
+// Constants
+import { founderUser } from 'src/constants/founder';
 
 /**
  * Service for handling user-related operations.
+ *
+ * @export
+ * @class UserService
+ * @implements {OnModuleInit} - Lifecycle hook that is executed when the module is initialized.
+ * @module UserModule
  */
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   /**
    * Initializes the user service with the specified dependencies.
    *
    * @param {PrismaService} prismaService - The service for interacting with the Prisma ORM.
+   * @param {PlanService} planService - The service for handling plan-related operations.
+   * @param {EmailVerificationService} emailVerificationService - The service for handling email verification operations.
    */
   constructor(
     private readonly prismaService: PrismaService,
@@ -45,6 +55,57 @@ export class UserService {
     return process.env.ADMIN.split(',')
       .map((admin: string) => admin.trim())
       .includes(username);
+  }
+
+  /**
+   * Method called when the module is initialized.
+   * Creates the founder user if they do not exist.
+   *
+   * @returns {Promise<void>} - A Promise that resolves when the founder user is created.
+   */
+  public async onModuleInit(): Promise<void> {
+    await this.createFounder();
+  }
+
+  /**
+   * Creates the founder user if they do not exist.
+   *
+   * @returns {Promise<User>} - The founder user.
+   */
+  public async createFounder(): Promise<void> {
+    const user: User = await this.prismaService.user.findFirst({
+      where: {
+        username: founderUser.username,
+      },
+    });
+
+    if (!user) {
+      await this.createUser({
+        username: founderUser.username,
+        avatar: {
+          filename: '/default.png',
+        },
+        connection: {
+          email: founderUser.connection.email,
+          password: await this.hashPassword(founderUser.connection.password),
+          provider: 'google',
+        },
+      });
+    }
+  }
+
+  /**
+   * Gets the founder user.
+   *
+   * @returns {Promise<User>} - The founder user.
+   */
+  public async getFounder(): Promise<User> {
+    return this.prismaService.user.findFirst({
+      where: {
+        username: founderUser.username,
+      },
+      include: userIncludes,
+    });
   }
 
   /**
@@ -120,7 +181,7 @@ export class UserService {
     const user: User = await this.prismaService.user.create({
       data: {
         ...newUserInput,
-        isAdmin: false,
+        isAdmin: UserService.checkIfUserIsAdmin(newUserInput.username),
         avatar: {
           create: {
             defaultFilename: '/default.png',

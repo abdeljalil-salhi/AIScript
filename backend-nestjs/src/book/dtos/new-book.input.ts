@@ -1,5 +1,11 @@
 // Dependencies
-import { IsNotEmpty, IsNumber, IsString, ValidateIf } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 
 /**
@@ -105,4 +111,18 @@ export class NewBookInput {
   @IsString({ message: 'Book PDF URL must be a string' })
   @Field(() => String, { description: 'PDF URL of the book' })
   public pdf: string;
+
+  /**
+   * Whether the book is a showcase item
+   * @type {boolean}
+   * @nullable
+   */
+  @ValidateIf((_, value) => value !== null)
+  @IsNotEmpty({ message: 'Book showcase item must not be empty' })
+  @IsBoolean({ message: 'Book showcase item must be a boolean' })
+  @Field(() => Boolean, {
+    description: 'Whether the book is a showcase item',
+    nullable: true,
+  })
+  public isShowcase?: boolean;
 }

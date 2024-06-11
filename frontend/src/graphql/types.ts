@@ -303,6 +303,32 @@ export type GetBooksByUserIdQuery = {
   >;
 };
 
+export type GetShowcaseBooksQueryVariables = Types.Exact<{
+  [key: string]: never;
+}>;
+
+export type GetShowcaseBooksQuery = {
+  getShowcaseBooks: Array<
+    Pick<
+      Types.Book,
+      | "id"
+      | "ownerId"
+      | "author"
+      | "title"
+      | "topic"
+      | "cover"
+      | "targetAudience"
+      | "numChapters"
+      | "numSubsections"
+      | "document"
+      | "pdf"
+      | "isShowcase"
+      | "createdAt"
+      | "updatedAt"
+    > & { owner?: Types.Maybe<Pick<Types.User, "username">> }
+  >;
+};
+
 export type GetSubscriptionsByUserIdQueryVariables = Types.Exact<{
   userId: Types.Scalars["String"]["input"];
 }>;

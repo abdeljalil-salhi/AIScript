@@ -69,6 +69,8 @@ export type Book = {
   document: Scalars["String"]["output"];
   /** Unique identifier of the book */
   id: Scalars["String"]["output"];
+  /** Whether the book is showcased or not */
+  isShowcase: Scalars["Boolean"]["output"];
   /** Number of chapters in the book */
   numChapters: Scalars["Float"]["output"];
   /** Number of subsections in the book */
@@ -358,6 +360,8 @@ export type NewBookInput = {
   cover: Scalars["String"]["input"];
   /** Document URL of the book */
   document: Scalars["String"]["input"];
+  /** Whether the book is a showcase item */
+  isShowcase?: InputMaybe<Scalars["Boolean"]["input"]>;
   /** Number of chapters in the book */
   numChapters: Scalars["Float"]["input"];
   /** Number of subsections in the book */
@@ -449,6 +453,8 @@ export type Query = {
   getBooksByUserId: Array<Book>;
   /** Gets a plan by its ID. */
   getPlanById: Plan;
+  /** Retrieves all showcase books. */
+  getShowcaseBooks: Array<Book>;
   /** Retrieves a single subscription entity by ID. */
   getSubscriptionById: Subscription;
   /** Retrieves all subscription entities for a specific plan. */

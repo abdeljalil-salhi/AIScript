@@ -22,23 +22,21 @@ export type DeleteBookByIdMutationVariables = Types.Exact<{
 }>;
 
 export type DeleteBookByIdMutation = {
-  deleteBookById?: Types.Maybe<
-    Pick<
-      Types.Book,
-      | "id"
-      | "ownerId"
-      | "author"
-      | "title"
-      | "topic"
-      | "targetAudience"
-      | "numChapters"
-      | "numSubsections"
-      | "cover"
-      | "document"
-      | "pdf"
-      | "createdAt"
-      | "updatedAt"
-    >
+  deleteBookById: Pick<
+    Types.Book,
+    | "id"
+    | "ownerId"
+    | "author"
+    | "title"
+    | "topic"
+    | "targetAudience"
+    | "numChapters"
+    | "numSubsections"
+    | "cover"
+    | "document"
+    | "pdf"
+    | "createdAt"
+    | "updatedAt"
   >;
 };
 

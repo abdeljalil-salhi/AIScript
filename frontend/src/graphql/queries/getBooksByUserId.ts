@@ -15,6 +15,7 @@ export const QUERY_GET_BOOKS_BY_USER_ID = gql`
       cover
       document
       pdf
+      isShowcase
       createdAt
       updatedAt
     }

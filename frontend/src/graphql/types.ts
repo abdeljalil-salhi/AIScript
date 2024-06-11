@@ -270,6 +270,7 @@ export type GetBookByIdQuery = {
       | "cover"
       | "document"
       | "pdf"
+      | "isShowcase"
       | "createdAt"
       | "updatedAt"
     > & {
@@ -297,6 +298,7 @@ export type GetBooksByUserIdQuery = {
       | "cover"
       | "document"
       | "pdf"
+      | "isShowcase"
       | "createdAt"
       | "updatedAt"
     >

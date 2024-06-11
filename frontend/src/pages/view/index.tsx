@@ -15,7 +15,7 @@ import {
   FileWordFilled,
   PrinterFilled,
 } from "@ant-design/icons";
-import { useCustom, useCustomMutation } from "@refinedev/core";
+import { useCustom, useCustomMutation, useGetIdentity } from "@refinedev/core";
 import { useDocumentTitle } from "@refinedev/react-router-v6";
 
 // Dependency Styles
@@ -31,6 +31,7 @@ import { API_URL } from "@/providers";
 // Pages
 import { LoadingPage } from "../loading";
 import { MUTATION_DELETE_BOOK_BY_ID } from "@/graphql/mutations/deleteBookById";
+import { MeResponse } from "@/graphql/schema.types";
 
 // Interfaces
 interface ViewPageProps {}
@@ -117,6 +118,13 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
     isError: isDeleteError,
     data: deleteBookData,
   } = useCustomMutation<DeleteBookByIdMutation>();
+
+  /**
+   * Get the user's identity
+   * @type {MeResponse}
+   */
+  const { data: identity, isLoading: isIdentityLoading } =
+    useGetIdentity<MeResponse>();
 
   /**
    * The reference to the PDF container element and its dimensions (width and height)
@@ -346,38 +354,42 @@ export const ViewPage: FC<ViewPageProps> = (): JSX.Element => {
                 </button>
 
                 <button
-                  className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-r border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                  className="flex h-full flex-row items-center justify-center gap-1.5 flex-grow border-n-6/90 hover:bg-n-6/60 transition-all ease-in-out duration-300"
                   onClick={() => window.print()}
                 >
                   <PrinterFilled className="text-lg" />
                   Print
                 </button>
 
-                <div className="flex h-full flex-row items-center justify-center flex-grow">
-                  {isConfirmDelete ? (
-                    <>
-                      <button
-                        className="flex-grow h-full flex items-center justify-center hover:bg-green-500/20 transition-all ease-in-out duration-300"
-                        onClick={deleteFile}
-                      >
-                        <CheckOutlined className="text-green-500" />
-                      </button>
-                      <button
-                        className="flex-grow h-full flex items-center justify-center hover:bg-red-500/20 transition-all ease-in-out duration-300 border-l border-n-6/90"
-                        onClick={() => setIsConfirmDelete(false)}
-                      >
-                        <CloseOutlined className="text-red-500" />
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      className="w-full h-full flex items-center justify-center hover:bg-n-6/60 transition-all ease-in-out duration-300"
-                      onClick={() => setIsConfirmDelete(true)}
-                    >
-                      <DeleteFilled className="text-lg" />
-                    </button>
+                {!isIdentityLoading &&
+                  identity &&
+                  book.data.getBookById.owner?.id === identity.user.id && (
+                    <div className="flex h-full flex-row items-center justify-center border-l border-n-6/90 flex-grow">
+                      {isConfirmDelete ? (
+                        <>
+                          <button
+                            className="flex-grow h-full flex items-center justify-center hover:bg-green-500/20 transition-all ease-in-out duration-300"
+                            onClick={deleteFile}
+                          >
+                            <CheckOutlined className="text-green-500" />
+                          </button>
+                          <button
+                            className="flex-grow h-full flex items-center justify-center hover:bg-red-500/20 transition-all ease-in-out duration-300 border-l border-n-6/90"
+                            onClick={() => setIsConfirmDelete(false)}
+                          >
+                            <CloseOutlined className="text-red-500" />
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className="w-full h-full flex items-center justify-center hover:bg-n-6/60 transition-all ease-in-out duration-300"
+                          onClick={() => setIsConfirmDelete(true)}
+                        >
+                          <DeleteFilled className="text-lg" />
+                        </button>
+                      )}
+                    </div>
                   )}
-                </div>
               </div>
             </div>
           </div>

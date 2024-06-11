@@ -186,6 +186,7 @@ model Book {
     cover          String
     document       String
     pdf            String
+    isShowcase     Boolean @default(false)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

@@ -1,5 +1,6 @@
 // Dependencies
 import {
+  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsNumber,
@@ -133,6 +134,18 @@ export class Book {
   @IsString({ message: 'Book PDF document URL must be a string' })
   @Field(() => String, { description: 'Book PDF document URL' })
   public pdf: string;
+
+  /**
+   * Whether the book is showcased or not
+   * @type {boolean}
+   */
+  @IsNotEmpty({ message: 'Book showcase status must not be empty' })
+  @IsBoolean({ message: 'Book showcase status must be a boolean' })
+  @Field(() => Boolean, {
+    description: 'Whether the book is showcased or not',
+    defaultValue: false,
+  })
+  public isShowcase: boolean;
 
   /**
    * Book creation date

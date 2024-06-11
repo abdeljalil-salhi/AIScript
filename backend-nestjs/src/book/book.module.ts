@@ -6,7 +6,12 @@ import { HttpModule } from '@nestjs/axios';
 import { BookResolver } from './book.resolver';
 // Services
 import { BookService } from './book.service';
+import { ConnectionService } from 'src/connection/connection.service';
+import { EmailVerificationService } from 'src/email-verification/email-verification.service';
+import { MailService } from 'src/mail/mail.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PlanService } from 'src/plan/plan.service';
+import { UserService } from 'src/user/user.service';
 import { WalletService } from 'src/wallet/wallet.service';
 // Controllers
 import { BookController } from './book.controller';
@@ -23,9 +28,14 @@ import { BookController } from './book.controller';
     // Resolvers
     BookResolver,
 
-    // Services
+    // Services,
     BookService,
+    EmailVerificationService,
+    ConnectionService,
+    MailService,
     PrismaService,
+    PlanService,
+    UserService,
     WalletService,
   ],
   exports: [BookService],

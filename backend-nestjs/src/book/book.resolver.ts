@@ -56,6 +56,20 @@ export class BookResolver {
   }
 
   /**
+   * Query to retrieve all showcase books.
+   *
+   * @query
+   * @returns {Promise<Book[]>} - The list of all showcase books.
+   */
+  @Query(() => [Book], {
+    name: 'getShowcaseBooks',
+    description: 'Retrieves all showcase books.',
+  })
+  public async getShowcaseBooks(): Promise<Book[]> {
+    return this.bookService.getShowcaseBooks();
+  }
+
+  /**
    * Query to retrieve a book entity by ID.
    *
    * @query

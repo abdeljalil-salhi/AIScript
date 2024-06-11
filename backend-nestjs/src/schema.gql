@@ -58,6 +58,9 @@ type Book {
   """Unique identifier of the book"""
   id: String!
 
+  """Whether the book is showcased or not"""
+  isShowcase: Boolean!
+
   """Number of chapters in the book"""
   numChapters: Float!
 
@@ -330,6 +333,9 @@ input NewBookInput {
   """Document URL of the book"""
   document: String!
 
+  """Whether the book is a showcase item"""
+  isShowcase: Boolean
+
   """Number of chapters in the book"""
   numChapters: Float!
 
@@ -455,6 +461,9 @@ type Query {
 
   """Gets a plan by its ID."""
   getPlanById(planId: String!): Plan!
+
+  """Retrieves all showcase books."""
+  getShowcaseBooks: [Book!]!
 
   """Retrieves a single subscription entity by ID."""
   getSubscriptionById(subscriptionId: String!): Subscription!

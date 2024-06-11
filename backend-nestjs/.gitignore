@@ -4,7 +4,8 @@
 
 # uploads
 /uploads/avatars/*.png
-/uploads/books/*.pdf
+/uploads/docs/*.docx
+/uploads/pdfs/*.pdf
 /uploads/covers/*.png
 
 # Logs

@@ -5,8 +5,6 @@ import { Spin } from "antd";
 import { v4 as uuidv4 } from "uuid";
 import { useGetIdentity, useNotification } from "@refinedev/core";
 
-// Assets
-import { LoadingBook } from "@/assets/create";
 // Components
 import { ChaptersAndSections } from "@/components/create/ChaptersAndSections";
 import { Cover } from "@/components/create/Cover";
@@ -244,12 +242,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
   ) : queue.inQueue ? (
     <div className="w-full h-full flex flex-col gap-3 font-['Poppins']">
       <div className="w-full h-full flex items-center justify-center flex-col gap-5">
-        <img
-          src={LoadingBook}
-          className="w-full max-w-28 aspect-square animate-pulse"
-          alt="Please wait while we create your book."
-          draggable={false}
-        />
+        <Spin className="w-full max-w-28 aspect-square animate-pulse" />
 
         <p className="text-sm text-center">
           {queue.positionInQueue <= 1
@@ -279,6 +272,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           name="author"
           className="w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder="The name displayed on the cover"
+          maxLength={40}
           required
         />
       </div>
@@ -291,6 +285,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           name="title"
           className="w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder="e.g. How to be healthy"
+          maxLength={50}
           required
         />
       </div>
@@ -305,6 +300,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
             suggestions[secureRandomIndexes(suggestions.length, 1)[0]].content
           }
           defaultValue={state?.topic || ""}
+          maxLength={200}
           required
         />
       </div>
@@ -317,6 +313,7 @@ export const CreateForm: FC<CreateFormProps> = (): JSX.Element => {
           name="target-audience"
           className="w-full p-2 bg-transparent border border-n-6/70 rounded-md outline-none focus:border-n-4 duration-300 ease-in-out font-light"
           placeholder="e.g. Adults, Teenagers"
+          maxLength={50}
         />
       </div>
 

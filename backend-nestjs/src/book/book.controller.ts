@@ -97,27 +97,52 @@ export class BookController {
   }
 
   /**
-   * Gets a book by its filename.
+   * Gets a book document by its filename.
    *
    * @public
-   * @param {string} filename - The filename of the book.
+   * @param {string} filename - The filename of the book document.
    * @param {Response} res - The response object.
    * @returns {void}
-   * @throws {NotFoundException} If the book is not found.
+   * @throws {NotFoundException} If the book document is not found.
    */
   @Public()
-  @Get(':filename')
+  @Get('document/:filename')
   public getBook(
     @Param('filename') filename: string,
     @Res() res: Response,
   ): void {
     try {
       return res.sendFile(filename, {
-        root: 'uploads/books',
+        root: 'uploads/docs',
         dotfiles: 'deny',
       });
     } catch (e) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException('Document not found');
+    }
+  }
+
+  /**
+   * Gets a book PDF by its filename.
+   *
+   * @public
+   * @param {string} filename - The filename of the book PDF.
+   * @param {Response} res - The response object.
+   * @returns {void}
+   * @throws {NotFoundException} If the book PDF is not found.
+   */
+  @Public()
+  @Get('pdf/:filename')
+  public getPdf(
+    @Param('filename') filename: string,
+    @Res() res: Response,
+  ): void {
+    try {
+      return res.sendFile(filename, {
+        root: 'uploads/pdfs',
+        dotfiles: 'deny',
+      });
+    } catch (e) {
+      throw new NotFoundException('PDF not found');
     }
   }
 }
